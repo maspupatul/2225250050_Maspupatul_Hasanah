@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Makna matematika (CLAUDE.md §5.4) */
+  --color-positive: #1d4ed8;
+  --color-negative: #dc2626;
+  --color-zero: #6b7280;
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #e3e1f0; /* lavender, like the reference design backdrop */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply font-sans text-ink antialiased;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid #f26b3a;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

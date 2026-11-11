@@ -1,0 +1,33 @@
+{
+  "id": "ujian-akhir",
+  "title": "Ujian Akhir",
+  "stages": [
+    {
+      "key": "dasar", "title": "Dasar", "level": 1,
+      "slots": [
+        ["ex-rep-lab", "ex-rep-office", "ex-rep-sub"],
+        ["ex-num-add", "ex-num-sub"],
+        ["ex-num-mul"],
+        ["ex-num-div"]
+      ]
+    },
+    {
+      "key": "menengah", "title": "Menengah", "level": 2,
+      "slots": [
+        ["ex-temp-cmp"],
+        ["ex-lift-chg-start"],
+        ["ex-temp-altitude"],
+        ["ex-money-debt"]
+      ]
+    },
+    {
+      "key": "hots", "title": "Tingkat Tinggi (HOTS)", "level": 3,
+      "slots": [
+        ["ex-num-mix"],
+        ["ex-temp-rpt-start", "ex-sea-mlt-change"],
+        ["ex-money-mixed"],
+        ["ex-score"]
+      ]
+    }
+  ]
+}

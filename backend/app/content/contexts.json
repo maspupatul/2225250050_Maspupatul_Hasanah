@@ -1,0 +1,233 @@
+{
+  "abstract": {
+    "unit": "",
+    "visual": "number_line",
+    "range": [
+      -15,
+      15
+    ],
+    "step": 1,
+    "fmt": {
+      "plain": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      },
+      "operand": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      }
+    },
+    "interpret": {},
+    "meaning": {
+      "pos": "di sebelah kanan nol",
+      "neg": "di sebelah kiri nol"
+    }
+  },
+  "temperature": {
+    "unit": "°C",
+    "visual": "thermometer",
+    "range": [
+      -20,
+      20
+    ],
+    "step": 1,
+    "fmt": {
+      "state": {
+        "pos": "{abs} °C",
+        "neg": "−{abs} °C",
+        "zero": "0 °C"
+      },
+      "state_words": {
+        "pos": "{abs} °C di atas nol",
+        "neg": "{abs} °C di bawah nol",
+        "zero": "0 °C"
+      },
+      "change": {
+        "pos": "naik {abs} °C",
+        "neg": "turun {abs} °C"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "{abs} °C di atas nol",
+        "neg": "{abs} °C di bawah nol"
+      },
+      "change": {
+        "pos": "suhunya naik {abs} °C",
+        "neg": "suhunya turun {abs} °C"
+      },
+      "diff": {
+        "pos": "selisih suhunya {abs} °C"
+      }
+    },
+    "meaning": {
+      "pos": "di atas nol atau naik",
+      "neg": "di bawah nol atau turun"
+    }
+  },
+  "sea_depth": {
+    "unit": "m",
+    "visual": "sea_depth",
+    "range": [
+      -20,
+      5
+    ],
+    "step": 1,
+    "fmt": {
+      "state": {
+        "pos": "{abs} meter di atas permukaan laut",
+        "neg": "{abs} meter di bawah permukaan laut",
+        "zero": "tepat di permukaan laut"
+      },
+      "change": {
+        "pos": "naik {abs} meter",
+        "neg": "menyelam {abs} meter lebih dalam"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "{abs} meter di atas permukaan laut",
+        "neg": "{abs} meter di bawah permukaan laut"
+      },
+      "change": {
+        "pos": "naik {abs} meter",
+        "neg": "turun {abs} meter"
+      }
+    },
+    "meaning": {
+      "pos": "di atas permukaan laut atau naik",
+      "neg": "di bawah permukaan laut atau turun"
+    }
+  },
+  "elevator": {
+    "unit": "lantai",
+    "visual": "elevator",
+    "range": [
+      -5,
+      10
+    ],
+    "step": 1,
+    "fmt": {
+      "state": {
+        "pos": "lantai {abs}",
+        "neg": "basement {abs}",
+        "zero": "lantai dasar"
+      },
+      "change": {
+        "pos": "naik {abs} lantai",
+        "neg": "turun {abs} lantai"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "lantai {abs}",
+        "neg": "basement {abs} (lantai −{abs})"
+      },
+      "change": {
+        "pos": "naik {abs} lantai",
+        "neg": "turun {abs} lantai"
+      }
+    },
+    "meaning": {
+      "pos": "di atas lantai dasar atau naik",
+      "neg": "di bawah lantai dasar (basement) atau turun"
+    }
+  },
+  "money": {
+    "unit": "Rp",
+    "visual": "number_line",
+    "range": [
+      -20000,
+      20000
+    ],
+    "step": 1000,
+    "thousands": true,
+    "fmt": {
+      "item": {
+        "pos": "untung Rp{abs}",
+        "neg": "rugi Rp{abs}"
+      },
+      "debt": {
+        "pos": "tabungan Rp{abs}",
+        "neg": "utang Rp{abs}"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "untung Rp{abs}",
+        "neg": "rugi Rp{abs}"
+      },
+      "share": {
+        "pos": "masing-masing mendapat untung Rp{abs}",
+        "neg": "masing-masing menanggung rugi Rp{abs}"
+      },
+      "share_debt": {
+        "pos": "masing-masing mendapat Rp{abs}",
+        "neg": "masing-masing berutang Rp{abs}"
+      }
+    },
+    "interpret_alt": false,
+    "meaning": {
+      "pos": "untung atau uang bertambah",
+      "neg": "rugi, utang, atau uang berkurang"
+    }
+  },
+  "abstract_wide": {
+    "unit": "",
+    "visual": "number_line",
+    "range": [
+      -50,
+      50
+    ],
+    "step": 1,
+    "fmt": {
+      "plain": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      },
+      "operand": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      }
+    },
+    "interpret": {},
+    "meaning": {
+      "pos": "di sebelah kanan nol",
+      "neg": "di sebelah kiri nol"
+    }
+  },
+  "score": {
+    "unit": "poin",
+    "visual": "number_line",
+    "range": [
+      -20,
+      80
+    ],
+    "step": 1,
+    "fmt": {
+      "score": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "skor akhirnya {abs} poin",
+        "neg": "skor akhirnya −{abs} poin"
+      },
+      "change": {
+        "pos": "skornya naik {abs} poin",
+        "neg": "skornya turun {abs} poin"
+      }
+    },
+    "meaning": {
+      "pos": "skor di atas nol",
+      "neg": "skor di bawah nol"
+    }
+  }
+}
