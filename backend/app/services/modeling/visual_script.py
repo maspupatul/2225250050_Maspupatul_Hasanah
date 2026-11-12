@@ -43,6 +43,11 @@ def _signed_label(value: int, context: Context, op: str = "+") -> str:
     return f"{op} {fmt_int(value, context.thousands)}" if value >= 0 else f"{op} ({fmt_int(value, context.thousands)})"
 
 
+def _scr_labels(template: Template) -> tuple[str, str]:
+    """Names of the scoring events, e.g. benar/salah (quiz) or menang/kalah (game)."""
+    return template.labels.get("plus", "benar"), template.labels.get("minus", "salah")
+
+
 def _state_marks(template: Template, givens: dict[str, int]) -> list[dict]:
     return [
         {"value": value, "label": _label(template, name), "tone": "given"}
@@ -136,8 +141,9 @@ def hint(template: Template, context: Context, givens: dict[str, int]) -> dict:
     elif st == "SCR":
         script["marks"] = [{"value": 0, "label": "awal", "tone": "given"}]
         p, m, b, s = givens["p"], givens["m"], givens["b"], givens["s"]
-        arrows.append(arrow(0, p, f"benar: {b} × {p}"))
-        arrows.append(arrow(0, m, f"salah: {s} × {fmt_operand(m)}"))
+        plus, minus = _scr_labels(template)
+        arrows.append(arrow(0, p, f"{plus}: {b} × {p}"))
+        arrows.append(arrow(0, m, f"{minus}: {s} × {fmt_operand(m)}"))
     script["arrows"] = arrows
     return script
 
@@ -173,7 +179,8 @@ def review(template: Template, context: Context, values: dict[str, int], answer:
         for _ in range(abs(answer)):
             arrows.append(arrow(position, jump, fmt_int(jump, context.thousands)))
             position += jump
-    elif template.kind == "numeric" and st == "MIX":
+    elif template.kind == "numeric" and st not in {"ADD", "SUB"}:
+        # several operations (MIX, ADD3, MUL3, DIST, DIV2): the trace explains the steps
         marks.append({"value": answer, "label": "hasil", "tone": "end"})
     elif template.kind == "numeric":
         a, b = values["a"], values["b"]
@@ -223,10 +230,11 @@ def review(template: Template, context: Context, values: dict[str, int], answer:
             position += answer
     elif st == "SCR":
         p, m, b, s = values["p"], values["m"], values["b"], values["s"]
+        plus, minus = _scr_labels(template)
         marks += [{"value": 0, "label": "awal", "tone": "start"},
                   {"value": answer, "label": "skor", "tone": "end"}]
-        arrows.append(arrow(0, b * p, f"benar: {b} × {p}"))
-        arrows.append(arrow(b * p, s * m, f"salah: {s} × {fmt_operand(m)}"))
+        arrows.append(arrow(0, b * p, f"{plus}: {b} × {p}"))
+        arrows.append(arrow(b * p, s * m, f"{minus}: {s} × {fmt_operand(m)}"))
     script["marks"] = marks
     script["arrows"] = arrows
     script["unknown"] = unknown

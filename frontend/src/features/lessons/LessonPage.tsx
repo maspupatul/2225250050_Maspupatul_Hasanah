@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
 import { RoundButton } from '../../components/ui/RoundButton';
+import { SlideIn } from '../../components/ui/SlideIn';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -16,6 +18,7 @@ export function LessonPage() {
   const saveSegment = useProgress((s) => s.saveSegment);
   const [index, setIndex] = useState(() => (saved?.status === 'done' ? 0 : (saved?.segment ?? 0)));
   const [replayKey, setReplayKey] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   if (error) {
     return (
@@ -34,6 +37,7 @@ export function LessonPage() {
   const current = Math.min(index, total - 1);
   const last = current === total - 1;
   const go = (next: number) => {
+    setDirection(next > current ? 1 : -1);
     setIndex(next);
     saveSegment(lessonId, next);
     window.scrollTo({ top: 0 });
@@ -49,11 +53,13 @@ export function LessonPage() {
           <p className="text-xs uppercase tracking-widest text-white/60">
             {lesson ? `${t.home.lesson} ${lesson.number}` : ''}
           </p>
-          <p className="font-extrabold">{lesson?.title ?? t.common.loading}</p>
+          <p className="font-extrabold">
+            {lesson && <span aria-hidden="true">{lesson.icon} </span>}
+            {lesson?.title ?? t.common.loading}
+          </p>
         </div>
-        <span className="text-2xl" aria-hidden="true">
-          {lesson?.icon}
-        </span>
+        {/* spacer keeps the title centred; the lesson icon sits next to the title, not in a button corner */}
+        <span className="h-10 w-10" aria-hidden="true" />
       </div>
 
       <div className="mt-3 flex justify-center gap-1.5" aria-label={t.lesson.progress(current + 1, total)}>
@@ -65,39 +71,38 @@ export function LessonPage() {
         ))}
       </div>
 
-      <section className="mt-4 flex-1 rounded-4xl bg-white p-5 text-ink shadow-card">
+      <section className="mt-4 flex-1 overflow-hidden rounded-4xl bg-white p-5 text-ink shadow-[0_6px_0_#231a2f]">
         {lesson ? (
-          <SegmentView key={`${current}-${replayKey}`} segment={lesson.segments[current]} />
+          <SlideIn id={`${current}-${replayKey}`} direction={direction}>
+            <SegmentView segment={lesson.segments[current]} />
+          </SlideIn>
         ) : (
           <div className="h-64 animate-pulse rounded-3xl bg-lavender-100" />
         )}
       </section>
 
       <div className="mt-4 grid grid-cols-[auto_auto_1fr] gap-2">
-        <button
-          type="button"
-          disabled={current === 0}
-          onClick={() => go(current - 1)}
-          className="rounded-2xl bg-plum-700 px-4 py-3 text-sm font-extrabold disabled:opacity-30"
-        >
+        <PopButton variant="dark" disabled={current === 0} onClick={() => go(current - 1)} className="px-4 text-sm">
           ‹ {t.lesson.back}
-        </button>
-        <button
-          type="button"
-          onClick={() => setReplayKey((k) => k + 1)}
-          className="rounded-2xl bg-plum-700 px-4 py-3 text-sm font-extrabold"
+        </PopButton>
+        <PopButton
+          variant="dark"
+          onClick={() => {
+            setDirection(1);
+            setReplayKey((k) => k + 1);
+          }}
+          className="px-4 text-sm"
           aria-label={t.lesson.replay}
         >
           ↺
-        </button>
-        <button
-          type="button"
+        </PopButton>
+        <PopButton
           disabled={!lesson}
           onClick={() => (last ? navigate(`/latihan/${lessonId}`) : go(current + 1))}
-          className="rounded-2xl bg-accent py-3 text-sm font-extrabold active:scale-[0.98] disabled:opacity-40"
+          className="text-sm"
         >
           {last ? `${t.lesson.startPractice} ✏️` : `${t.lesson.next} ›`}
-        </button>
+        </PopButton>
       </div>
 
       <div className="mt-4">

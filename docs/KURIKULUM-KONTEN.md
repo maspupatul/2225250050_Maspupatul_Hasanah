@@ -301,3 +301,18 @@ Semua segmen pelajaran memakai format yang sama (dicek oleh `backend/tests/test_
 | `callout` | Kesimpulan atau kaitan gerakan ↔ notasi (pada segmen *explore*) | Kotak sorotan kuning dengan ikon 💡 |
 
 Aturan: ≤ 60 kata per layar, ≤ 15 kata per kalimat, gaya bahasa hangat ("Yuk, coba…", "Coba pikirkan…"). Segmen konsep yang memuat ≥ 3 baris pola wajib punya `callout`.
+
+## 10. Struktur Aktif Aplikasi (November 2026)
+
+Aplikasi dirancang untuk **belajar mandiri tanpa guru**. Setiap pelajaran berisi contoh lengkap, eksplorasi, latihan dengan 3 tingkat petunjuk, Soal Kembar, dan Antrean Ulang. Struktur ini menggantikan peta M0–M6 di §1 untuk versi yang berjalan (ID pelajaran lama tetap dipakai agar progres siswa aman):
+
+| Modul | Pelajaran (nomor di Beranda) | Template latihan |
+|---|---|---|
+| 1 Penjumlahan & Pengurangan | 1 Positif & Negatif (suhu, laut, skor, e-money) · 2 Garis Bilangan · 3 Penjumlahan · 4 Pengurangan · 5 Sifat Penjumlahan | `rep-*`, `num-add*`, `num-sub`, `num-add3` |
+| 2 Perkalian & Pembagian | 6 Perkalian · 7 Pembagian | `num-mul`, `temp-rpt`, `num-div`, `money-prt`, `temp-prt` |
+| 3 Sifat Operasi Perkalian & Pembagian | 8 Komutatif & Asosiatif · 9 Distributif · 10 Sifat Pembagian & Nol | `num-mul3`, `num-dist`, `num-div2` |
+| 4 Operasi Campuran & Soal Cerita | 11 Operasi Campuran · 12 Suhu Minuman · 13 Penyelam · 14 Uang Saku & E-Money · 15 Skor Game & Anak Tangga | `num-mix-a`, `num-mix-paren`, `game-score`, `temp-*`, `sea-*`, `emoney-chg-end`, `money-cmb`, `game-chg-change`, `stairs-mlt` |
+
+**Konteks soal cerita:** saldo e-money/uang saku, skor game (bonus, denda, menang, kalah), suhu minuman di kulkas/freezer, naik-turun anak tangga, dan kedalaman laut. **Konteks lift/basement tidak dipakai lagi** (pelajaran `m6-t3` dihapus, `m6-t4` digabung ke `m6-t5`; dicek oleh `tests/test_curriculum_v2.py`).
+
+**Catatan materi sifat pembagian:** yang tidak berlaku adalah komutatif, asosiatif, dan distributif bentuk `a : (b + c) ≠ a : b + a : c`. Bentuk `(b + c) : a = b : a + c : a` sebenarnya berlaku, sehingga materi menuliskan bentuk pertama secara eksplisit. Pembagian dengan nol: `0 : a = 0`, sedangkan `a : 0` tidak terdefinisi.

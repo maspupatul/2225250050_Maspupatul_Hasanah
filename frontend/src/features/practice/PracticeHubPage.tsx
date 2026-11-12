@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { BottomNav } from '../../components/ui/BottomNav';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -38,9 +37,14 @@ function HubCard(props: {
       )}
     </span>
   );
-  const base = 'block rounded-4xl bg-white p-5 shadow-sm ring-1 ring-lavender-200';
+  const base = 'card-3d block rounded-4xl p-5 transition-[transform,box-shadow] duration-100';
   return props.enabled ? (
-    <MotionLink to={props.to} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }} className={`${base} hover:shadow-card`}>
+    <MotionLink
+      to={props.to}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.97 }}
+      className={`${base} active:translate-y-1 active:shadow-none`}
+    >
       {content}
     </MotionLink>
   ) : (
@@ -80,7 +84,6 @@ export function PracticeHubPage() {
           tone="bg-accent-soft"
         />
       </main>
-      <BottomNav />
     </div>
   );
 }

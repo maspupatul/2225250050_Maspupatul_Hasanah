@@ -19,7 +19,15 @@ export default {
       },
       fontFamily: { sans: ['Nunito', 'system-ui', 'Segoe UI', 'Roboto', 'sans-serif'] },
       borderRadius: { '4xl': '2rem' },
-      boxShadow: { card: '0 12px 32px -14px rgba(43, 34, 56, 0.35)' },
+      boxShadow: {
+        card: '0 12px 32px -14px rgba(43, 34, 56, 0.35)',
+        // 3D "pop" edges (UI-UX.md §Sistem 3D): a solid lip under buttons and cards
+        'pop-accent': '0 4px 0 #c2410c',
+        'pop-plum': '0 5px 0 #231a2f',
+        'pop-soft': '0 4px 0 #cfcce3',
+        'pop-amber': '0 5px 0 #d97706',
+        'pop-fuchsia': '0 5px 0 #a21caf',
+      },
     },
   },
   plugins: [],

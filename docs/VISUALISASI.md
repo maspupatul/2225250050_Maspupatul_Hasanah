@@ -106,6 +106,9 @@ Fitur terkait: F-05 (Garis Bilangan), **F-19 (Visual Kontekstual)**.
 - **Operasi**: membaca data (LM3), selisih, rata-rata, kenaikan/penurunan terbesar.
 - **Tampilan**: sumbu-y melewati 0 dengan garis nol tebal, titik positif biru dan negatif merah.
 
+### 2.10 Mobil di Garis Bilangan (`NumberLineWalker`) — usulan, komponen siap
+Operasi `a + b` dan `a − b` sebagai mobil yang menghadap kanan (+) atau berbalik ke kiri (−), lalu maju (bilangan kedua positif) atau mundur (negatif). Siswa mengatur soal, menebak, lalu menjalankan mobil satu langkah per ketukan. Logika murni di `features/visuals/walk.ts`. Spesifikasi lengkap: [RANCANGAN-BELAJAR-MANDIRI.md](RANCANGAN-BELAJAR-MANDIRI.md) §2.2.
+
 ## 3. Antarmuka Komponen yang Seragam
 
 Semua visual menerima **skrip visual** yang sama dari backend (`visual_script.py`), sehingga mudah ditukar:

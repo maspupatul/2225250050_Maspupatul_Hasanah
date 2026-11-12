@@ -117,7 +117,7 @@ export const t = {
     guideDefault: 'Pemandu 4 langkah aktif',
     reset: 'Hapus semua progres',
     resetConfirm: 'Yakin ingin menghapus semua progres belajar di perangkat ini?',
-    modules: { m1: 'Konsep', m3: 'Tambah & Kurang', m4: 'Kali & Bagi', m6: 'Soal Cerita' } as Record<string, string>,
+    modules: { m1: 'Tambah & Kurang', m2: 'Kali & Bagi', m3: 'Sifat Operasi', m4: 'Campuran & Cerita' } as Record<string, string>,
     examBest: 'Nilai terbaik Ujian Akhir',
     examNone: 'Belum ada',
   },
@@ -159,6 +159,46 @@ export const t = {
       score >= 85 ? 'Luar biasa!' : score >= 70 ? 'Bagus sekali!' : score >= 55 ? 'Sudah baik!' : 'Terus berlatih, kamu pasti bisa!',
     gradeNote: 'Nilai dihitung dari bantuan yang kamu pakai. Tanpa petunjuk = nilai penuh.',
     newBest: 'Nilai terbaik baru! 🎉',
+  },
+
+  walker: {
+    title: 'Simulasi Mobil di Garis Bilangan',
+    setupTitle: 'Atur soalnya',
+    start: 'Posisi awal',
+    operation: 'Operasi',
+    operand: 'Bilangan kedua',
+    opAdd: 'Tambah +',
+    opSub: 'Kurang −',
+    less: 'Kurangi',
+    more: 'Tambah',
+    guessPrompt: 'Tebak dulu: di mana mobil akan berhenti? Geser benderanya.',
+    guessLabel: 'tebakanmu',
+    lockGuess: 'Kunci tebakan',
+    predict: 'Tebak hasilnya ›',
+    arrow: (motion: 'forward' | 'backward', n: number) => (motion === 'forward' ? `maju ${n}` : `mundur ${n}`),
+    skipGuess: 'Langsung jalankan',
+    nextStep: 'Jalan 1 langkah',
+    finish: 'Selesaikan',
+    reset: 'Ulangi dengan soal baru',
+    facing: {
+      right: 'Tanda + : mobil menghadap ke kanan, arah positif.',
+      left: 'Tanda − : mobil berbalik, menghadap ke kiri.',
+    } as Record<'right' | 'left', string>,
+    motion: (motion: 'forward' | 'backward', n: number) =>
+      motion === 'forward'
+        ? `Bilangan kedua positif, jadi mobil maju ${n} langkah.`
+        : `Bilangan kedua negatif, jadi mobil mundur ${n} langkah.`,
+    stepCount: (i: number, n: number) => `Langkah ${i} dari ${n}`,
+    position: 'Posisi mobil',
+    start_mark: 'mulai',
+    end_mark: 'berhenti',
+    subtractLink: 'Berbalik arah lalu bergerak sama artinya dengan menambah lawannya.',
+    feedback: {
+      correct: 'Tebakanmu tepat! 🎉',
+      wrong_direction: 'Cek arah mobilnya: menghadap ke mana, lalu maju atau mundur?',
+      wrong_distance: 'Arahnya sudah benar. Coba hitung lagi banyak langkahnya.',
+      other: 'Perhatikan lagi arah hadap mobil dan banyak langkahnya.',
+    } as Record<'correct' | 'wrong_direction' | 'wrong_distance' | 'other', string>,
   },
 
   visual: {

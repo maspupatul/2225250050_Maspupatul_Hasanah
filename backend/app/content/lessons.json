@@ -29,6 +29,18 @@
         }
       },
       {
+        "type": "concept",
+        "title": "Bilangan negatif di sekitar kita",
+        "text": "Bilangan negatif sering kita temui sehari-hari. Perhatikan contoh ini:",
+        "lines": [
+          "suhu freezer 5 °C di bawah nol → −5",
+          "kedalaman laut 10 meter → −10",
+          "kena denda 20 poin di game → −20",
+          "saldo e-money berkurang Rp2.000 → −2.000"
+        ],
+        "callout": "Kata seperti **di bawah**, **denda**, dan **berkurang** menandakan bilangan **negatif**."
+      },
+      {
         "type": "explore",
         "title": "Yuk, coba sendiri",
         "text": "Ketuk tombol ▲ untuk naik dan ▼ untuk turun.\n\nBisakah kamu mengatur suhunya menjadi **5 °C**?",
@@ -127,7 +139,7 @@
       "templates": [
         "rep-temp",
         "rep-sea",
-        "rep-lift"
+        "rep-game"
       ],
       "count": 3
     }
@@ -258,7 +270,7 @@
     ],
     "practice": {
       "templates": [
-        "rep-lift",
+        "rep-game",
         "rep-temp",
         "rep-sea"
       ],
@@ -267,8 +279,8 @@
   },
   {
     "id": "m3-t1",
-    "module_id": "m3",
-    "order": 1,
+    "module_id": "m1",
+    "order": 3,
     "title": "Penjumlahan",
     "subtitle": "Melompat di garis bilangan",
     "icon": "➕",
@@ -454,8 +466,8 @@
   },
   {
     "id": "m3-t2",
-    "module_id": "m3",
-    "order": 2,
+    "module_id": "m1",
+    "order": 4,
     "title": "Pengurangan",
     "subtitle": "Mengurangi = menambah lawan",
     "icon": "➖",
@@ -614,421 +626,120 @@
     }
   },
   {
-    "id": "m6-t1",
-    "module_id": "m6",
-    "order": 1,
-    "title": "Soal Cerita: Suhu",
-    "subtitle": "Termometer & 4 langkah",
-    "icon": "🌡️",
+    "id": "m3-t3",
+    "module_id": "m1",
+    "order": 5,
+    "title": "Sifat Penjumlahan",
+    "subtitle": "Tukar & kelompokkan",
+    "icon": "🔄",
     "segments": [
       {
         "type": "hook",
-        "title": "Soal cerita itu seperti teka-teki",
-        "text": "Soal cerita itu seperti **teka-teki**! Isinya ada **bilangan** dan **kata kunci**.\n\nTugasmu: ubah cerita menjadi **kalimat matematika**, lalu hitung."
+        "title": "Urutan ditukar, hasilnya?",
+        "text": "Saldo e-money-mu berkurang Rp3.000, lalu bertambah Rp5.000.\n\nBagaimana jika urutannya dibalik? Apakah saldo akhirnya berbeda? Yuk, kita selidiki!"
       },
       {
         "type": "concept",
-        "title": "4 langkah andalan",
-        "text": "Setiap soal cerita kita kerjakan dengan 4 langkah yang sama:",
+        "title": "Sifat komutatif (tukar)",
+        "text": "Urutan bilangan pada penjumlahan boleh ditukar. Hasilnya tetap sama.",
         "lines": [
-          "① Pahami → cari bilangan & tandanya",
-          "② Ditanya → apa yang dicari?",
-          "③ Model → susun kalimat matematika",
-          "④ Hitung → lalu tafsirkan artinya"
+          "(−3) + 5 = 2",
+          "5 + (−3) = 2"
         ],
-        "callout": "Jangan berhenti di angka! Selalu cek: **apakah hasilnya masuk akal** di dalam cerita?"
+        "callout": "**Sifat komutatif**: a + b = b + a."
+      },
+      {
+        "type": "concept",
+        "title": "Sifat asosiatif (kelompok)",
+        "text": "Pada tiga bilangan, kita boleh memilih pasangan mana yang dihitung dulu.",
+        "lines": [
+          "((−7) + 4) + 6 = 3",
+          "(−7) + (4 + 6) = 3"
+        ],
+        "callout": "**Sifat asosiatif**: (a + b) + c = a + (b + c). Pilih kelompok yang paling mudah."
+      },
+      {
+        "type": "concept",
+        "title": "Bagaimana dengan pengurangan?",
+        "text": "Coba tukar urutan pada pengurangan. Apakah hasilnya tetap sama?",
+        "lines": [
+          "7 − 3 = 4",
+          "3 − 7 = −4",
+          "(9 − 5) − 2 = 2",
+          "9 − (5 − 2) = 6"
+        ],
+        "callout": "Hasilnya berbeda! Pengurangan **tidak komutatif** dan **tidak asosiatif**."
       },
       {
         "type": "worked_example",
-        "title": "Contoh",
-        "problem": "Suhu sebuah kota −4 °C. Siang hari suhu naik 7 °C. Berapa suhu siang hari?",
+        "title": "Hitung cerdas",
+        "problem": "(−17) + 9 + (−3) = ?",
         "steps": [
           {
-            "text": "**Pahami**: −4 °C → −4, naik 7 °C → +7.",
-            "why": "Kata 'naik' berarti positif."
+            "text": "Tukar dan kelompokkan: **((−17) + (−3)) + 9**.",
+            "why": "Sifat komutatif dan asosiatif."
           },
           {
-            "text": "**Ditanya**: suhu siang hari (keadaan akhir).",
-            "why": "Lihat kalimat tanya."
+            "text": "(−17) + (−3) = **−20**.",
+            "why": "Tanda sama: jumlahkan, tandanya tetap."
           },
           {
-            "text": "**Model**: (−4) + 7.",
-            "why": "Keadaan awal + perubahan = keadaan akhir."
-          },
-          {
-            "text": "**Hitung**: (−4) + 7 = 3.",
-            "why": "Tanda beda: 7 − 4 = 3, ikuti tanda 7 (positif)."
-          },
-          {
-            "text": "**Tafsirkan**: suhu siang hari 3 °C di atas nol.",
-            "why": "Masuk akal karena suhu naik melewati nol."
+            "text": "(−20) + 9 = **−11**.",
+            "why": "Tanda beda: 20 − 9 = 11, ikuti tanda −20."
           }
         ],
-        "self_explain": "Coba pikirkan: apa yang terjadi jika suhunya turun 7 °C?",
+        "self_explain": "Coba pikirkan: mengapa −17 dan −3 enak dikelompokkan dulu?",
         "visual": {
-          "kind": "thermometer",
-          "unit": "°C",
+          "kind": "number_line",
           "range": [
-            -20,
-            20
+            -25,
+            5
           ],
           "marks": [
             {
-              "value": -4,
-              "label": "pagi"
+              "value": -20,
+              "label": "kelompok"
             },
             {
-              "value": 3,
-              "label": "siang"
-            }
-          ],
-          "arrows": [
-            {
-              "at": -4,
-              "anchor": "from",
-              "dir": "up",
-              "value": 7,
-              "label": "naik 7 °C"
+              "value": -11,
+              "label": "hasil"
             }
           ],
           "showEnd": true,
-          "mode": "guided"
+          "mode": "guided",
+          "arrows": [
+            {
+              "at": -20,
+              "anchor": "from",
+              "dir": "up",
+              "value": 9,
+              "label": "+ 9"
+            }
+          ]
         }
       },
       {
         "type": "summary",
         "title": "Rangkuman",
         "points": [
-          "Kata kunci menentukan tanda.",
-          "Awal + perubahan = akhir.",
-          "Selalu tafsirkan hasil ke dalam cerita."
+          "a + b = b + a (komutatif).",
+          "(a + b) + c = a + (b + c) (asosiatif).",
+          "Pengurangan **tidak** komutatif dan **tidak** asosiatif.",
+          "Kelompokkan bilangan yang mudah dijumlahkan dulu."
         ]
       }
     ],
     "practice": {
       "templates": [
-        "temp-chg-end",
-        "temp-chg-start",
-        "temp-chg-change",
-        "temp-cmp",
-        "temp-rpt"
+        "num-add3",
+        "num-sub"
       ],
       "count": 4
     }
   },
   {
-    "id": "m6-t2",
-    "module_id": "m6",
-    "order": 2,
-    "title": "Soal Cerita: Penyelam",
-    "subtitle": "Di atas & di bawah laut",
-    "icon": "🤿",
-    "segments": [
-      {
-        "type": "hook",
-        "title": "Permukaan laut = nol",
-        "text": "Di laut, **permukaan air** adalah titik **0**. Perhatikan tandanya:",
-        "visual": {
-          "kind": "sea_depth",
-          "unit": "m",
-          "range": [
-            -20,
-            5
-          ],
-          "marks": [
-            {
-              "value": 0,
-              "label": "permukaan"
-            }
-          ],
-          "showEnd": true,
-          "mode": "review"
-        },
-        "lines": [
-          "di atas permukaan laut → positif",
-          "tepat di permukaan → 0",
-          "di bawah permukaan laut → negatif"
-        ]
-      },
-      {
-        "type": "explore",
-        "title": "Coba sendiri",
-        "text": "Ayo menyelam! Gerakkan penyelam ke **7 meter di bawah permukaan laut**.",
-        "visual": {
-          "kind": "sea_depth",
-          "unit": "m",
-          "range": [
-            -20,
-            5
-          ],
-          "pointer": 0,
-          "showEnd": false,
-          "mode": "explore"
-        },
-        "target": -7,
-        "success": "Tepat! 7 meter di bawah permukaan laut ditulis −7.",
-        "callout": "Ingat: **di bawah permukaan laut** berarti bilangan **negatif**."
-      },
-      {
-        "type": "worked_example",
-        "title": "Contoh",
-        "problem": "Seorang penyelam mula-mula berada 2 meter di bawah permukaan laut. Ia menyelam 3 meter lebih dalam, lalu naik 1 meter. Di mana posisinya sekarang?",
-        "steps": [
-          {
-            "text": "**Pahami**: −2, menyelam lebih dalam 3 → −3, naik 1 → +1.",
-            "why": "'Di bawah' dan 'lebih dalam' berarti negatif, 'naik' berarti positif."
-          },
-          {
-            "text": "**Ditanya**: posisi penyelam sekarang.",
-            "why": "Keadaan akhir."
-          },
-          {
-            "text": "**Model**: (−2) + (−3) + 1.",
-            "why": "Awal + perubahan 1 + perubahan 2."
-          },
-          {
-            "text": "**Hitung**: (−2) + (−3) = −5, lalu (−5) + 1 = −4.",
-            "why": "Hitung dari kiri ke kanan."
-          },
-          {
-            "text": "**Tafsirkan**: 4 meter di bawah permukaan laut.",
-            "why": "Masuk akal: penyelam lebih banyak turun daripada naik."
-          }
-        ],
-        "self_explain": "Coba pikirkan: mengapa hasilnya negatif?",
-        "visual": {
-          "kind": "sea_depth",
-          "unit": "m",
-          "range": [
-            -20,
-            5
-          ],
-          "marks": [
-            {
-              "value": -2,
-              "label": "mula-mula"
-            },
-            {
-              "value": -4,
-              "label": "sekarang"
-            }
-          ],
-          "arrows": [
-            {
-              "at": -2,
-              "anchor": "from",
-              "dir": "down",
-              "value": -3,
-              "label": "menyelam 3 m"
-            },
-            {
-              "at": -5,
-              "anchor": "from",
-              "dir": "up",
-              "value": 1,
-              "label": "naik 1 m"
-            }
-          ],
-          "showEnd": true,
-          "mode": "guided"
-        }
-      },
-      {
-        "type": "summary",
-        "title": "Rangkuman",
-        "points": [
-          "Permukaan laut = 0.",
-          "Menyelam lebih dalam → negatif.",
-          "Naik ke atas → positif."
-        ]
-      }
-    ],
-    "practice": {
-      "templates": [
-        "sea-chg-end",
-        "sea-chg-start"
-      ],
-      "count": 3
-    }
-  },
-  {
-    "id": "m6-t3",
-    "module_id": "m6",
-    "order": 3,
-    "title": "Soal Cerita: Lift",
-    "subtitle": "Lantai & basement",
-    "icon": "🛗",
-    "segments": [
-      {
-        "type": "hook",
-        "title": "Lantai dasar = nol",
-        "text": "Di mal, **lantai dasar** adalah titik **0**. Lantai di bawah tanah disebut **basement**.",
-        "visual": {
-          "kind": "elevator",
-          "unit": "lantai",
-          "range": [
-            -5,
-            10
-          ],
-          "marks": [
-            {
-              "value": 0,
-              "label": "dasar"
-            }
-          ],
-          "showEnd": true,
-          "mode": "review"
-        },
-        "lines": [
-          "lantai 3 → 3",
-          "lantai dasar → 0",
-          "basement 2 → −2"
-        ]
-      },
-      {
-        "type": "explore",
-        "title": "Coba sendiri",
-        "text": "Kamu mulai di **lantai 3**. Bawa lift **turun 5 lantai**.\n\nKamu berhenti di lantai berapa?",
-        "visual": {
-          "kind": "elevator",
-          "unit": "lantai",
-          "range": [
-            -5,
-            10
-          ],
-          "pointer": 3,
-          "marks": [
-            {
-              "value": 3,
-              "label": "mulai"
-            }
-          ],
-          "showEnd": false,
-          "mode": "explore"
-        },
-        "target": -2,
-        "success": "Tepat! 3 + (−5) = −2, yaitu basement 2.",
-        "callout": "Perjalanan lift ini sama artinya dengan **3 + (−5)**."
-      },
-      {
-        "type": "summary",
-        "title": "Rangkuman",
-        "points": [
-          "Lantai dasar = 0.",
-          "Basement = bilangan negatif.",
-          "Naik → tambah positif, turun → tambah negatif."
-        ]
-      }
-    ],
-    "practice": {
-      "templates": [
-        "lift-chg-end",
-        "lift-chg-change",
-        "lift-mlt"
-      ],
-      "count": 3
-    }
-  },
-  {
-    "id": "m6-t4",
-    "module_id": "m6",
-    "order": 4,
-    "title": "Soal Cerita: Untung & Rugi",
-    "subtitle": "Menggabungkan beberapa bilangan",
-    "icon": "💰",
-    "segments": [
-      {
-        "type": "hook",
-        "title": "Untung dan rugi",
-        "text": "Saat berjualan, uang bisa **bertambah** atau **berkurang**. Begini cara menulisnya:",
-        "lines": [
-          "untung Rp4.000 → 4.000",
-          "rugi Rp6.000 → −6.000"
-        ],
-        "callout": "**Untung** ditulis positif. **Rugi** ditulis negatif."
-      },
-      {
-        "type": "worked_example",
-        "title": "Contoh",
-        "problem": "Bu Sari untung Rp4.000 pada hari Senin dan rugi Rp6.000 pada hari Selasa. Berapa total untung atau ruginya?",
-        "steps": [
-          {
-            "text": "**Pahami**: untung 4.000 → +4.000, rugi 6.000 → −6.000.",
-            "why": "Untung positif, rugi negatif."
-          },
-          {
-            "text": "**Model**: 4.000 + (−6.000).",
-            "why": "Total berarti semua dijumlahkan."
-          },
-          {
-            "text": "**Hitung**: −2.000.",
-            "why": "Tanda beda: 6.000 − 4.000 = 2.000, ikuti tanda −6.000."
-          },
-          {
-            "text": "**Tafsirkan**: rugi Rp2.000.",
-            "why": "Hasil negatif berarti rugi."
-          }
-        ],
-        "self_explain": "Coba pikirkan: bagaimana jika ruginya hanya Rp3.000?",
-        "visual": {
-          "kind": "number_line",
-          "unit": "Rp",
-          "range": [
-            -10000,
-            10000
-          ],
-          "step": 1000,
-          "thousands": true,
-          "marks": [
-            {
-              "value": 0,
-              "label": "awal"
-            },
-            {
-              "value": -2000,
-              "label": "total"
-            }
-          ],
-          "arrows": [
-            {
-              "at": 0,
-              "anchor": "from",
-              "dir": "up",
-              "value": 4000,
-              "label": "untung"
-            },
-            {
-              "at": 4000,
-              "anchor": "from",
-              "dir": "down",
-              "value": -6000,
-              "label": "rugi"
-            }
-          ],
-          "showEnd": true,
-          "mode": "guided"
-        }
-      },
-      {
-        "type": "summary",
-        "title": "Rangkuman",
-        "points": [
-          "Untung → positif.",
-          "Rugi → negatif.",
-          "Total → jumlahkan semua."
-        ]
-      }
-    ],
-    "practice": {
-      "templates": [
-        "money-cmb"
-      ],
-      "count": 3
-    }
-  },
-  {
     "id": "m4-t1",
-    "module_id": "m4",
+    "module_id": "m2",
     "order": 1,
     "title": "Perkalian",
     "subtitle": "Penjumlahan berulang & aturan tanda",
@@ -1256,7 +967,7 @@
   },
   {
     "id": "m4-t2",
-    "module_id": "m4",
+    "module_id": "m2",
     "order": 2,
     "title": "Pembagian",
     "subtitle": "Kebalikan perkalian",
@@ -1507,6 +1218,898 @@
         "num-div",
         "money-prt",
         "temp-prt"
+      ],
+      "count": 4
+    }
+  },
+  {
+    "id": "m5-t1",
+    "module_id": "m3",
+    "order": 1,
+    "title": "Komutatif & Asosiatif Perkalian",
+    "subtitle": "Tukar dan kelompokkan",
+    "icon": "🔁",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Kursi di aula",
+        "text": "Kursi di aula disusun 3 baris, tiap baris 4 kursi. Kalau diputar, jadi 4 baris, tiap baris 3 kursi.\n\nJumlah kursinya tetap sama, bukan? Perkalian bilangan bulat juga begitu."
+      },
+      {
+        "type": "concept",
+        "title": "Sifat komutatif",
+        "text": "Urutan bilangan pada perkalian boleh ditukar.",
+        "lines": [
+          "(−4) × 3 = −12",
+          "3 × (−4) = −12"
+        ],
+        "callout": "**Sifat komutatif**: a × b = b × a."
+      },
+      {
+        "type": "concept",
+        "title": "Sifat asosiatif",
+        "text": "Pada tiga bilangan, kita boleh memilih pasangan mana yang dikalikan dulu.",
+        "lines": [
+          "((−2) × 5) × 3 = −30",
+          "(−2) × (5 × 3) = −30"
+        ],
+        "callout": "**Sifat asosiatif**: (a × b) × c = a × (b × c)."
+      },
+      {
+        "type": "worked_example",
+        "title": "Hitung cerdas",
+        "problem": "(−5) × 7 × 2 = ?",
+        "steps": [
+          {
+            "text": "Tukar dan kelompokkan: **((−5) × 2) × 7**.",
+            "why": "Cari pasangan yang hasilnya puluhan."
+          },
+          {
+            "text": "(−5) × 2 = **−10**.",
+            "why": "Tanda berbeda → hasil negatif."
+          },
+          {
+            "text": "(−10) × 7 = **−70**.",
+            "why": "Dikali 10 itu mudah: tambahkan nol."
+          }
+        ],
+        "self_explain": "Coba pikirkan: mengapa (−5) dan 2 dikalikan lebih dulu?"
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "a × b = b × a (komutatif).",
+          "(a × b) × c = a × (b × c) (asosiatif).",
+          "Cari pasangan yang hasilnya puluhan, misalnya 5 × 2."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "num-mul3"
+      ],
+      "count": 3
+    }
+  },
+  {
+    "id": "m5-t2",
+    "module_id": "m3",
+    "order": 2,
+    "title": "Sifat Distributif",
+    "subtitle": "Kali terhadap tambah & kurang",
+    "icon": "🧩",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Belanja di kantin",
+        "text": "Kamu membeli 4 roti seharga Rp3.000 dan 4 susu seharga Rp2.000.\n\nCara cepat: 4 × (3.000 + 2.000) = 4 × 5.000 = Rp20.000. Inilah **sifat distributif**!"
+      },
+      {
+        "type": "concept",
+        "title": "Distributif terhadap penjumlahan",
+        "text": "Pengali boleh **disebar** ke setiap bilangan di dalam kurung.",
+        "lines": [
+          "(−3) × (4 + 6) = (−3) × 10",
+          "= −30",
+          "(−3) × 4 + (−3) × 6 = (−12) + (−18)",
+          "= −30"
+        ],
+        "callout": "**Sifat distributif**: a × (b + c) = a × b + a × c."
+      },
+      {
+        "type": "concept",
+        "title": "Distributif terhadap pengurangan",
+        "text": "Sifat ini juga berlaku untuk pengurangan. Contohnya untuk menghitung cepat:",
+        "lines": [
+          "(−5) × 98 = (−5) × (100 − 2)",
+          "= (−500) − (−10)",
+          "= −490"
+        ],
+        "callout": "a × (b − c) = a × b − a × c."
+      },
+      {
+        "type": "worked_example",
+        "title": "Hitung cerdas",
+        "problem": "(−4) × 7 + (−4) × 3 = ?",
+        "steps": [
+          {
+            "text": "Ada pengali yang sama: **(−4)**.",
+            "why": "Bilangan yang sama muncul di dua perkalian."
+          },
+          {
+            "text": "Gunakan distributif: **(−4) × (7 + 3)**.",
+            "why": "a × b + a × c = a × (b + c)."
+          },
+          {
+            "text": "(−4) × 10 = **−40**.",
+            "why": "Tanda berbeda → hasil negatif."
+          }
+        ],
+        "self_explain": "Coba pikirkan: bagaimana menghitung 6 × 99 dengan cepat?"
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "a × (b + c) = a × b + a × c.",
+          "a × (b − c) = a × b − a × c.",
+          "Cari pengali yang sama, lalu satukan dalam kurung."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "num-dist"
+      ],
+      "count": 3
+    }
+  },
+  {
+    "id": "m5-t3",
+    "module_id": "m3",
+    "order": 3,
+    "title": "Sifat Pembagian & Nol",
+    "subtitle": "Kapan sifat tidak berlaku",
+    "icon": "⚖️",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Apakah pembagian sama?",
+        "text": "Perkalian punya sifat komutatif, asosiatif, dan distributif.\n\nApakah pembagian juga punya? Yuk, kita uji satu per satu!"
+      },
+      {
+        "type": "concept",
+        "title": "Uji sifat komutatif",
+        "text": "Tukar urutan pembagian, lalu bandingkan hasilnya.",
+        "lines": [
+          "12 : (−4) = −3",
+          "(−4) : 12 = −1/3"
+        ],
+        "callout": "Hasilnya berbeda. Pembagian **tidak komutatif**: a : b ≠ b : a."
+      },
+      {
+        "type": "concept",
+        "title": "Uji sifat asosiatif",
+        "text": "Ubah pengelompokannya, lalu bandingkan hasilnya.",
+        "lines": [
+          "(24 : 4) : 2 = 6 : 2 = 3",
+          "24 : (4 : 2) = 24 : 2 = 12"
+        ],
+        "callout": "Hasilnya berbeda. Pembagian **tidak asosiatif**. Kerjakan berurutan **dari kiri ke kanan**."
+      },
+      {
+        "type": "concept",
+        "title": "Uji sifat distributif",
+        "text": "Coba sebar pembaginya seperti pada perkalian.",
+        "lines": [
+          "12 : (2 + 4) = 12 : 6 = 2",
+          "12 : 2 + 12 : 4 = 6 + 3 = 9"
+        ],
+        "callout": "Hasilnya berbeda. Pada pembagian, **a : (b + c) ≠ a : b + a : c**."
+      },
+      {
+        "type": "concept",
+        "title": "Pembagian dengan nol",
+        "text": "Ingat: pembagian adalah kebalikan perkalian.",
+        "lines": [
+          "0 : 5 = 0 → karena 5 × 0 = 0",
+          "5 : 0 = ? → tidak ada bilangan × 0 = 5"
+        ],
+        "callout": "**0 : a = 0**. Tetapi **a : 0 tidak terdefinisi**, artinya tidak punya hasil."
+      },
+      {
+        "type": "worked_example",
+        "title": "Bagi dari kiri",
+        "problem": "(−48) : 4 : (−2) = ?",
+        "steps": [
+          {
+            "text": "Kerjakan dari kiri: **(−48) : 4** dulu.",
+            "why": "Pembagian tidak asosiatif."
+          },
+          {
+            "text": "(−48) : 4 = **−12**.",
+            "why": "Tanda berbeda → hasil negatif."
+          },
+          {
+            "text": "(−12) : (−2) = **6**.",
+            "why": "Tanda sama → hasil positif."
+          }
+        ],
+        "self_explain": "Coba pikirkan: berapa hasilnya jika 4 : (−2) dihitung dulu? Samakah?"
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Pembagian **tidak** komutatif.",
+          "Pembagian **tidak** asosiatif: kerjakan dari kiri.",
+          "a : (b + c) ≠ a : b + a : c.",
+          "0 : a = 0, tetapi a : 0 tidak terdefinisi."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "num-div2"
+      ],
+      "count": 3
+    }
+  },
+  {
+    "id": "m7-t1",
+    "module_id": "m4",
+    "order": 1,
+    "title": "Operasi Hitung Campuran",
+    "subtitle": "Kurung → kali/bagi → tambah/kurang",
+    "icon": "🧮",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Dua jawaban berbeda",
+        "text": "Raka menghitung 2 + 3 × 4 = 20. Sinta menghitung 2 + 3 × 4 = 14.\n\nSiapa yang benar? Kita butuh **aturan urutan** yang sama."
+      },
+      {
+        "type": "concept",
+        "title": "Aturan urutan operasi",
+        "text": "Kerjakan dari langkah pertama sampai terakhir:",
+        "lines": [
+          "① ( ) → tanda kurung dulu",
+          "② × dan : → urut dari kiri",
+          "③ + dan − → urut dari kiri"
+        ],
+        "callout": "Jadi 2 + 3 × 4 = 2 + 12 = **14**. Sinta yang benar!"
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh 1",
+        "problem": "(−6) + 4 × (−3) = ?",
+        "steps": [
+          {
+            "text": "Kali dulu: **4 × (−3) = −12**.",
+            "why": "× dikerjakan sebelum +."
+          },
+          {
+            "text": "(−6) + (−12) = **−18**.",
+            "why": "Tanda sama: jumlahkan, tandanya tetap."
+          }
+        ],
+        "self_explain": "Coba pikirkan: berapa hasilnya jika dihitung dari kiri? Mengapa salah?"
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh 2: ada kurung",
+        "problem": "((−2) + 7) × (−3) = ?",
+        "steps": [
+          {
+            "text": "Kurung dulu: **(−2) + 7 = 5**.",
+            "why": "Tanda kurung dikerjakan paling dulu."
+          },
+          {
+            "text": "5 × (−3) = **−15**.",
+            "why": "Tanda berbeda → hasil negatif."
+          }
+        ],
+        "self_explain": "Coba pikirkan: apa bedanya dengan (−2) + 7 × (−3)?"
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh 3: skor game",
+        "problem": "Menang diberi 5 poin, kalah diberi −2 poin. Dodi menang 4 kali dan kalah 3 kali. Berapa total poinnya?",
+        "steps": [
+          {
+            "text": "**Model**: 4 × 5 + 3 × (−2).",
+            "why": "Banyak kejadian × poinnya."
+          },
+          {
+            "text": "Kali dulu: 4 × 5 = 20 dan 3 × (−2) = −6.",
+            "why": "× dikerjakan sebelum +."
+          },
+          {
+            "text": "20 + (−6) = **14**.",
+            "why": "Tanda beda: 20 − 6 = 14, ikuti tanda 20."
+          },
+          {
+            "text": "**Tafsirkan**: total poin Dodi 14.",
+            "why": "Masuk akal: Dodi lebih sering menang."
+          }
+        ],
+        "self_explain": "Coba pikirkan: bagaimana jika Dodi kalah 10 kali?",
+        "visual": {
+          "kind": "number_line",
+          "range": [
+            -5,
+            25
+          ],
+          "marks": [
+            {
+              "value": 0,
+              "label": "awal"
+            },
+            {
+              "value": 14,
+              "label": "total"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided",
+          "arrows": [
+            {
+              "at": 0,
+              "anchor": "from",
+              "dir": "up",
+              "value": 20,
+              "label": "menang 4 × 5"
+            },
+            {
+              "at": 20,
+              "anchor": "from",
+              "dir": "down",
+              "value": -6,
+              "label": "kalah 3 × (−2)"
+            }
+          ]
+        }
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Urutan: kurung → × dan : → + dan −.",
+          "× dan : yang sejajar dikerjakan dari kiri.",
+          "+ dan − yang sejajar dikerjakan dari kiri."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "num-mix-a",
+        "num-mix-paren",
+        "game-score"
+      ],
+      "count": 4
+    }
+  },
+  {
+    "id": "m6-t1",
+    "module_id": "m4",
+    "order": 2,
+    "title": "Soal Cerita: Suhu Minuman",
+    "subtitle": "Kulkas, freezer & 4 langkah",
+    "icon": "🌡️",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Soal cerita itu seperti teka-teki",
+        "text": "Soal cerita itu seperti **teka-teki**! Isinya ada **bilangan** dan **kata kunci**.\n\nTugasmu: ubah cerita menjadi **kalimat matematika**, lalu hitung."
+      },
+      {
+        "type": "concept",
+        "title": "4 langkah andalan",
+        "text": "Setiap soal cerita kita kerjakan dengan 4 langkah yang sama:",
+        "lines": [
+          "① Pahami → cari bilangan & tandanya",
+          "② Ditanya → apa yang dicari?",
+          "③ Model → susun kalimat matematika",
+          "④ Hitung → lalu tafsirkan artinya"
+        ],
+        "callout": "Jangan berhenti di angka! Selalu cek: **apakah hasilnya masuk akal** di dalam cerita?"
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh",
+        "problem": "Suhu es teh di dalam freezer −4 °C. Setelah dikeluarkan, suhunya naik 7 °C. Berapa suhunya sekarang?",
+        "steps": [
+          {
+            "text": "**Pahami**: −4 °C → −4, naik 7 °C → +7.",
+            "why": "Kata 'naik' berarti positif."
+          },
+          {
+            "text": "**Ditanya**: suhu es teh sekarang (keadaan akhir).",
+            "why": "Lihat kalimat tanya."
+          },
+          {
+            "text": "**Model**: (−4) + 7.",
+            "why": "Keadaan awal + perubahan = keadaan akhir."
+          },
+          {
+            "text": "**Hitung**: (−4) + 7 = 3.",
+            "why": "Tanda beda: 7 − 4 = 3, ikuti tanda 7 (positif)."
+          },
+          {
+            "text": "**Tafsirkan**: suhunya 3 °C di atas nol.",
+            "why": "Masuk akal: es teh mulai mencair."
+          }
+        ],
+        "self_explain": "Coba pikirkan: berapa suhunya jika hanya naik 2 °C?",
+        "visual": {
+          "kind": "thermometer",
+          "unit": "°C",
+          "range": [
+            -20,
+            20
+          ],
+          "marks": [
+            {
+              "value": -4,
+              "label": "freezer"
+            },
+            {
+              "value": 3,
+              "label": "sekarang"
+            }
+          ],
+          "arrows": [
+            {
+              "at": -4,
+              "anchor": "from",
+              "dir": "up",
+              "value": 7,
+              "label": "naik 7 °C"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided"
+        }
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Kata kunci menentukan tanda.",
+          "Awal + perubahan = akhir.",
+          "Selalu tafsirkan hasil ke dalam cerita."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "temp-chg-end",
+        "temp-chg-start",
+        "temp-chg-change",
+        "temp-cmp",
+        "temp-rpt"
+      ],
+      "count": 4
+    }
+  },
+  {
+    "id": "m6-t2",
+    "module_id": "m4",
+    "order": 3,
+    "title": "Soal Cerita: Penyelam",
+    "subtitle": "Di atas & di bawah laut",
+    "icon": "🤿",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Permukaan laut = nol",
+        "text": "Di laut, **permukaan air** adalah titik **0**. Perhatikan tandanya:",
+        "visual": {
+          "kind": "sea_depth",
+          "unit": "m",
+          "range": [
+            -20,
+            5
+          ],
+          "marks": [
+            {
+              "value": 0,
+              "label": "permukaan"
+            }
+          ],
+          "showEnd": true,
+          "mode": "review"
+        },
+        "lines": [
+          "di atas permukaan laut → positif",
+          "tepat di permukaan → 0",
+          "di bawah permukaan laut → negatif"
+        ]
+      },
+      {
+        "type": "explore",
+        "title": "Coba sendiri",
+        "text": "Ayo menyelam! Gerakkan penyelam ke **7 meter di bawah permukaan laut**.",
+        "visual": {
+          "kind": "sea_depth",
+          "unit": "m",
+          "range": [
+            -20,
+            5
+          ],
+          "pointer": 0,
+          "showEnd": false,
+          "mode": "explore"
+        },
+        "target": -7,
+        "success": "Tepat! 7 meter di bawah permukaan laut ditulis −7.",
+        "callout": "Ingat: **di bawah permukaan laut** berarti bilangan **negatif**."
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh",
+        "problem": "Seorang penyelam mula-mula berada 2 meter di bawah permukaan laut. Ia menyelam 3 meter lebih dalam, lalu naik 1 meter. Di mana posisinya sekarang?",
+        "steps": [
+          {
+            "text": "**Pahami**: −2, menyelam lebih dalam 3 → −3, naik 1 → +1.",
+            "why": "'Di bawah' dan 'lebih dalam' berarti negatif, 'naik' berarti positif."
+          },
+          {
+            "text": "**Ditanya**: posisi penyelam sekarang.",
+            "why": "Keadaan akhir."
+          },
+          {
+            "text": "**Model**: (−2) + (−3) + 1.",
+            "why": "Awal + perubahan 1 + perubahan 2."
+          },
+          {
+            "text": "**Hitung**: (−2) + (−3) = −5, lalu (−5) + 1 = −4.",
+            "why": "Hitung dari kiri ke kanan."
+          },
+          {
+            "text": "**Tafsirkan**: 4 meter di bawah permukaan laut.",
+            "why": "Masuk akal: penyelam lebih banyak turun daripada naik."
+          }
+        ],
+        "self_explain": "Coba pikirkan: mengapa hasilnya negatif?",
+        "visual": {
+          "kind": "sea_depth",
+          "unit": "m",
+          "range": [
+            -20,
+            5
+          ],
+          "marks": [
+            {
+              "value": -2,
+              "label": "mula-mula"
+            },
+            {
+              "value": -4,
+              "label": "sekarang"
+            }
+          ],
+          "arrows": [
+            {
+              "at": -2,
+              "anchor": "from",
+              "dir": "down",
+              "value": -3,
+              "label": "menyelam 3 m"
+            },
+            {
+              "at": -5,
+              "anchor": "from",
+              "dir": "up",
+              "value": 1,
+              "label": "naik 1 m"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided"
+        }
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Permukaan laut = 0.",
+          "Menyelam lebih dalam → negatif.",
+          "Naik ke atas → positif."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "sea-chg-end",
+        "sea-chg-start"
+      ],
+      "count": 3
+    }
+  },
+  {
+    "id": "m6-t5",
+    "module_id": "m4",
+    "order": 4,
+    "title": "Soal Cerita: Uang Saku & E-Money",
+    "subtitle": "Uang masuk & uang keluar",
+    "icon": "💳",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Uang masuk, uang keluar",
+        "text": "Saldo e-money dan uang saku bisa **bertambah** atau **berkurang**. Begini cara menulisnya:",
+        "lines": [
+          "isi ulang Rp10.000 → 10.000",
+          "bayar ongkos bus Rp4.000 → −4.000",
+          "untung jualan Rp5.000 → 5.000",
+          "rugi Rp3.000 → −3.000"
+        ],
+        "callout": "Uang **masuk** ditulis positif. Uang **keluar** ditulis negatif."
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh 1: saldo e-money",
+        "problem": "Saldo e-money Sinta Rp15.000. Ia membayar ongkos bus Rp4.000, lalu mengisi ulang Rp10.000. Berapa saldonya sekarang?",
+        "steps": [
+          {
+            "text": "**Pahami**: 15.000, membayar → −4.000, isi ulang → +10.000.",
+            "why": "Uang keluar negatif, uang masuk positif."
+          },
+          {
+            "text": "**Ditanya**: saldo sekarang.",
+            "why": "Keadaan akhir."
+          },
+          {
+            "text": "**Model**: 15.000 + (−4.000) + 10.000.",
+            "why": "Saldo awal + semua perubahan."
+          },
+          {
+            "text": "**Hitung**: 11.000, lalu 21.000.",
+            "why": "Hitung dari kiri ke kanan."
+          },
+          {
+            "text": "**Tafsirkan**: saldonya Rp21.000.",
+            "why": "Masuk akal: uang masuk lebih banyak."
+          }
+        ],
+        "self_explain": "Coba pikirkan: bagaimana jika ia tidak mengisi ulang?",
+        "visual": {
+          "kind": "number_line",
+          "range": [
+            0,
+            25000
+          ],
+          "marks": [
+            {
+              "value": 15000,
+              "label": "awal"
+            },
+            {
+              "value": 21000,
+              "label": "sekarang"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided",
+          "arrows": [
+            {
+              "at": 15000,
+              "anchor": "from",
+              "dir": "down",
+              "value": -4000,
+              "label": "bayar"
+            },
+            {
+              "at": 11000,
+              "anchor": "from",
+              "dir": "up",
+              "value": 10000,
+              "label": "isi ulang"
+            }
+          ],
+          "unit": "Rp",
+          "step": 1000,
+          "thousands": true
+        }
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh 2: untung dan rugi",
+        "problem": "Bu Sari untung Rp4.000 pada hari Senin dan rugi Rp6.000 pada hari Selasa. Berapa total untung atau ruginya?",
+        "steps": [
+          {
+            "text": "**Pahami**: untung 4.000 → +4.000, rugi 6.000 → −6.000.",
+            "why": "Untung positif, rugi negatif."
+          },
+          {
+            "text": "**Model**: 4.000 + (−6.000).",
+            "why": "Total berarti semua dijumlahkan."
+          },
+          {
+            "text": "**Hitung**: −2.000.",
+            "why": "Tanda beda: 6.000 − 4.000 = 2.000, ikuti tanda −6.000."
+          },
+          {
+            "text": "**Tafsirkan**: rugi Rp2.000.",
+            "why": "Hasil negatif berarti rugi."
+          }
+        ],
+        "self_explain": "Coba pikirkan: bagaimana jika ruginya hanya Rp3.000?",
+        "visual": {
+          "kind": "number_line",
+          "unit": "Rp",
+          "range": [
+            -10000,
+            10000
+          ],
+          "step": 1000,
+          "thousands": true,
+          "marks": [
+            {
+              "value": 0,
+              "label": "awal"
+            },
+            {
+              "value": -2000,
+              "label": "total"
+            }
+          ],
+          "arrows": [
+            {
+              "at": 0,
+              "anchor": "from",
+              "dir": "up",
+              "value": 4000,
+              "label": "untung"
+            },
+            {
+              "at": 4000,
+              "anchor": "from",
+              "dir": "down",
+              "value": -6000,
+              "label": "rugi"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided"
+        }
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Uang masuk (isi ulang, untung) → positif.",
+          "Uang keluar (bayar, rugi) → negatif.",
+          "Saldo akhir = saldo awal + semua perubahan."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "emoney-chg-end",
+        "money-cmb",
+        "money-prt"
+      ],
+      "count": 4
+    }
+  },
+  {
+    "id": "m6-t6",
+    "module_id": "m4",
+    "order": 5,
+    "title": "Soal Cerita: Skor Game & Anak Tangga",
+    "subtitle": "Bonus, denda, naik & turun",
+    "icon": "🎮",
+    "segments": [
+      {
+        "type": "hook",
+        "title": "Naik dan turun",
+        "text": "Di game, skor bisa naik dan turun. Di tangga sekolah, kamu juga naik dan turun.",
+        "lines": [
+          "bonus 15 poin → 15",
+          "denda 10 poin → −10",
+          "naik 6 anak tangga → 6",
+          "turun 4 anak tangga → −4"
+        ],
+        "callout": "**Bonus** dan **naik** ditulis positif. **Denda** dan **turun** ditulis negatif."
+      },
+      {
+        "type": "explore",
+        "title": "Yuk, naik tangga",
+        "text": "Rani berdiri di anak tangga ke-4. Ia naik 7 anak tangga, lalu turun 5.\n\nGerakkan titiknya. Di anak tangga ke berapa Rani berhenti?",
+        "callout": "Gerakan ini sama artinya dengan **4 + 7 + (−5)**.",
+        "visual": {
+          "kind": "number_line",
+          "range": [
+            0,
+            20
+          ],
+          "pointer": 4,
+          "marks": [
+            {
+              "value": 4,
+              "label": "mulai"
+            }
+          ],
+          "showEnd": false,
+          "mode": "explore"
+        },
+        "target": 6,
+        "success": "Tepat! 4 + 7 + (−5) = 6. Rani di anak tangga ke-6."
+      },
+      {
+        "type": "worked_example",
+        "title": "Contoh: perubahan skor",
+        "problem": "Skor Arka mula-mula 12 poin. Setelah satu ronde, skornya −5 poin. Berapa perubahan skornya?",
+        "steps": [
+          {
+            "text": "**Pahami**: awal 12, akhir −5.",
+            "why": "Skor bisa di bawah nol."
+          },
+          {
+            "text": "**Ditanya**: perubahan skor.",
+            "why": "Bukan skor awal atau akhir."
+          },
+          {
+            "text": "**Model**: (−5) − 12.",
+            "why": "Perubahan = akhir − awal."
+          },
+          {
+            "text": "**Hitung**: (−5) + (−12) = −17.",
+            "why": "Mengurangi = menambah lawannya."
+          },
+          {
+            "text": "**Tafsirkan**: skornya turun 17 poin.",
+            "why": "Hasil negatif berarti turun."
+          }
+        ],
+        "self_explain": "Coba pikirkan: berapa perubahannya jika skor akhirnya 20 poin?",
+        "visual": {
+          "kind": "number_line",
+          "range": [
+            -10,
+            20
+          ],
+          "marks": [
+            {
+              "value": 12,
+              "label": "awal"
+            },
+            {
+              "value": -5,
+              "label": "akhir"
+            }
+          ],
+          "showEnd": true,
+          "mode": "guided",
+          "arrows": [
+            {
+              "at": 12,
+              "anchor": "from",
+              "dir": "down",
+              "value": -17,
+              "label": "turun 17"
+            }
+          ]
+        }
+      },
+      {
+        "type": "summary",
+        "title": "Rangkuman",
+        "points": [
+          "Bonus, menang, naik → positif.",
+          "Denda, kalah, turun → negatif.",
+          "Perubahan = keadaan akhir − keadaan awal."
+        ]
+      }
+    ],
+    "practice": {
+      "templates": [
+        "game-chg-change",
+        "stairs-mlt",
+        "game-score"
       ],
       "count": 4
     }

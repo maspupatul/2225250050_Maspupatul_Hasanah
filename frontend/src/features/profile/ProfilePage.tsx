@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BottomNav } from '../../components/ui/BottomNav';
 import { InstallCard } from '../../components/ui/InstallCard';
 import { ProgressRings } from '../../components/ui/ProgressRings';
 import { RoundButton } from '../../components/ui/RoundButton';
+import { StatTile } from '../../components/ui/StatTile';
 import { Toggle } from '../../components/ui/Toggle';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
@@ -121,7 +121,10 @@ export function ProfilePage() {
         </section>
 
         <section className="flex items-center gap-4 rounded-4xl bg-white p-5">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-amber-300 to-accent text-2xl" aria-hidden="true">
+          <span
+            className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-amber-300 to-accent text-2xl"
+            aria-hidden="true"
+          >
             🏆
           </span>
           <span className="flex-1 text-sm font-bold text-ink">{t.profile.examBest}</span>
@@ -149,24 +152,16 @@ export function ProfilePage() {
 
         <section>
           <h2 className="mb-2 px-1 font-extrabold text-ink">{t.profile.skills}</h2>
-          <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1">
-            {skills.map((s) => (
-              <div key={s.label} className="flex min-w-[150px] snap-start items-center gap-3 rounded-3xl bg-white p-4">
-                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-lavender-100 text-xl" aria-hidden="true">
-                  {s.icon}
-                </span>
-                <span>
-                  <span className="block text-xl font-black text-ink">{s.value}</span>
-                  <span className="block text-[11px] font-bold leading-tight text-ink-muted">{s.label}</span>
-                </span>
-              </div>
+          {/* fixed grid: 2 × 2 on phones, 4 in a row on wider screens, never a horizontal scrollbar */}
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {skills.map((s, i) => (
+              <StatTile key={s.label} icon={s.icon} value={s.value} label={s.label} index={i} />
             ))}
-          </div>
+          </ul>
         </section>
 
         <InstallCard />
       </main>
-      <BottomNav />
     </div>
   );
 }

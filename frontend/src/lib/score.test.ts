@@ -37,5 +37,6 @@ describe('number line ticks', () => {
     expect(tickValues(-20, 20, 1).labelEvery).toBe(5);
     expect(tickValues(-50, 50, 1).labelEvery).toBe(10);
     expect(tickValues(-20, 80, 1).labelEvery).toBe(10);
+    expect(tickValues(-100, 100, 1).labelEvery).toBe(20);
   });
 });

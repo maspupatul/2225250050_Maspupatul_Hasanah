@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BottomNav } from '../../components/ui/BottomNav';
 import { Toast, type ToastMessage } from '../../components/ui/Toast';
+import { ZLogo } from '../../components/ui/ZLogo';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -50,7 +50,10 @@ export function HomePage() {
   const allLessons = modules?.flatMap((m) => m.lessons) ?? [];
   const doneCount = allLessons.filter((l) => lessons[l.id]?.status === 'done').length;
   const streak = streakDays(activeDays);
-  const stars = totalStars(lessons);
+  const stars = totalStars(
+    lessons,
+    allLessons.map((l) => l.id),
+  );
   const showLocked = () => setToast({ id: Date.now(), text: t.home.lockedToast });
 
   return (
@@ -62,12 +65,7 @@ export function HomePage() {
         />
         <div className="relative flex items-center justify-between gap-2">
           <span className="flex items-center gap-2.5">
-            <span
-              className="grid h-9 w-9 place-items-center rounded-xl bg-accent text-lg font-black"
-              aria-hidden="true"
-            >
-              Z
-            </span>
+            <ZLogo size={40} />
             <span className="text-lg font-black tracking-tight">{t.appName}</span>
           </span>
           <span className="flex items-center gap-1.5">
@@ -162,7 +160,6 @@ export function HomePage() {
         )}
       </main>
       <Toast toast={toast} onDone={clearToast} />
-      <BottomNav />
     </div>
   );
 }

@@ -227,8 +227,10 @@ export function lessonStars(progress: LessonProgress | undefined): number {
   return progress.mastery >= 0.8 ? 3 : progress.mastery >= 0.5 ? 2 : 1;
 }
 
-export function totalStars(lessons: Record<string, LessonProgress>): number {
-  return Object.values(lessons).reduce((sum, l) => sum + lessonStars(l), 0);
+/** Stars of the given lessons (lessons removed from the curriculum no longer count). */
+export function totalStars(lessons: Record<string, LessonProgress>, lessonIds?: string[]): number {
+  const ids = lessonIds ?? Object.keys(lessons);
+  return ids.reduce((sum, id) => sum + lessonStars(lessons[id]), 0);
 }
 
 /** Days in a row with learning, counting back from today (or yesterday if today is not active yet). */

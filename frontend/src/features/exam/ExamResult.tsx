@@ -77,10 +77,10 @@ export function ExamResult({ outcomes, stages, newBest, onHome, onAgain }: Props
 
       <OutcomeStats outcomes={outcomes} />
 
-      <button type="button" onClick={onHome} className="mt-6 w-full rounded-2xl bg-accent py-3.5 font-extrabold text-white">
+      <button type="button" onClick={onHome} className="btn-3d-primary mt-6 w-full">
         {t.summary.home}
       </button>
-      <button type="button" onClick={onAgain} className="mt-2 w-full rounded-2xl py-3 font-extrabold text-plum-700">
+      <button type="button" onClick={onAgain} className="btn-3d-soft mt-3 w-full text-plum-700">
         ↺ {t.exam.again}
       </button>
     </div>

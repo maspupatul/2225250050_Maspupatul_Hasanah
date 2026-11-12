@@ -313,3 +313,41 @@ Hindari: "Salah!", "Gagal", "Bodoh", tanda seru berlebihan, istilah teknis tanpa
 - **Alur belajar** berupa jalur berkelok: simpul ikon + kartu. Pelajaran aktif diberi cahaya lembut dan tombol "Mulai/Lanjutkan". Pelajaran terkunci tetap berwarna pastel dengan lencana gembok; saat diketuk, kartu bergetar dan muncul toast "Selesaikan pelajaran sebelumnya untuk membuka!".
 - **Kartu Ujian Akhir** dibingkai gradien emas–ungu dengan progres prasyarat "x/10 Pelajaran Selesai".
 - Batasan (CLAUDE.md §5.8): animasi hanya di Beranda dan navigasi, singkat, dan otomatis mati bila perangkat meminta "kurangi gerakan" (`MotionConfig reducedMotion="user"`). Layar pelajaran dan latihan tetap tenang.
+
+## Sistem UI "Pop 3D" (November 2026)
+
+Tujuannya agar tampilan tidak datar seperti formulir. Animasi tetap singkat (≈ 0,3 detik) dan mati otomatis bila perangkat meminta "kurangi gerakan" (CLAUDE.md §5.8).
+
+### Warna
+| Peran | Warna | Catatan |
+|---|---|---|
+| Aksi utama | `accent` #f26b3a, tepi `#c2410c` | Tombol Periksa, Lanjut, Mulai |
+| Permukaan gelap | `plum-700/800`, tepi `#231a2f` | Latar layar soal, tombol sekunder di latar gelap |
+| Kartu | putih + border `lavender-200`, tepi `#cfcce3` | `card-3d` |
+| Kategori modul / tingkat | Modul 1 oranye · Modul 2 amber · Modul 3 fuchsia–ungu · Modul 4 plum | Juga dipakai untuk 3 tahap Ujian Akhir |
+| **Dilarang untuk dekorasi** | biru, merah, abu | Khusus tanda bilangan (§5.4). Chip bilangan memakai tepi biru/merah **karena** maknanya tanda |
+
+### Radius & jarak
+`rounded-2xl` untuk tombol, `rounded-3xl` untuk kartu, `rounded-4xl` untuk lembar utama. Padding kartu `p-4`–`p-5`, jarak antar-kartu `space-y-3`.
+
+### Efek 3D (didefinisikan di `src/index.css` → `@layer components`)
+| Kelas | Isi |
+|---|---|
+| `btn-3d` | Dasar: `active:translate-y-[5px] active:shadow-none`, transisi 100 ms |
+| `btn-3d-primary` / `btn-3d-dark` / `btn-3d-soft` / `btn-3d-selected` | Varian warna + tepi (`shadow-pop-*` di `tailwind.config.js`) |
+| `card-3d` | Kartu putih dengan tepi bawah lembut |
+
+### Komponen
+| Komponen | Pakai untuk |
+|---|---|
+| `PopButton` | Semua tombol aksi; ada pantulan pegas kecil saat diketuk |
+| `SlideIn` | Pergantian soal dan layar pelajaran: geser + pudar + pegas (`AnimatePresence mode="wait"`); arah mengikuti Lanjut/Kembali |
+| `BadgeCard` | Aturan, petunjuk, langkah Soal Kembar: badge bulat bernomor/ikon, bukan bullet |
+| `StatTile` | Statistik dalam `grid` (Profil 2×2 / 4 kolom, rekap 3 kolom); **tanpa** scroll horizontal |
+
+Lembar Soal Kembar meluncur dari bawah (spring). Umpan balik "belum tepat" bergetar ringan, sedangkan "benar" muncul dengan pantulan. `html, body` memakai `overflow-x: clip` sebagai pengaman di layar 360 px.
+
+### Navigasi bawah & logo (pembaruan)
+- `BottomNav` dirender **sekali** di `App.tsx` (di luar `<Routes>`), hanya tampil di 4 halaman tab. Jangan merender `BottomNav` di dalam halaman: jika nav ikut dibongkar-pasang saat pindah tab, indikator `layoutId="activeTabIndicator"` tidak bisa meluncur dan akan "loncat". Pegas indikator: `stiffness 400, damping 30`.
+- `SlideIn`: masuk dari ±120 px, `scale 0.95 → 1`, pegas `stiffness 300, damping 25`; keluar cepat (0,16 dtk) ke arah berlawanan. Wadahnya wajib `overflow-hidden`.
+- Logo `ZLogo`: huruf ℤ (*Zahlen*, himpunan bilangan bulat) double-struck pada badge oranye 3D. Aksen **+ biru** dan **− merah** mengikuti warna tanda (§5.4). Favicon memakai gambar yang sama.

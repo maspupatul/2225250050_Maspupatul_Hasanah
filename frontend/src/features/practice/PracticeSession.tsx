@@ -1,6 +1,9 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
 import { RoundButton } from '../../components/ui/RoundButton';
+import { SlideIn } from '../../components/ui/SlideIn';
 import { Toggle } from '../../components/ui/Toggle';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
@@ -68,6 +71,8 @@ export function PracticeSession({
   const [busy, setBusy] = useState(false);
   const [showVisual, setShowVisual] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // bumps on every answer so the feedback bubble pops again, even with the same text
+  const [feedbackKey, setFeedbackKey] = useState(0);
 
   const load = useCallback(
     async (i: number) => {
@@ -114,6 +119,7 @@ export function PracticeSession({
     try {
       const r = await api.submitStep(problem.attempt_id, stepKey, answer);
       setResult(r);
+      setFeedbackKey((k) => k + 1);
       if (r.correct && r.attempt_status === 'correct') {
         setFinal(r);
         setPhase('done');
@@ -241,8 +247,12 @@ export function PracticeSession({
       </div>
 
       {/* main white card */}
-      <section className="mt-4 overflow-hidden rounded-4xl bg-white text-ink shadow-card">
-        <div className="p-5">
+      <section className="mt-4 overflow-hidden rounded-4xl bg-white text-ink shadow-[0_6px_0_#231a2f]">
+        {/* one sheet per problem: slides in from the right when the problem number changes */}
+        <SlideIn
+          id={`${index}:${phase === 'summary' ? 'summary' : phase === 'loading' ? 'loading' : 'problem'}`}
+          className="p-5"
+        >
           {phase === 'loading' && (
             <div className="h-48 animate-pulse rounded-3xl bg-lavender-100" aria-label={t.common.loading} />
           )}
@@ -250,13 +260,9 @@ export function PracticeSession({
           {phase === 'error' && (
             <div className="text-center">
               <p className="text-sm">{error}</p>
-              <button
-                type="button"
-                onClick={() => void load(index)}
-                className="mt-3 rounded-2xl bg-accent px-5 py-2 text-sm font-extrabold text-white"
-              >
+              <PopButton onClick={() => void load(index)} className="mt-3 text-sm">
                 {t.home.retry}
-              </button>
+              </PopButton>
             </div>
           )}
 
@@ -280,7 +286,7 @@ export function PracticeSession({
                 </div>
               )}
 
-              <div className="mt-5">
+              <SlideIn id={`${stepKey}:${phase}:${result?.correct ? 'ok' : 'ask'}`} className="mt-5">
                 {phase === 'solving' && step && !result?.correct && (
                   <StepPanel
                     key={`${problem.attempt_id}-${step.key}`}
@@ -293,24 +299,25 @@ export function PracticeSession({
                 )}
 
                 {phase === 'solving' && result?.correct && (
-                  <div className="space-y-3">
-                    <p className="rounded-2xl bg-green-50 px-4 py-3 text-center font-extrabold text-correct">
-                      {result.feedback}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={nextStep}
-                      className="w-full rounded-2xl bg-accent py-3.5 font-extrabold text-white"
+                  <div className="space-y-4">
+                    <motion.p
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                      className="rounded-3xl border-2 border-green-200 bg-green-50 px-4 py-3 text-center font-extrabold text-correct"
                     >
+                      {result.feedback}
+                    </motion.p>
+                    <PopButton onClick={nextStep} block>
                       {t.practice.continue} ›
-                    </button>
+                    </PopButton>
                   </div>
                 )}
 
                 {phase === 'done' && final?.review && <ReviewCard review={final.review} feedback={final.feedback} />}
 
                 {phase === 'deferred' && result && (
-                  <div className="rounded-2xl bg-accent-soft px-4 py-4 text-center">
+                  <div className="rounded-3xl border-2 border-accent/30 bg-accent-soft px-4 py-4 text-center">
                     <p className="text-2xl" aria-hidden="true">
                       🔁
                     </p>
@@ -320,20 +327,23 @@ export function PracticeSession({
                 )}
 
                 {finished && (
-                  <button
-                    type="button"
-                    onClick={nextProblem}
-                    className="mt-4 w-full rounded-2xl bg-accent py-3.5 font-extrabold text-white"
-                  >
+                  <PopButton onClick={nextProblem} block className="mt-5">
                     {index + 1 < total ? `${t.practice.nextProblem} ›` : `${t.practice.finish} 🏁`}
-                  </button>
+                  </PopButton>
                 )}
-              </div>
+              </SlideIn>
 
               {phase === 'solving' && result && !result.correct && (
-                <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800" role="status">
+                <motion.p
+                  key={feedbackKey}
+                  initial={{ x: -8, opacity: 0 }}
+                  animate={{ x: [8, -5, 3, 0], opacity: 1 }}
+                  transition={{ duration: 0.35 }}
+                  className="mt-4 rounded-3xl border-2 border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-6 text-amber-800"
+                  role="status"
+                >
                   🟠 {result.feedback}
-                </p>
+                </motion.p>
               )}
               {notice && (
                 <p className="mt-3 rounded-2xl bg-lavender-100 px-4 py-3 text-sm font-bold text-plum-700" role="status">
@@ -341,17 +351,13 @@ export function PracticeSession({
                 </p>
               )}
               {phase === 'solving' && twinAvailable && (
-                <button
-                  type="button"
-                  onClick={() => void openTwin()}
-                  className="mt-3 w-full rounded-2xl border-2 border-accent py-3 text-sm font-extrabold text-accent"
-                >
+                <PopButton variant="soft" onClick={() => void openTwin()} block className="mt-4 text-sm text-accent">
                   🔁 {t.practice.twinOpen}
-                </button>
+                </PopButton>
               )}
             </>
           )}
-        </div>
+        </SlideIn>
 
         {/* control row (reference design: pills + green toggle) */}
         {phase === 'solving' && (
@@ -389,7 +395,7 @@ export function PracticeSession({
         <ProgressCard icon={icon} title={title} percent={percent} />
       </div>
 
-      {twin && <TwinSheet twin={twin} onClose={() => setTwin(null)} />}
+      <AnimatePresence>{twin && <TwinSheet twin={twin} onClose={() => setTwin(null)} />}</AnimatePresence>
     </div>
   );
 }

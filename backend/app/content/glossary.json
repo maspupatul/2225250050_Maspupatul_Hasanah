@@ -7,8 +7,6 @@
   {"phrase": "di atas nol", "sign": "+", "explanation": "Lebih hangat dari 0 °C. Ditulis dengan bilangan positif."},
   {"phrase": "naik", "sign": "+", "explanation": "Bertambah atau bergerak ke atas. Ditulis dengan bilangan positif."},
   {"phrase": "turun", "sign": "-", "explanation": "Berkurang atau bergerak ke bawah. Ditulis dengan bilangan negatif."},
-  {"phrase": "basement", "sign": "-", "explanation": "Lantai di bawah lantai dasar. Basement 1 sama dengan lantai −1."},
-  {"phrase": "lantai dasar", "sign": "0", "explanation": "Titik awal, sama dengan 0."},
   {"phrase": "untung", "sign": "+", "explanation": "Uang bertambah. Ditulis dengan bilangan positif."},
   {"phrase": "rugi", "sign": "-", "explanation": "Uang berkurang. Ditulis dengan bilangan negatif."},
   {"phrase": "selisih", "sign": null, "explanation": "Jarak antara dua nilai: nilai yang besar dikurangi nilai yang kecil."},
@@ -22,5 +20,14 @@
   {"phrase": "utang", "sign": "-", "explanation": "Uang yang harus dibayar. Ditulis dengan bilangan negatif."},
   {"phrase": "jawaban benar", "sign": "+", "explanation": "Menambah skor. Ditulis dengan bilangan positif."},
   {"phrase": "jawaban salah", "sign": "-", "explanation": "Mengurangi skor. Ditulis dengan bilangan negatif."},
-  {"phrase": "tidak dijawab", "sign": "0", "explanation": "Skor tidak berubah, sama dengan 0."}
+  {"phrase": "tidak dijawab", "sign": "0", "explanation": "Skor tidak berubah, sama dengan 0."},
+  {"phrase": "bonus", "sign": "+", "explanation": "Poin tambahan. Ditulis dengan bilangan positif."},
+  {"phrase": "denda", "sign": "-", "explanation": "Poin yang dikurangi. Ditulis dengan bilangan negatif."},
+  {"phrase": "menang", "sign": "+", "explanation": "Mendapat poin. Ditulis dengan bilangan positif."},
+  {"phrase": "kalah", "sign": "-", "explanation": "Kehilangan poin. Ditulis dengan bilangan negatif."},
+  {"phrase": "mengisi ulang", "sign": "+", "explanation": "Menambah saldo (top up). Ditulis dengan bilangan positif."},
+  {"phrase": "membayar", "sign": "-", "explanation": "Uang keluar dari saldo. Ditulis dengan bilangan negatif."},
+  {"phrase": "minus", "sign": "-", "explanation": "Kurang dari nol. Ditulis dengan tanda −."},
+  {"phrase": "saldo", "sign": null, "explanation": "Jumlah uang yang tersimpan, misalnya di kartu e-money."},
+  {"phrase": "anak tangga", "sign": null, "explanation": "Satu pijakan pada tangga. Dihitung dari lantai bawah."}
 ]

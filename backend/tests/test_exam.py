@@ -67,8 +67,10 @@ def test_plan_covers_all_operations():
     templates = content().templates
     for seed in range(20):
         schemas = {templates[i.template_id].schema_type for i in build_plan(content().exam, seed)}
-        assert {"REP", "MUL", "DIV", "MIX", "PRT", "SCR", "CMP", "CHG"} <= schemas
+        assert {"REP", "MUL", "DIV", "MIX", "PRT", "SCR", "CHG"} <= schemas
         assert schemas & {"ADD", "SUB"}
+        assert schemas & {"DIST", "DIV2"}  # properties of multiplication and division
+        assert schemas & {"CMP", "RPT"}
 
 
 def test_different_seeds_vary_templates_and_numbers():

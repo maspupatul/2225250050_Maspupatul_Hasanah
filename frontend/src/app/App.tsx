@@ -1,5 +1,6 @@
 import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { BottomNav } from '../components/ui/BottomNav';
 import { ExamIntroPage } from '../features/exam/ExamIntroPage';
 import { ExamSessionPage } from '../features/exam/ExamSessionPage';
 import { HomePage } from '../features/home/HomePage';
@@ -34,6 +35,8 @@ export function App() {
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          {/* mounted once so the active-tab indicator can glide between tabs */}
+          <BottomNav />
         </div>
       </BrowserRouter>
     </MotionConfig>

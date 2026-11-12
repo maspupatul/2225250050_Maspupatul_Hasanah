@@ -30,8 +30,9 @@ FEEDBACK: dict[str, str] = {
     "mult_as_add": "Ini perkalian, bukan penjumlahan. Perkalian adalah penjumlahan berulang.",
     "div_as_mult": "Ini pembagian, bukan perkalian. "
     "Cari bilangan yang jika dikali pembagi menghasilkan bilangan yang dibagi.",
-    "order_of_ops": "Ingat urutan operasi: kali dan bagi dikerjakan lebih dulu, "
+    "order_of_ops": "Ingat urutan operasi: kurung dulu, lalu kali dan bagi, "
     "baru tambah dan kurang.",
+    "div_grouping": "Pembagian tidak asosiatif. Kerjakan berurutan dari kiri ke kanan.",
     "invalid_expression": "Kalimat matematikanya belum lengkap. "
     "Periksa lagi angka, tanda operasi, dan kurungnya.",
     "asked_wrong": "Belum tepat. Baca lagi kalimat tanyanya pelan-pelan.",
@@ -62,9 +63,42 @@ def diagnose_result(node: ast.AST, values: dict[str, int], answer: int, correct:
             return "sub_negative"
     if answer == -correct:
         return "sign_error"
-    if _mixes_precedence(node) and answer == _left_to_right(node, values):
+    if _mixes_precedence(node) and answer in {_left_to_right(node, values), _without_brackets(node, values)}:
         return "order_of_ops"
+    if _divides_right_first(node, values) == answer:
+        return "div_grouping"
     return "other"
+
+
+def _without_brackets(node: ast.AST, values: dict[str, int]) -> int | None:
+    """The value when brackets are ignored but × and : still go first."""
+    items = _flatten(node)
+    text = " ".join(
+        {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}[item] if isinstance(item, type) else f"({_value(item, values)})"
+        for item in items
+    )
+    try:
+        return to_int(evaluate(text))
+    except ExprError:
+        return None
+
+
+def _value(node: ast.AST, values: dict[str, int]) -> int:
+    return to_int(evaluate(node, values))
+
+
+def _divides_right_first(node: ast.AST, values: dict[str, int]) -> int | None:
+    """a : b : c computed as a : (b : c)."""
+    if not (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)):
+        return None
+    inner = node.left
+    if not (isinstance(inner, ast.BinOp) and isinstance(inner.op, ast.Div)):
+        return None
+    try:
+        a, b, c = (Fraction(evaluate(n, values)) for n in (inner.left, inner.right, node.right))
+        return to_int(apply_op(ast.Div, a, apply_op(ast.Div, b, c)))
+    except ExprError:
+        return None
 
 
 def _flatten(node: ast.AST) -> list:

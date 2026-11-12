@@ -8,9 +8,14 @@ const LEFT = 18;
 const RIGHT = W - 18;
 const SHORT = 30;
 
-type Props = { script: VisualScript; pointer: number | null };
+type Props = {
+  script: VisualScript;
+  pointer: number | null;
+  /** Draw the pointer as a car facing left or right (NumberLineWalker). */
+  character?: { facing: 'left' | 'right' };
+};
 
-export function NumberLine({ script, pointer }: Props) {
+export function NumberLine({ script, pointer, character }: Props) {
   const [lo, hi] = script.range;
   const step = script.step ?? 1;
   const th = script.thousands ?? false;
@@ -18,13 +23,25 @@ export function NumberLine({ script, pointer }: Props) {
   const { values, labelEvery } = tickValues(lo, hi, step);
   const marks = script.marks ?? [];
   const arrows = script.arrows ?? [];
-  const labelX = spreadLabels(marks.map((m) => x(m.value)), 34);
+  const labelX = spreadLabels(
+    marks.map((m) => x(m.value)),
+    34,
+  );
 
   return (
     <svg viewBox={`0 0 ${W} 170`} className="h-auto w-full" aria-hidden="true">
       <defs>
         {(['up', 'down'] as const).map((dir) => (
-          <marker key={dir} id={`nl-head-${dir}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <marker
+            key={dir}
+            id={`nl-head-${dir}`}
+            viewBox="0 0 10 10"
+            refX="8"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
             <path d="M0,0 L10,5 L0,10 z" fill={dirColor(dir)} />
           </marker>
         ))}
@@ -47,7 +64,14 @@ export function NumberLine({ script, pointer }: Props) {
               strokeWidth={v === 0 ? 2.5 : 1}
             />
             {labelled && (
-              <text x={x(v)} y={AXIS_Y + 24} textAnchor="middle" fontSize={11} fontWeight={v === 0 ? 800 : 600} fill={signColor(v)}>
+              <text
+                x={x(v)}
+                y={AXIS_Y + 24}
+                textAnchor="middle"
+                fontSize={11}
+                fontWeight={v === 0 ? 800 : 600}
+                fill={signColor(v)}
+              >
                 {fmtTick(v, th)}
               </text>
             )}
@@ -95,7 +119,14 @@ export function NumberLine({ script, pointer }: Props) {
         <g key={`m${i}`}>
           <circle cx={x(m.value)} cy={AXIS_Y} r={6} fill={signColor(m.value)} stroke="#fff" strokeWidth={2} />
           {m.label && (
-            <text x={labelX[i]} y={AXIS_Y + 44} textAnchor="middle" fontSize={11} fontWeight={700} fill={signColor(m.value)}>
+            <text
+              x={labelX[i]}
+              y={AXIS_Y + 44}
+              textAnchor="middle"
+              fontSize={11}
+              fontWeight={700}
+              fill={signColor(m.value)}
+            >
               {m.label}
             </text>
           )}
@@ -103,10 +134,32 @@ export function NumberLine({ script, pointer }: Props) {
       ))}
 
       {/* pointer */}
-      {pointer !== null && (
+      {pointer !== null && !character && (
         <g style={{ transition: 'transform 250ms ease' }} transform={`translate(${x(pointer)}, ${AXIS_Y})`}>
           <circle r={10} fill={COLORS.accent} stroke="#fff" strokeWidth={3} />
           <path d="M-6,-24 h12 l-6,8 z" fill={COLORS.accent} />
+        </g>
+      )}
+
+      {/* car: drawn facing right, mirrored when it faces left; the front light shows the direction */}
+      {pointer !== null && character && (
+        <g style={{ transition: 'transform 250ms ease' }} transform={`translate(${x(pointer)}, ${AXIS_Y - 4})`}>
+          <g
+            style={{ transition: 'transform 250ms ease' }}
+            transform={character.facing === 'left' ? 'scale(-1,1)' : 'scale(1,1)'}
+          >
+            <path
+              d="M-15,-6 h30 v-7 l-6,-1 l-5,-7 h-12 l-4,7 h-3 z"
+              fill={COLORS.accent}
+              stroke="#fff"
+              strokeWidth={1.5}
+            />
+            <path d="M-9,-14 l3,-5 h8 l4,5 z" fill="#fff" opacity={0.85} />
+            <circle cx={14} cy={-10} r={2} fill="#fde68a" />
+            <circle cx={-8} cy={-5} r={4} fill={COLORS.ink} stroke="#fff" strokeWidth={1.5} />
+            <circle cx={8} cy={-5} r={4} fill={COLORS.ink} stroke="#fff" strokeWidth={1.5} />
+          </g>
+          <circle r={3} cy={4} fill={COLORS.accent} />
         </g>
       )}
     </svg>

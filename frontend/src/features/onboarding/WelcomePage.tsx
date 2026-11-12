@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { InstallCard } from '../../components/ui/InstallCard';
+import { ZLogo } from '../../components/ui/ZLogo';
 import { t } from '../../i18n/id';
 import { useProgress } from '../../store/progress';
 
@@ -23,9 +24,7 @@ export function WelcomePage() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-plum-800 px-6 pb-8 pt-[calc(env(safe-area-inset-top)+48px)] text-white">
-      <div className="grid h-20 w-20 place-items-center rounded-3xl bg-accent text-4xl font-black shadow-card" aria-hidden="true">
-        ±
-      </div>
+      <ZLogo size={88} />
       <h1 className="mt-6 text-4xl font-black tracking-tight">{t.appName}</h1>
       <p className="mt-2 max-w-xs text-white/75">{t.tagline}</p>
 

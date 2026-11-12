@@ -3,30 +3,66 @@
   "title": "Ujian Akhir",
   "stages": [
     {
-      "key": "dasar", "title": "Dasar", "level": 1,
+      "key": "dasar",
+      "title": "Dasar",
+      "level": 1,
       "slots": [
-        ["ex-rep-lab", "ex-rep-office", "ex-rep-sub"],
-        ["ex-num-add", "ex-num-sub"],
-        ["ex-num-mul"],
-        ["ex-num-div"]
+        [
+          "ex-rep-lab",
+          "ex-rep-game",
+          "ex-rep-sub"
+        ],
+        [
+          "ex-num-add",
+          "ex-num-sub"
+        ],
+        [
+          "ex-num-mul"
+        ],
+        [
+          "ex-num-div"
+        ]
       ]
     },
     {
-      "key": "menengah", "title": "Menengah", "level": 2,
+      "key": "menengah",
+      "title": "Menengah",
+      "level": 2,
       "slots": [
-        ["ex-temp-cmp"],
-        ["ex-lift-chg-start"],
-        ["ex-temp-altitude"],
-        ["ex-money-debt"]
+        [
+          "ex-temp-cmp",
+          "ex-temp-altitude"
+        ],
+        [
+          "ex-emoney-chg-start"
+        ],
+        [
+          "ex-num-dist",
+          "ex-num-div2"
+        ],
+        [
+          "ex-money-debt"
+        ]
       ]
     },
     {
-      "key": "hots", "title": "Tingkat Tinggi (HOTS)", "level": 3,
+      "key": "hots",
+      "title": "Tingkat Tinggi (HOTS)",
+      "level": 3,
       "slots": [
-        ["ex-num-mix"],
-        ["ex-temp-rpt-start", "ex-sea-mlt-change"],
-        ["ex-money-mixed"],
-        ["ex-score"]
+        [
+          "ex-num-mix"
+        ],
+        [
+          "ex-temp-rpt-start",
+          "ex-sea-mlt-change"
+        ],
+        [
+          "ex-money-mixed"
+        ],
+        [
+          "ex-score"
+        ]
       ]
     }
   ]

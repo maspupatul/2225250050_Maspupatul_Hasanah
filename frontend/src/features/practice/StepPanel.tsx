@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { fmtInt, parseIntInput, serializeTokens, type Token } from '../../lib/format';
 import type { StepDef } from '../../lib/types';
+import { motion } from 'framer-motion';
+import { PopButton } from '../../components/ui/PopButton';
 import { t } from '../../i18n/id';
 import { ExpressionBuilder } from './ExpressionBuilder';
 import { IntegerPad } from './IntegerPad';
@@ -20,7 +22,7 @@ export function StepPanel({ step, interpretOptions, thousands, busy, onSubmit }:
   const [tokens, setTokens] = useState<Token[]>([]);
   const [raw, setRaw] = useState('');
 
-  const options = step.key === 'interpret' ? interpretOptions ?? [] : (step.options ?? []);
+  const options = step.key === 'interpret' ? (interpretOptions ?? []) : (step.options ?? []);
   let ready = false;
   let submit = () => {};
 
@@ -48,43 +50,53 @@ export function StepPanel({ step, interpretOptions, thousands, busy, onSubmit }:
           {(step.options as number[]).map((value) => {
             const on = selected.includes(value);
             return (
-              <button
+              <motion.button
                 key={value}
                 type="button"
                 aria-pressed={on}
                 onClick={() => setSelected(on ? selected.filter((v) => v !== value) : [...selected, value])}
-                className={`min-w-16 rounded-2xl border-2 px-4 py-2.5 text-lg font-extrabold transition active:scale-95 ${
+                animate={{ scale: on ? [1, 1.12, 1] : 1 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 18 }}
+                // sign colours keep their meaning; the darker lip is the same hue
+                className={`min-w-16 rounded-2xl border-2 px-4 py-2.5 text-lg font-extrabold transition-[transform,box-shadow] active:translate-y-1 active:shadow-none ${
                   on
                     ? value < 0
-                      ? 'border-negative bg-negative text-white'
-                      : 'border-positive bg-positive text-white'
+                      ? 'border-negative bg-negative text-white shadow-[0_4px_0_#991b1b]'
+                      : 'border-positive bg-positive text-white shadow-[0_4px_0_#1e3a8a]'
                     : value < 0
-                      ? 'border-negative/30 text-negative'
-                      : 'border-positive/30 text-positive'
+                      ? 'border-negative/30 bg-white text-negative shadow-[0_4px_0_#fecaca]'
+                      : 'border-positive/30 bg-white text-positive shadow-[0_4px_0_#bfdbfe]'
                 }`}
               >
                 {fmtInt(value, thousands)}
-              </button>
+              </motion.button>
             );
           })}
         </div>
       )}
 
       {step.input === 'choice' && (
-        <div className="space-y-2" role="radiogroup">
+        <div className="space-y-3" role="radiogroup">
           {options.map((option, i) => (
-            <button
+            <PopButton
               key={String(option)}
-              type="button"
               role="radio"
               aria-checked={choice === i}
               onClick={() => setChoice(i)}
-              className={`w-full rounded-2xl border-2 px-4 py-3 text-left text-[15px] font-bold transition ${
-                choice === i ? 'border-accent bg-accent-soft text-ink' : 'border-lavender-200 text-ink'
-              }`}
+              variant={choice === i ? 'selected' : 'soft'}
+              block
+              animate={{ scale: choice === i ? [1, 1.03, 1] : 1 }}
+              className="!justify-start text-left text-[15px] font-bold"
             >
+              <span
+                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black ${choice === i ? 'bg-accent text-white' : 'bg-lavender-100 text-plum-700'}`}
+                aria-hidden="true"
+              >
+                {String.fromCharCode(65 + i)}
+              </span>
               {String(option)}
-            </button>
+            </PopButton>
           ))}
         </div>
       )}
@@ -95,14 +107,9 @@ export function StepPanel({ step, interpretOptions, thousands, busy, onSubmit }:
 
       {step.input === 'integer' && <IntegerPad value={raw} onChange={setRaw} unit={step.unit} thousands={thousands} />}
 
-      <button
-        type="button"
-        disabled={!ready || busy}
-        onClick={submit}
-        className="mt-4 w-full rounded-2xl bg-accent py-3.5 text-base font-extrabold text-white transition active:scale-[0.98] disabled:opacity-40"
-      >
+      <PopButton disabled={!ready || busy} onClick={submit} block className="mt-5 text-base">
         {t.practice.check}
-      </button>
+      </PopButton>
     </div>
   );
 }

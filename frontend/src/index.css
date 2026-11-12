@@ -14,6 +14,7 @@ html,
 body {
   background: #e3e1f0; /* lavender, like the reference design backdrop */
   -webkit-tap-highlight-color: transparent;
+  overflow-x: clip; /* no stray horizontal scrollbar on small phones */
 }
 
 body {
@@ -22,6 +23,33 @@ body {
 
 button {
   touch-action: manipulation;
+}
+
+/* ---------------------------------------------------------------- 3D "pop" system
+   Buttons and cards stand on a solid lip (box-shadow). Pressing pushes them down:
+   translate-y by the lip height and remove the lip. Colours never use the sign
+   colours blue/red/grey (CLAUDE.md §5.4). */
+@layer components {
+  .btn-3d {
+    @apply relative inline-flex select-none items-center justify-center gap-2 rounded-2xl px-5 py-3.5 font-extrabold
+      transition-[transform,box-shadow,background-color] duration-100 active:translate-y-1 active:shadow-none
+      disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-3d-primary {
+    @apply btn-3d bg-accent text-white shadow-pop-accent hover:brightness-105;
+  }
+  .btn-3d-dark {
+    @apply btn-3d bg-plum-700 text-white shadow-pop-plum;
+  }
+  .btn-3d-soft {
+    @apply btn-3d border-2 border-lavender-200 bg-white text-ink shadow-pop-soft active:translate-y-1;
+  }
+  .btn-3d-selected {
+    @apply btn-3d border-2 border-accent bg-accent-soft text-ink shadow-pop-accent;
+  }
+  .card-3d {
+    @apply rounded-3xl border-2 border-lavender-200 bg-white shadow-pop-soft;
+  }
 }
 
 :focus-visible {

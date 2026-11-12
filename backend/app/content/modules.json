@@ -1,6 +1,6 @@
 [
-  { "id": "m1", "title": "Mengenal Bilangan Bulat", "order": 1, "lessons": ["m1-t1", "m1-t2"] },
-  { "id": "m3", "title": "Penjumlahan & Pengurangan", "order": 3, "lessons": ["m3-t1", "m3-t2"] },
-  { "id": "m4", "title": "Perkalian & Pembagian", "order": 4, "lessons": ["m4-t1", "m4-t2"] },
-  { "id": "m6", "title": "Soal Cerita & Pemodelan", "order": 6, "lessons": ["m6-t1", "m6-t2", "m6-t3", "m6-t4"] }
+  {"id": "m1", "title": "Penjumlahan & Pengurangan", "order": 1, "lessons": ["m1-t1", "m1-t2", "m3-t1", "m3-t2", "m3-t3"]},
+  {"id": "m2", "title": "Perkalian & Pembagian", "order": 2, "lessons": ["m4-t1", "m4-t2"]},
+  {"id": "m3", "title": "Sifat Operasi Perkalian & Pembagian", "order": 3, "lessons": ["m5-t1", "m5-t2", "m5-t3"]},
+  {"id": "m4", "title": "Operasi Campuran & Soal Cerita", "order": 4, "lessons": ["m7-t1", "m6-t1", "m6-t2", "m6-t5", "m6-t6"]}
 ]

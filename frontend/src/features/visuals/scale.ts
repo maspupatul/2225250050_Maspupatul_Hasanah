@@ -22,7 +22,7 @@ export function dirColor(dir: Arrow['dir']): string {
 export function tickValues(lo: number, hi: number, step: number): { values: number[]; labelEvery: number } {
   const count = Math.round((hi - lo) / step);
   // wide ranges (Ujian Akhir: −50..50, score board) label every 10 to stay readable
-  const labelEvery = count <= 16 ? 1 : count <= 24 ? 2 : count <= 60 ? 5 : 10;
+  const labelEvery = count <= 16 ? 1 : count <= 24 ? 2 : count <= 60 ? 5 : count <= 120 ? 10 : 20;
   const values: number[] = [];
   for (let i = 0; i <= count; i++) values.push(lo + i * step);
   return { values, labelEvery };

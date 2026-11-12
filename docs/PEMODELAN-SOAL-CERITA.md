@@ -214,3 +214,15 @@ sequenceDiagram
 | `MLT` + `unknown: "change"` | Perubahan kedua tidak diketahui | `end - start - c1` | Petunjuk hanya menampilkan perubahan pertama |
 
 Kode miskonsepsi baru: `mult_as_add`, `div_as_mult`, `order_of_ops`.
+
+### 8.1 Jenis Soal Sifat Operasi & Operasi Campuran (latihan)
+
+| Kode | Model | Tujuan | Petunjuk Level 3 (kotak kosong) |
+|---|---|---|---|
+| `ADD3` | `a + b + c` dengan a + c kelipatan 10 | Komutatif & asosiatif penjumlahan | `(a + c) + b = □ + b` |
+| `MUL3` | `a * b * c` dengan a × c = ±10 | Komutatif & asosiatif perkalian | `(a × c) × b = □ × b` |
+| `DIST` | `a * b + a * c` dengan b + c = ±10 | Distributif | `a × (b + c) = a × □` |
+| `DIV2` | `a / b / c` | Pembagian tidak asosiatif | Langkah pertama dari kiri |
+| `MIX2` | `a + b * c`, `(a + b) * c` | Urutan operasi | Langkah pertama sesuai urutan |
+
+`SCR` sekarang dipakai juga untuk skor game (`labels.plus = "menang"`, `labels.minus = "kalah"`). Miskonsepsi baru: `div_grouping` (membagi dari kanan), dan `order_of_ops` juga mendeteksi kurung yang diabaikan.

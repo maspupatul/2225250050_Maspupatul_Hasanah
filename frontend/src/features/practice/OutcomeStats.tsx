@@ -1,3 +1,4 @@
+import { StatTile } from '../../components/ui/StatTile';
 import { t } from '../../i18n/id';
 import type { Outcome } from '../../lib/score';
 
@@ -12,12 +13,8 @@ export function OutcomeStats({ outcomes }: { outcomes: Outcome[] }) {
   ];
   return (
     <ul className="mt-5 grid grid-cols-3 gap-2">
-      {stats.map((s) => (
-        <li key={s.label} className="rounded-2xl bg-lavender-50 px-2 py-3">
-          <span className="text-xl" aria-hidden="true">{s.icon}</span>
-          <p className="text-2xl font-black text-ink">{s.value}</p>
-          <p className="text-[11px] font-bold leading-tight text-ink-muted">{s.label}</p>
-        </li>
+      {stats.map((s, i) => (
+        <StatTile key={s.label} icon={s.icon} value={s.value} label={s.label} index={i} />
       ))}
     </ul>
   );

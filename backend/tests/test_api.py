@@ -23,11 +23,11 @@ def hint(attempt_id: str, key: str):
 
 def test_modules_and_lessons():
     modules = client.get(f"{API}/modules").json()
-    assert [m["id"] for m in modules] == ["m1", "m3", "m4", "m6"]
+    assert [m["id"] for m in modules] == ["m1", "m2", "m3", "m4"]
     numbers = [lesson["number"] for m in modules for lesson in m["lessons"]]
-    assert numbers == list(range(1, 11))
-    assert client.get(f"{API}/lessons/m4-t1").json()["number"] == 5
-    assert client.get(f"{API}/lessons/m4-t2").json()["number"] == 6
+    assert numbers == list(range(1, 16))
+    assert client.get(f"{API}/lessons/m4-t1").json()["number"] == 6
+    assert client.get(f"{API}/lessons/m4-t2").json()["number"] == 7
     lesson = client.get(f"{API}/lessons/m6-t2").json()
     assert lesson["segments"] and "practice" not in lesson
     assert client.get(f"{API}/lessons/nope").json()["error"]["code"] == "NOT_FOUND"

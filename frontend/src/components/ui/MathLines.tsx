@@ -12,19 +12,19 @@ export function MathLines({ lines }: { lines: string[] }) {
   const rows = lines.map(splitMathLine);
   const aligned = rows.some((r) => r.sep);
   return (
-    <div className="overflow-x-auto rounded-2xl bg-lavender-50 px-4 py-3 ring-1 ring-lavender-200">
+    <div className="rounded-2xl bg-lavender-50 px-3 py-3 ring-1 ring-lavender-200 sm:px-4">
       <div
-        className={`grid gap-y-2 font-mono text-[15px] leading-snug text-ink tabular-nums ${aligned ? 'grid-cols-[auto_auto_1fr] gap-x-2' : ''}`}
+        className={`grid gap-y-2 font-mono text-[14px] leading-snug sm:text-[15px] text-ink tabular-nums ${aligned ? 'grid-cols-[auto_auto_1fr] gap-x-2' : ''}`}
       >
         {rows.map((row, i) => {
           const sign = signOf(row.right);
           return aligned ? (
             <div key={i} className="contents">
-              <span className="whitespace-nowrap text-right">
+              <span className="text-right [overflow-wrap:anywhere]">
                 <RichText text={row.left} />
               </span>
               <span className="text-center font-bold text-ink-muted">{row.sep}</span>
-              <span className={`whitespace-nowrap font-bold ${sign ? SIGN_CLASS[sign] : ''}`}>
+              <span className={`font-bold [overflow-wrap:anywhere] ${sign ? SIGN_CLASS[sign] : ''}`}>
                 <RichText text={row.right} />
               </span>
             </div>

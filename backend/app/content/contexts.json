@@ -101,40 +101,6 @@
       "neg": "di bawah permukaan laut atau turun"
     }
   },
-  "elevator": {
-    "unit": "lantai",
-    "visual": "elevator",
-    "range": [
-      -5,
-      10
-    ],
-    "step": 1,
-    "fmt": {
-      "state": {
-        "pos": "lantai {abs}",
-        "neg": "basement {abs}",
-        "zero": "lantai dasar"
-      },
-      "change": {
-        "pos": "naik {abs} lantai",
-        "neg": "turun {abs} lantai"
-      }
-    },
-    "interpret": {
-      "state": {
-        "pos": "lantai {abs}",
-        "neg": "basement {abs} (lantai −{abs})"
-      },
-      "change": {
-        "pos": "naik {abs} lantai",
-        "neg": "turun {abs} lantai"
-      }
-    },
-    "meaning": {
-      "pos": "di atas lantai dasar atau naik",
-      "neg": "di bawah lantai dasar (basement) atau turun"
-    }
-  },
   "money": {
     "unit": "Rp",
     "visual": "number_line",
@@ -213,12 +179,26 @@
         "pos": "{abs}",
         "neg": "−{abs}",
         "zero": "0"
+      },
+      "state": {
+        "pos": "{abs} poin",
+        "neg": "−{abs} poin",
+        "zero": "0 poin"
+      },
+      "state_words": {
+        "pos": "{abs} poin",
+        "neg": "minus {abs} poin",
+        "zero": "0 poin"
+      },
+      "change": {
+        "pos": "mendapat bonus {abs} poin",
+        "neg": "kena denda {abs} poin"
       }
     },
     "interpret": {
       "state": {
-        "pos": "skor akhirnya {abs} poin",
-        "neg": "skor akhirnya −{abs} poin"
+        "pos": "skornya {abs} poin",
+        "neg": "skornya −{abs} poin"
       },
       "change": {
         "pos": "skornya naik {abs} poin",
@@ -226,8 +206,96 @@
       }
     },
     "meaning": {
-      "pos": "skor di atas nol",
-      "neg": "skor di bawah nol"
+      "pos": "poin bertambah (menang atau bonus)",
+      "neg": "poin berkurang (kalah atau denda)"
+    }
+  },
+  "abstract_100": {
+    "unit": "",
+    "visual": "number_line",
+    "range": [
+      -100,
+      100
+    ],
+    "step": 1,
+    "fmt": {
+      "operand": {
+        "pos": "{abs}",
+        "neg": "−{abs}",
+        "zero": "0"
+      }
+    },
+    "interpret": {},
+    "meaning": {
+      "pos": "di sebelah kanan nol",
+      "neg": "di sebelah kiri nol"
+    }
+  },
+  "emoney": {
+    "unit": "Rp",
+    "visual": "number_line",
+    "range": [
+      0,
+      40000
+    ],
+    "step": 1000,
+    "thousands": true,
+    "fmt": {
+      "state": {
+        "pos": "Rp{abs}",
+        "zero": "Rp0"
+      },
+      "change": {
+        "pos": "mengisi ulang Rp{abs}",
+        "neg": "membayar Rp{abs}"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "saldonya Rp{abs}",
+        "neg": "saldonya kurang Rp{abs}"
+      },
+      "change": {
+        "pos": "saldonya bertambah Rp{abs}",
+        "neg": "saldonya berkurang Rp{abs}"
+      }
+    },
+    "meaning": {
+      "pos": "uang masuk (isi ulang)",
+      "neg": "uang keluar (membayar)"
+    }
+  },
+  "stairs": {
+    "unit": "anak tangga",
+    "visual": "number_line",
+    "range": [
+      0,
+      20
+    ],
+    "step": 1,
+    "fmt": {
+      "state": {
+        "pos": "anak tangga ke-{abs}",
+        "zero": "lantai bawah"
+      },
+      "change": {
+        "pos": "naik {abs} anak tangga",
+        "neg": "turun {abs} anak tangga"
+      }
+    },
+    "interpret": {
+      "state": {
+        "pos": "di anak tangga ke-{abs}",
+        "neg": "di bawah lantai"
+      },
+      "change": {
+        "pos": "naik {abs} anak tangga",
+        "neg": "turun {abs} anak tangga"
+      }
+    },
+    "meaning": {
+      "pos": "naik",
+      "neg": "turun"
     }
   }
 }

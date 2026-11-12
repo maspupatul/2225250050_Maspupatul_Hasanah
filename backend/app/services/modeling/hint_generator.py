@@ -41,8 +41,8 @@ RELATION_MEANING = {
     "Pembagian adalah kebalikan perkalian.",
     ("PRT", "mixed"): "Gabungkan dulu semua untung dan rugi menjadi satu hasil. "
     "Lalu bagi hasil itu dengan banyaknya orang.",
-    ("SCR", None): "Skor akhir = (banyak benar × skor benar) + (banyak salah × skor salah). "
-    "Soal yang tidak dijawab bernilai nol, jadi tidak perlu dihitung.",
+    ("SCR", None): "Hitung poin dari setiap kejadian: banyaknya × poinnya. "
+    "Lalu jumlahkan semuanya. Kejadian yang bernilai nol tidak perlu dihitung.",
 }
 
 ASKED_STRATEGY = {
@@ -64,6 +64,21 @@ MIX_RULE = (
     "Ingat urutan operasi: perkalian dan pembagian dikerjakan lebih dulu, "
     "baru penjumlahan dan pengurangan."
 )
+PAREN_RULE = "Tanda kurung dikerjakan paling dulu. Setelah itu baru perkalian atau pembagian."
+
+# Numeric problems with several operations: no single jump picture, so the
+# level-2 hint is a structured text instead of a visual.
+NO_PICTURE = {"MIX", "MIX2", "ADD3", "MUL3", "DIST", "DIV2"}
+
+PROPERTY_MEANING = {
+    "ADD3": "Sifat komutatif dan asosiatif: urutan dan kelompok penjumlahan boleh diubah. "
+    "Cari dua bilangan yang mudah dijumlahkan, misalnya hasilnya puluhan.",
+    "MUL3": "Sifat komutatif dan asosiatif: urutan dan kelompok perkalian boleh diubah. "
+    "Cari dua bilangan yang hasil kalinya puluhan.",
+    "DIST": "Ada pengali yang sama di dua perkalian. Sifat distributif: "
+    "a × b + a × c = a × (b + c).",
+    "DIV2": "Pembagian tidak asosiatif. Kerjakan berurutan dari kiri ke kanan.",
+}
 
 
 @dataclass(frozen=True)
@@ -119,8 +134,10 @@ def _meaning(view: HintView, step: str) -> str:
     if step == "result":
         if t.kind == "represent":
             return "Cari kata kunci yang menunjukkan arah: di atas atau di bawah? Naik atau turun?"
-        if t.schema_type == "MIX":
-            return MIX_RULE
+        if t.schema_type in PROPERTY_MEANING:
+            return PROPERTY_MEANING[t.schema_type]
+        if t.schema_type in {"MIX", "MIX2"}:
+            return PAREN_RULE if "(" in t.model else MIX_RULE
         op = first_operation(parse(t.model), view.givens)
         if op is None:
             return "Pikirkan arti setiap bilangan di soal."
@@ -151,9 +168,9 @@ def _meaning(view: HintView, step: str) -> str:
 def _visual(view: HintView, step: str) -> dict:
     if step == "asked":
         return {"text": "Kalimat yang disorot adalah pertanyaannya.", "highlight": view.template.question}
-    if view.template.schema_type == "MIX":
+    if view.template.schema_type in NO_PICTURE:
         # several operations at once: a single jump picture would mislead
-        return {"text": "Tandai dulu bagian perkalian dan pembagian. " + MIX_RULE}
+        return {"text": _structure_text(view)}
     script = visual_script.hint(view.template, view.context, view.givens)
     texts = {
         "known": "Perhatikan arah panahnya. Panah biru ke arah positif, panah merah ke arah negatif.",
@@ -173,6 +190,19 @@ def _visual(view: HintView, step: str) -> dict:
     elif view.template.schema_type == "PRT":
         texts["result"] = "Bayangkan hasil seluruhnya dipotong menjadi bagian-bagian yang sama besar."
     return {"text": texts.get(step, texts["model"]), "visual": script}
+
+
+def _structure_text(view: HintView) -> str:
+    st = view.template.schema_type
+    if st in {"MIX", "MIX2"}:
+        if "(" in view.template.model:
+            return "Tandai dulu bagian di dalam kurung. " + PAREN_RULE
+        return "Tandai dulu bagian perkalian dan pembagian. " + MIX_RULE
+    if st == "DIV2":
+        return "Tandai pembagian pertama dari kiri. Hitung itu dulu, baru pembagian berikutnya."
+    if st == "DIST":
+        return "Lingkari pengali yang muncul dua kali. Bilangan lainnya bisa dijumlahkan dulu."
+    return "Coba pasangkan bilangan yang hasilnya puluhan. Urutannya boleh ditukar."
 
 
 # ------------------------------------------------------------------ level 3
@@ -206,6 +236,22 @@ def _strategy(view: HintView, step: str) -> dict:
     if step == "result":
         if t.kind == "represent":
             return {"text": _keyword_rules(view) + " Tulis tandanya dulu, lalu angkanya."}
+        g = {k: fmt_operand(v, th) for k, v in view.givens.items()}
+        if t.schema_type == "ADD3":
+            return {
+                "text": "Kelompokkan bilangan yang mudah dulu, lalu tambahkan sisanya.",
+                "template": f"({g['a']} + {g['c']}) + {g['b']} = □ + {g['b']}",
+            }
+        if t.schema_type == "MUL3":
+            return {
+                "text": "Kalikan pasangan yang hasilnya puluhan dulu. Tanda: hitung banyak bilangan negatif.",
+                "template": f"({g['a']} × {g['c']}) × {g['b']} = □ × {g['b']}",
+            }
+        if t.schema_type == "DIST":
+            return {
+                "text": "Satukan dengan sifat distributif. Hitung isi kurung dulu.",
+                "template": f"{g['a']} × ({g['b']} + {g['c']}) = {g['a']} × □",
+            }
         node = parse(t.model)
         op = first_operation(node, view.givens)
         if op is None:

@@ -16,11 +16,11 @@ describe('home motivation badges', () => {
     expect(lessonStars({ status: 'in_progress', segment: 2, mastery: 0 })).toBe(0);
     expect(lessonStars({ status: 'done', segment: 0, mastery: 0.9 })).toBe(3);
     expect(lessonStars({ status: 'done', segment: 0, mastery: 0.6 })).toBe(2);
-    expect(
-      totalStars({
-        a: { status: 'done', segment: 0, mastery: 1 },
-        b: { status: 'done', segment: 0, mastery: 0.2 },
-      }),
-    ).toBe(4);
+    const saved = {
+      a: { status: 'done', segment: 0, mastery: 1 },
+      b: { status: 'done', segment: 0, mastery: 0.2 },
+    } as const;
+    expect(totalStars(saved)).toBe(4);
+    expect(totalStars(saved, ['a', 'removed'])).toBe(3); // lessons removed from the curriculum do not count
   });
 });

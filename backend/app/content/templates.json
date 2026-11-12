@@ -1,492 +1,2610 @@
 [
   {
-    "id": "rep-temp", "kind": "represent", "schema_type": "REP", "context": "temperature", "level": 1,
+    "id": "rep-temp",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "temperature",
+    "level": 1,
     "text": "Suhu di puncak sebuah gunung pada dini hari tercatat {a}. Tuliskan suhu itu sebagai bilangan bulat.",
     "question": "Tuliskan suhu itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-15, 15], "nonzero": true, "fmt": "state_words" } },
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "scientific" }
+    "vars": {
+      "a": {
+        "range": [
+          -15,
+          15
+        ],
+        "nonzero": true,
+        "fmt": "state_words"
+      }
+    },
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "rep-sea", "kind": "represent", "schema_type": "REP", "context": "sea_depth", "level": 1,
+    "id": "rep-sea",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "sea_depth",
+    "level": 1,
     "text": "Seekor penyu sedang berenang {a}. Tuliskan posisi penyu itu sebagai bilangan bulat.",
     "question": "Tuliskan posisi penyu itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-15, -1], "fmt": "state" } },
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "scientific" }
+    "vars": {
+      "a": {
+        "range": [
+          -15,
+          -1
+        ],
+        "fmt": "state"
+      }
+    },
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "rep-lift", "kind": "represent", "schema_type": "REP", "context": "elevator", "level": 1,
-    "text": "Ayah memarkir mobil di {a} sebuah mal. Tuliskan letak lantai itu sebagai bilangan bulat.",
-    "question": "Tuliskan letak lantai itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-4, 8], "nonzero": true, "fmt": "state" } },
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "personal" }
-  },
-  {
-    "id": "num-add", "kind": "numeric", "schema_type": "ADD", "context": "abstract", "level": 1,
+    "id": "num-add",
+    "kind": "numeric",
+    "schema_type": "ADD",
+    "context": "abstract",
+    "level": 1,
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-9, 9], "nonzero": true, "fmt": "plain" },
-      "b": { "range": [-9, 9], "nonzero": true, "fmt": "plain" }
+      "a": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      }
     },
-    "constraints": ["abs(a + b) <= 15", "a < 0 or b < 0"],
-    "model": "a + b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a + b) <= 15",
+      "a < 0 or b < 0"
+    ],
+    "model": "a + b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "num-add-diff", "kind": "numeric", "schema_type": "ADD", "context": "abstract", "level": 1,
+    "id": "num-add-diff",
+    "kind": "numeric",
+    "schema_type": "ADD",
+    "context": "abstract",
+    "level": 1,
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-9, 9], "nonzero": true, "fmt": "plain" },
-      "b": { "range": [-9, 9], "nonzero": true, "fmt": "plain" }
+      "a": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      }
     },
-    "constraints": ["a * b < 0"],
-    "model": "a + b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "a * b < 0"
+    ],
+    "model": "a + b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "num-sub", "kind": "numeric", "schema_type": "SUB", "context": "abstract", "level": 1,
+    "id": "num-sub",
+    "kind": "numeric",
+    "schema_type": "SUB",
+    "context": "abstract",
+    "level": 1,
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-9, 9], "nonzero": true, "fmt": "plain" },
-      "b": { "range": [-9, 9], "nonzero": true, "fmt": "plain" }
+      "a": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      }
     },
-    "constraints": ["abs(a - b) <= 15", "a < 0 or b < 0"],
-    "model": "a - b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a - b) <= 15",
+      "a < 0 or b < 0"
+    ],
+    "model": "a - b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "temp-chg-end", "kind": "story", "schema_type": "CHG", "unknown": "end", "context": "temperature", "level": 1,
-    "text": "Suhu di puncak gunung pada pagi hari {start}. Siang harinya, suhu {change}. Berapa suhu di puncak gunung pada siang hari?",
-    "question": "Berapa suhu di puncak gunung pada siang hari?",
+    "id": "temp-chg-end",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "end",
+    "context": "temperature",
+    "level": 1,
+    "text": "Suhu sebotol minuman di lemari pendingin {start}. Satu jam kemudian, suhunya {change}. Berapa suhu minuman itu sekarang?",
+    "question": "Berapa suhu minuman itu sekarang?",
     "vars": {
-      "start": { "range": [-10, 8], "nonzero": true, "fmt": "state" },
-      "change": { "range": [-9, 9], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -10,
+          8
+        ],
+        "nonzero": true,
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "end": "start + change" },
-    "constraints": ["abs(end) <= 15"],
-    "model": "start + change", "given": ["start", "change"], "answer_fmt": "state",
-    "labels": { "start": "pagi", "end": "siang" },
-    "asked": { "options": ["Suhu pada siang hari", "Suhu pada pagi hari", "Besar kenaikan suhu"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "abs(end) <= 15"
+    ],
+    "model": "start + change",
+    "given": [
+      "start",
+      "change"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "awal",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Suhu minuman sekarang",
+        "Suhu minuman mula-mula",
+        "Besar perubahan suhu"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "temp-chg-start", "kind": "story", "schema_type": "CHG", "unknown": "start", "context": "temperature", "level": 2,
+    "id": "temp-chg-start",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "start",
+    "context": "temperature",
+    "level": 2,
     "text": "Suhu di dalam sebuah freezer {change} sehingga menjadi {end}. Berapa suhu freezer mula-mula?",
     "question": "Berapa suhu freezer mula-mula?",
     "vars": {
-      "start": { "range": [-15, -1], "fmt": "state" },
-      "change": { "range": [-9, 9], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -15,
+          -1
+        ],
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "end": "start + change" },
-    "constraints": ["end <= -1", "end >= -18"],
-    "model": "end - change", "forward_model": "end + change",
-    "given": ["change", "end"], "answer_fmt": "state",
-    "labels": { "start": "mula-mula", "end": "sekarang" },
-    "asked": { "options": ["Suhu freezer mula-mula", "Suhu freezer sekarang", "Besar perubahan suhu"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "personal" }
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end <= -1",
+      "end >= -18"
+    ],
+    "model": "end - change",
+    "forward_model": "end + change",
+    "given": [
+      "change",
+      "end"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "mula-mula",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Suhu freezer mula-mula",
+        "Suhu freezer sekarang",
+        "Besar perubahan suhu"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "temp-chg-change", "kind": "story", "schema_type": "CHG", "unknown": "change", "context": "temperature", "level": 2,
+    "id": "temp-chg-change",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "change",
+    "context": "temperature",
+    "level": 2,
     "text": "Pada malam hari, suhu di sebuah desa di pegunungan {start}. Pagi harinya, suhu menjadi {end}. Berapa perubahan suhu dari malam ke pagi?",
     "question": "Berapa perubahan suhu dari malam ke pagi?",
     "vars": {
-      "start": { "range": [-8, 6], "nonzero": true, "fmt": "state" },
-      "change": { "range": [-9, 9], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -8,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "end": "start + change" },
-    "constraints": ["abs(end) <= 15"],
-    "model": "end - start", "forward_model": "start + end",
-    "given": ["start", "end"], "answer_fmt": "change",
-    "labels": { "start": "malam", "end": "pagi" },
-    "asked": { "options": ["Besar perubahan suhu", "Suhu pada malam hari", "Suhu pada pagi hari"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "scientific" }
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "abs(end) <= 15"
+    ],
+    "model": "end - start",
+    "forward_model": "start + end",
+    "given": [
+      "start",
+      "end"
+    ],
+    "answer_fmt": "change",
+    "labels": {
+      "start": "malam",
+      "end": "pagi"
+    },
+    "asked": {
+      "options": [
+        "Besar perubahan suhu",
+        "Suhu pada malam hari",
+        "Suhu pada pagi hari"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "temp-cmp", "kind": "story", "schema_type": "CMP", "context": "temperature", "level": 2,
+    "id": "temp-cmp",
+    "kind": "story",
+    "schema_type": "CMP",
+    "context": "temperature",
+    "level": 2,
     "text": "Pada bulan Januari, suhu terendah di kota A adalah {a}, sedangkan suhu terendah di kota B adalah {b}. Berapa selisih suhu terendah kedua kota itu?",
     "question": "Berapa selisih suhu terendah kedua kota itu?",
     "vars": {
-      "a": { "range": [-5, 10], "nonzero": true, "fmt": "state" },
-      "b": { "range": [-15, -1], "fmt": "state" }
+      "a": {
+        "range": [
+          -5,
+          10
+        ],
+        "nonzero": true,
+        "fmt": "state"
+      },
+      "b": {
+        "range": [
+          -15,
+          -1
+        ],
+        "fmt": "state"
+      }
     },
-    "constraints": ["a > b", "a - b <= 20"],
-    "model": "a - b", "forward_model": "a + b",
-    "given": ["a", "b"], "answer_fmt": "diff",
-    "labels": { "a": "kota A", "b": "kota B" },
-    "asked": { "options": ["Selisih suhu kedua kota", "Suhu terendah kota A", "Suhu terendah kota B"], "correct": 0 },
-    "literacy": { "indicators": ["LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "constraints": [
+      "a > b",
+      "a - b <= 20"
+    ],
+    "model": "a - b",
+    "forward_model": "a + b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "answer_fmt": "diff",
+    "labels": {
+      "a": "kota A",
+      "b": "kota B"
+    },
+    "asked": {
+      "options": [
+        "Selisih suhu kedua kota",
+        "Suhu terendah kota A",
+        "Suhu terendah kota B"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "temp-rpt", "kind": "story", "schema_type": "RPT", "context": "temperature", "level": 2,
+    "id": "temp-rpt",
+    "kind": "story",
+    "schema_type": "RPT",
+    "context": "temperature",
+    "level": 2,
     "text": "Suhu di dalam ruang pendingin {r} setiap jam. Berapa perubahan suhu ruang itu setelah {n} jam?",
     "question": "Berapa perubahan suhu ruang itu setelah {n} jam?",
     "vars": {
-      "r": { "range": [-5, -2], "fmt": "change" },
-      "n": { "range": [2, 4], "fmt": "count" }
+      "r": {
+        "range": [
+          -5,
+          -2
+        ],
+        "fmt": "change"
+      },
+      "n": {
+        "range": [
+          2,
+          4
+        ],
+        "fmt": "count"
+      }
     },
-    "constraints": ["abs(n * r) <= 18"],
-    "model": "n * r", "forward_model": "n + r",
-    "given": ["n", "r"], "answer_fmt": "change",
-    "asked": { "options": ["Perubahan suhu seluruhnya", "Perubahan suhu setiap jam", "Banyaknya jam"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "constraints": [
+      "abs(n * r) <= 18"
+    ],
+    "model": "n * r",
+    "forward_model": "n + r",
+    "given": [
+      "n",
+      "r"
+    ],
+    "answer_fmt": "change",
+    "asked": {
+      "options": [
+        "Perubahan suhu seluruhnya",
+        "Perubahan suhu setiap jam",
+        "Banyaknya jam"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "sea-chg-end", "kind": "story", "schema_type": "CHG", "unknown": "end", "context": "sea_depth", "level": 1,
+    "id": "sea-chg-end",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "end",
+    "context": "sea_depth",
+    "level": 1,
     "text": "Seorang penyelam mula-mula berada {start}. Kemudian, ia {change}. Di mana posisi penyelam sekarang?",
     "question": "Di mana posisi penyelam sekarang?",
     "vars": {
-      "start": { "range": [-10, -1], "fmt": "state" },
-      "change": { "range": [-8, 8], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -10,
+          -1
+        ],
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -8,
+          8
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "end": "start + change" },
-    "constraints": ["end <= -1", "end >= -18"],
-    "model": "start + change", "given": ["start", "change"], "answer_fmt": "state",
-    "labels": { "start": "mula-mula", "end": "sekarang" },
-    "asked": { "options": ["Posisi penyelam sekarang", "Posisi penyelam mula-mula", "Jarak yang sudah ditempuh"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end <= -1",
+      "end >= -18"
+    ],
+    "model": "start + change",
+    "given": [
+      "start",
+      "change"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "mula-mula",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Posisi penyelam sekarang",
+        "Posisi penyelam mula-mula",
+        "Jarak yang sudah ditempuh"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "sea-chg-start", "kind": "story", "schema_type": "CHG", "unknown": "start", "context": "sea_depth", "level": 2,
+    "id": "sea-chg-start",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "start",
+    "context": "sea_depth",
+    "level": 2,
     "text": "Seekor ikan {change} sehingga sekarang berada {end}. Di mana posisi ikan mula-mula?",
     "question": "Di mana posisi ikan mula-mula?",
     "vars": {
-      "start": { "range": [-10, -1], "fmt": "state" },
-      "change": { "range": [-6, 6], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -10,
+          -1
+        ],
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "end": "start + change" },
-    "constraints": ["end <= -1", "end >= -18"],
-    "model": "end - change", "forward_model": "end + change",
-    "given": ["change", "end"], "answer_fmt": "state",
-    "labels": { "start": "mula-mula", "end": "sekarang" },
-    "asked": { "options": ["Posisi ikan mula-mula", "Posisi ikan sekarang", "Jarak yang ditempuh ikan"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "scientific" }
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end <= -1",
+      "end >= -18"
+    ],
+    "model": "end - change",
+    "forward_model": "end + change",
+    "given": [
+      "change",
+      "end"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "mula-mula",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Posisi ikan mula-mula",
+        "Posisi ikan sekarang",
+        "Jarak yang ditempuh ikan"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "lift-chg-end", "kind": "story", "schema_type": "CHG", "unknown": "end", "context": "elevator", "level": 1,
-    "text": "Rina masuk lift di {start}. Lift itu kemudian {change}. Di lantai berapa Rina sekarang?",
-    "question": "Di lantai berapa Rina sekarang?",
-    "vars": {
-      "start": { "range": [-3, 8], "nonzero": true, "fmt": "state" },
-      "change": { "range": [-8, 8], "nonzero": true, "fmt": "change" }
-    },
-    "derived": { "end": "start + change" },
-    "constraints": ["end >= -4", "end <= 9"],
-    "model": "start + change", "given": ["start", "change"], "answer_fmt": "state",
-    "labels": { "start": "masuk", "end": "keluar" },
-    "asked": { "options": ["Lantai tempat Rina sekarang", "Lantai tempat Rina masuk lift", "Banyak lantai yang dilewati"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "personal" }
-  },
-  {
-    "id": "lift-chg-change", "kind": "story", "schema_type": "CHG", "unknown": "change", "context": "elevator", "level": 2,
-    "text": "Sebuah lift berangkat dari {start} dan berhenti di {end}. Berapa lantai lift itu bergerak, dan ke arah mana?",
-    "question": "Berapa lantai lift itu bergerak, dan ke arah mana?",
-    "vars": {
-      "start": { "range": [-4, 9], "nonzero": true, "fmt": "state" },
-      "change": { "range": [-9, 9], "nonzero": true, "fmt": "change" }
-    },
-    "derived": { "end": "start + change" },
-    "constraints": ["end >= -4", "end <= 9", "end != 0"],
-    "model": "end - start", "forward_model": "start + end",
-    "given": ["start", "end"], "answer_fmt": "change",
-    "labels": { "start": "berangkat", "end": "berhenti" },
-    "asked": { "options": ["Perpindahan lift (banyak lantai dan arahnya)", "Lantai keberangkatan lift", "Lantai tujuan lift"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "personal" }
-  },
-  {
-    "id": "lift-mlt", "kind": "story", "schema_type": "MLT", "unknown": "end", "context": "elevator", "level": 2,
-    "text": "Dodi masuk lift di {start}. Lift itu {c1}, lalu {c2}. Di lantai berapa Dodi sekarang?",
-    "question": "Di lantai berapa Dodi sekarang?",
-    "vars": {
-      "start": { "range": [-3, 6], "nonzero": true, "fmt": "state" },
-      "c1": { "range": [-6, 6], "nonzero": true, "fmt": "change" },
-      "c2": { "range": [-6, 6], "nonzero": true, "fmt": "change" }
-    },
-    "derived": { "mid": "start + c1", "end": "start + c1 + c2" },
-    "constraints": ["mid >= -4", "mid <= 9", "mid != 0", "end >= -4", "end <= 9"],
-    "model": "start + c1 + c2", "given": ["start", "c1", "c2"], "answer_fmt": "state",
-    "labels": { "start": "masuk", "end": "sekarang" },
-    "asked": { "options": ["Lantai tempat Dodi sekarang", "Lantai tempat Dodi masuk lift", "Banyak lantai seluruhnya"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "personal" }
-  },
-  {
-    "id": "money-cmb", "kind": "story", "schema_type": "CMB", "unknown": "total", "context": "money", "level": 2,
+    "id": "money-cmb",
+    "kind": "story",
+    "schema_type": "CMB",
+    "unknown": "total",
+    "context": "money",
+    "level": 2,
     "text": "Selama tiga hari berjualan, Pak Budi {q1} pada hari pertama, {q2} pada hari kedua, dan {q3} pada hari ketiga. Berapa total untung atau rugi Pak Budi selama tiga hari itu?",
     "question": "Berapa total untung atau rugi Pak Budi selama tiga hari itu?",
     "vars": {
-      "q1": { "range": [-9, 9], "nonzero": true, "step": 1000, "fmt": "item" },
-      "q2": { "range": [-9, 9], "nonzero": true, "step": 1000, "fmt": "item" },
-      "q3": { "range": [-9, 9], "nonzero": true, "step": 1000, "fmt": "item" }
+      "q1": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      },
+      "q2": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      },
+      "q3": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      }
     },
     "constraints": [
       "abs(q1 + q2 + q3) <= 20000",
       "q1 < 0 or q2 < 0 or q3 < 0",
       "q1 > 0 or q2 > 0 or q3 > 0"
     ],
-    "model": "q1 + q2 + q3", "given": ["q1", "q2", "q3"], "answer_fmt": "state",
-    "asked": { "options": ["Total untung atau rugi selama tiga hari", "Untung pada hari pertama", "Rugi pada hari kedua"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "socio_cultural" }
+    "model": "q1 + q2 + q3",
+    "given": [
+      "q1",
+      "q2",
+      "q3"
+    ],
+    "answer_fmt": "state",
+    "asked": {
+      "options": [
+        "Total untung atau rugi selama tiga hari",
+        "Untung pada hari pertama",
+        "Rugi pada hari kedua"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "socio_cultural"
+    }
   },
-
   {
-    "id": "num-mul", "kind": "numeric", "schema_type": "MUL", "context": "abstract", "level": 1,
+    "id": "num-mul",
+    "kind": "numeric",
+    "schema_type": "MUL",
+    "context": "abstract",
+    "level": 1,
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-5, 5], "nonzero": true, "fmt": "operand" },
-      "b": { "range": [-7, 7], "nonzero": true, "fmt": "operand" }
+      "a": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -7,
+          7
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
     },
-    "constraints": ["abs(a) >= 2", "abs(b) >= 2", "abs(a * b) <= 15", "a < 0 or b < 0"],
-    "model": "a * b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 2",
+      "abs(a * b) <= 15",
+      "a < 0 or b < 0"
+    ],
+    "model": "a * b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "num-div", "kind": "numeric", "schema_type": "DIV", "context": "abstract", "level": 1,
+    "id": "num-div",
+    "kind": "numeric",
+    "schema_type": "DIV",
+    "context": "abstract",
+    "level": 1,
     "text": "Hitunglah {model}",
     "vars": {
-      "q": { "range": [-5, 5], "nonzero": true, "fmt": "operand" },
-      "b": { "range": [-5, 5], "nonzero": true, "fmt": "operand" }
+      "q": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
     },
-    "derived": { "a": "q * b" }, "derived_fmt": { "a": "operand" },
-    "constraints": ["abs(q) >= 2", "abs(b) >= 2", "abs(a) <= 15", "q < 0 or b < 0"],
-    "model": "a / b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "derived": {
+      "a": "q * b"
+    },
+    "derived_fmt": {
+      "a": "operand"
+    },
+    "constraints": [
+      "abs(q) >= 2",
+      "abs(b) >= 2",
+      "abs(a) <= 15",
+      "q < 0 or b < 0"
+    ],
+    "model": "a / b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "money-prt", "kind": "story", "schema_type": "PRT", "context": "money", "level": 2,
+    "id": "money-prt",
+    "kind": "story",
+    "schema_type": "PRT",
+    "context": "money",
+    "level": 2,
     "text": "Sebuah kelompok yang terdiri atas {n} siswa berjualan di bazar sekolah. Hasilnya {total}. Hasil itu dibagi rata kepada semua anggota. Berapa bagian tiap anggota?",
     "question": "Berapa bagian tiap anggota?",
     "vars": {
-      "n": { "range": [2, 5], "fmt": "count" },
-      "s": { "range": [-5, 5], "nonzero": true, "step": 1000, "fmt": "item" }
+      "n": {
+        "range": [
+          2,
+          5
+        ],
+        "fmt": "count"
+      },
+      "s": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      }
     },
-    "derived": { "total": "n * s" }, "derived_fmt": { "total": "item" },
-    "constraints": ["abs(total) <= 20000"],
-    "model": "total / n", "given": ["total", "n"], "answer_fmt": "share",
-    "labels": { "part": "bagian" },
-    "asked": { "options": ["Bagian untung atau rugi tiap anggota", "Hasil seluruhnya", "Banyak anggota kelompok"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "socio_cultural" }
+    "derived": {
+      "total": "n * s"
+    },
+    "derived_fmt": {
+      "total": "item"
+    },
+    "constraints": [
+      "abs(total) <= 20000"
+    ],
+    "model": "total / n",
+    "given": [
+      "total",
+      "n"
+    ],
+    "answer_fmt": "share",
+    "labels": {
+      "part": "bagian"
+    },
+    "asked": {
+      "options": [
+        "Bagian untung atau rugi tiap anggota",
+        "Hasil seluruhnya",
+        "Banyak anggota kelompok"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "socio_cultural"
+    }
   },
   {
-    "id": "temp-prt", "kind": "story", "schema_type": "PRT", "context": "temperature", "level": 2,
+    "id": "temp-prt",
+    "kind": "story",
+    "schema_type": "PRT",
+    "context": "temperature",
+    "level": 2,
     "text": "Selama {n} jam, suhu di sebuah gudang {total}. Perubahan suhunya sama besar setiap jam. Berapa perubahan suhu setiap jam?",
     "question": "Berapa perubahan suhu setiap jam?",
     "vars": {
-      "n": { "range": [2, 4], "fmt": "count" },
-      "r": { "range": [-6, 6], "nonzero": true, "fmt": "change" }
+      "n": {
+        "range": [
+          2,
+          4
+        ],
+        "fmt": "count"
+      },
+      "r": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "total": "n * r" }, "derived_fmt": { "total": "change" },
-    "constraints": ["abs(total) <= 18"],
-    "model": "total / n", "given": ["total", "n"], "answer_fmt": "change",
-    "labels": { "part": "jam" },
-    "asked": { "options": ["Perubahan suhu setiap jam", "Perubahan suhu seluruhnya", "Lama waktunya"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "derived": {
+      "total": "n * r"
+    },
+    "derived_fmt": {
+      "total": "change"
+    },
+    "constraints": [
+      "abs(total) <= 18"
+    ],
+    "model": "total / n",
+    "given": [
+      "total",
+      "n"
+    ],
+    "answer_fmt": "change",
+    "labels": {
+      "part": "jam"
+    },
+    "asked": {
+      "options": [
+        "Perubahan suhu setiap jam",
+        "Perubahan suhu seluruhnya",
+        "Lama waktunya"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-rep-lab", "kind": "represent", "schema_type": "REP", "context": "temperature", "level": 1, "pool": "exam",
+    "id": "ex-rep-lab",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "temperature",
+    "level": 1,
+    "pool": "exam",
     "text": "Termometer di sebuah laboratorium menunjukkan suhu {a}. Tuliskan suhu itu sebagai bilangan bulat.",
     "question": "Tuliskan suhu itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-18, 18], "nonzero": true, "fmt": "state_words" } },
-    "constraints": ["abs(a) >= 5"],
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "scientific" }
+    "vars": {
+      "a": {
+        "range": [
+          -18,
+          18
+        ],
+        "nonzero": true,
+        "fmt": "state_words"
+      }
+    },
+    "constraints": [
+      "abs(a) >= 5"
+    ],
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-rep-office", "kind": "represent", "schema_type": "REP", "context": "elevator", "level": 1, "pool": "exam",
-    "text": "Ruang arsip sebuah kantor berada di {a}. Tuliskan letak ruang itu sebagai bilangan bulat.",
-    "question": "Tuliskan letak ruang itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-5, 10], "nonzero": true, "fmt": "state" } },
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "personal" }
-  },
-  {
-    "id": "ex-rep-sub", "kind": "represent", "schema_type": "REP", "context": "sea_depth", "level": 1, "pool": "exam",
+    "id": "ex-rep-sub",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "sea_depth",
+    "level": 1,
+    "pool": "exam",
     "text": "Sebuah kapal selam berhenti {a}. Tuliskan posisi kapal selam itu sebagai bilangan bulat.",
     "question": "Tuliskan posisi kapal selam itu sebagai bilangan bulat.",
-    "vars": { "a": { "range": [-20, -5], "fmt": "state" } },
-    "model": "a", "given": [],
-    "literacy": { "indicators": ["LM1"], "process": "formulate", "cognitive_level": "understanding", "akm_context": "scientific" }
+    "vars": {
+      "a": {
+        "range": [
+          -20,
+          -5
+        ],
+        "fmt": "state"
+      }
+    },
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-num-add", "kind": "numeric", "schema_type": "ADD", "context": "abstract_wide", "level": 1, "pool": "exam",
+    "id": "ex-num-add",
+    "kind": "numeric",
+    "schema_type": "ADD",
+    "context": "abstract_wide",
+    "level": 1,
+    "pool": "exam",
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-30, 30], "nonzero": true, "fmt": "plain" },
-      "b": { "range": [-30, 30], "nonzero": true, "fmt": "plain" }
+      "a": {
+        "range": [
+          -30,
+          30
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      },
+      "b": {
+        "range": [
+          -30,
+          30
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      }
     },
-    "constraints": ["abs(a + b) <= 45", "a < 0 or b < 0", "abs(a) >= 10 or abs(b) >= 10"],
-    "model": "a + b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a + b) <= 45",
+      "a < 0 or b < 0",
+      "abs(a) >= 10 or abs(b) >= 10"
+    ],
+    "model": "a + b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "ex-num-sub", "kind": "numeric", "schema_type": "SUB", "context": "abstract_wide", "level": 1, "pool": "exam",
+    "id": "ex-num-sub",
+    "kind": "numeric",
+    "schema_type": "SUB",
+    "context": "abstract_wide",
+    "level": 1,
+    "pool": "exam",
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-30, 30], "nonzero": true, "fmt": "plain" },
-      "b": { "range": [-30, 30], "nonzero": true, "fmt": "plain" }
+      "a": {
+        "range": [
+          -30,
+          30
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      },
+      "b": {
+        "range": [
+          -30,
+          30
+        ],
+        "nonzero": true,
+        "fmt": "plain"
+      }
     },
-    "constraints": ["abs(a - b) <= 45", "a < 0 or b < 0", "abs(a) >= 10 or abs(b) >= 10"],
-    "model": "a - b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a - b) <= 45",
+      "a < 0 or b < 0",
+      "abs(a) >= 10 or abs(b) >= 10"
+    ],
+    "model": "a - b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "ex-num-mul", "kind": "numeric", "schema_type": "MUL", "context": "abstract_wide", "level": 1, "pool": "exam",
+    "id": "ex-num-mul",
+    "kind": "numeric",
+    "schema_type": "MUL",
+    "context": "abstract_wide",
+    "level": 1,
+    "pool": "exam",
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-6, 6], "nonzero": true, "fmt": "operand" },
-      "b": { "range": [-9, 9], "nonzero": true, "fmt": "operand" }
+      "a": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
     },
-    "constraints": ["abs(a) >= 2", "abs(b) >= 3", "abs(a * b) >= 16", "abs(a * b) <= 48", "a < 0 or b < 0"],
-    "model": "a * b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 3",
+      "abs(a * b) >= 16",
+      "abs(a * b) <= 48",
+      "a < 0 or b < 0"
+    ],
+    "model": "a * b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "ex-num-div", "kind": "numeric", "schema_type": "DIV", "context": "abstract_wide", "level": 1, "pool": "exam",
+    "id": "ex-num-div",
+    "kind": "numeric",
+    "schema_type": "DIV",
+    "context": "abstract_wide",
+    "level": 1,
+    "pool": "exam",
     "text": "Hitunglah {model}",
     "vars": {
-      "q": { "range": [-6, 6], "nonzero": true, "fmt": "operand" },
-      "b": { "range": [-9, 9], "nonzero": true, "fmt": "operand" }
+      "q": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
     },
-    "derived": { "a": "q * b" }, "derived_fmt": { "a": "operand" },
-    "constraints": ["abs(q) >= 2", "abs(b) >= 3", "abs(a) >= 16", "abs(a) <= 48", "q < 0 or b < 0"],
-    "model": "a / b", "given": ["a", "b"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "application", "akm_context": "personal" }
+    "derived": {
+      "a": "q * b"
+    },
+    "derived_fmt": {
+      "a": "operand"
+    },
+    "constraints": [
+      "abs(q) >= 2",
+      "abs(b) >= 3",
+      "abs(a) >= 16",
+      "abs(a) <= 48",
+      "q < 0 or b < 0"
+    ],
+    "model": "a / b",
+    "given": [
+      "a",
+      "b"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "ex-temp-cmp", "kind": "story", "schema_type": "CMP", "context": "temperature", "level": 2, "pool": "exam",
+    "id": "ex-temp-cmp",
+    "kind": "story",
+    "schema_type": "CMP",
+    "context": "temperature",
+    "level": 2,
+    "pool": "exam",
     "text": "Pada suatu malam, suhu di puncak gunung {b}. Pada saat yang sama, suhu di desa kaki gunung {a}. Berapa selisih suhu kedua tempat itu?",
     "question": "Berapa selisih suhu kedua tempat itu?",
     "vars": {
-      "a": { "range": [3, 15], "fmt": "state" },
-      "b": { "range": [-12, -2], "fmt": "state" }
+      "a": {
+        "range": [
+          3,
+          15
+        ],
+        "fmt": "state"
+      },
+      "b": {
+        "range": [
+          -12,
+          -2
+        ],
+        "fmt": "state"
+      }
     },
-    "constraints": ["a - b <= 25"],
-    "model": "a - b", "forward_model": "a + b",
-    "given": ["b", "a"], "answer_fmt": "diff",
-    "labels": { "a": "desa", "b": "puncak" },
-    "asked": { "options": ["Selisih suhu kedua tempat", "Suhu di puncak gunung", "Suhu di desa"], "correct": 0 },
-    "literacy": { "indicators": ["LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "constraints": [
+      "a - b <= 25"
+    ],
+    "model": "a - b",
+    "forward_model": "a + b",
+    "given": [
+      "b",
+      "a"
+    ],
+    "answer_fmt": "diff",
+    "labels": {
+      "a": "desa",
+      "b": "puncak"
+    },
+    "asked": {
+      "options": [
+        "Selisih suhu kedua tempat",
+        "Suhu di puncak gunung",
+        "Suhu di desa"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-lift-chg-start", "kind": "story", "schema_type": "CHG", "unknown": "start", "context": "elevator", "level": 2, "pool": "exam",
-    "text": "Bu Wati {change} dengan lift. Ia keluar dari lift di {end}. Di lantai berapa Bu Wati masuk lift?",
-    "question": "Di lantai berapa Bu Wati masuk lift?",
-    "vars": {
-      "start": { "range": [-4, 9], "nonzero": true, "fmt": "state" },
-      "change": { "range": [-9, 9], "nonzero": true, "fmt": "change" }
-    },
-    "derived": { "end": "start + change" },
-    "constraints": ["end >= -4", "end <= 9", "end != 0"],
-    "model": "end - change", "forward_model": "end + change",
-    "given": ["change", "end"], "answer_fmt": "state",
-    "labels": { "start": "masuk", "end": "keluar" },
-    "asked": { "options": ["Lantai tempat Bu Wati masuk lift", "Lantai tempat Bu Wati keluar", "Banyak lantai yang dilewati"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "personal" }
-  },
-  {
-    "id": "ex-temp-altitude", "kind": "story", "schema_type": "RPT", "context": "temperature", "level": 2, "pool": "exam",
+    "id": "ex-temp-altitude",
+    "kind": "story",
+    "schema_type": "RPT",
+    "context": "temperature",
+    "level": 2,
+    "pool": "exam",
     "text": "Makin tinggi suatu tempat, makin dingin udaranya. Setiap ketinggian bertambah satu kilometer, suhu udara {r}. Berapa perubahan suhu jika ketinggian bertambah {n} kilometer?",
     "question": "Berapa perubahan suhu jika ketinggian bertambah {n} kilometer?",
     "vars": {
-      "r": { "range": [-7, -4], "fmt": "change" },
-      "n": { "range": [2, 3], "fmt": "count" }
+      "r": {
+        "range": [
+          -7,
+          -4
+        ],
+        "fmt": "change"
+      },
+      "n": {
+        "range": [
+          2,
+          3
+        ],
+        "fmt": "count"
+      }
     },
-    "constraints": ["abs(n * r) <= 18"],
-    "model": "n * r", "forward_model": "n + r",
-    "given": ["r", "n"], "answer_fmt": "change",
-    "asked": { "options": ["Perubahan suhu seluruhnya", "Perubahan suhu setiap kilometer", "Ketinggian tempat itu"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "scientific" }
+    "constraints": [
+      "abs(n * r) <= 18"
+    ],
+    "model": "n * r",
+    "forward_model": "n + r",
+    "given": [
+      "r",
+      "n"
+    ],
+    "answer_fmt": "change",
+    "asked": {
+      "options": [
+        "Perubahan suhu seluruhnya",
+        "Perubahan suhu setiap kilometer",
+        "Ketinggian tempat itu"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-money-debt", "kind": "story", "schema_type": "PRT", "context": "money", "level": 2, "pool": "exam",
+    "id": "ex-money-debt",
+    "kind": "story",
+    "schema_type": "PRT",
+    "context": "money",
+    "level": 2,
+    "pool": "exam",
     "text": "Sebanyak {n} sahabat menyewa lapangan futsal. Mereka mempunyai {total} kepada pemilik lapangan. Utang itu dibagi rata. Berapa bagian utang tiap sahabat?",
     "question": "Berapa bagian utang tiap sahabat?",
     "vars": {
-      "n": { "range": [3, 5], "fmt": "count" },
-      "s": { "range": [-6, -2], "step": 1000, "fmt": "debt" }
+      "n": {
+        "range": [
+          3,
+          5
+        ],
+        "fmt": "count"
+      },
+      "s": {
+        "range": [
+          -6,
+          -2
+        ],
+        "step": 1000,
+        "fmt": "debt"
+      }
     },
-    "derived": { "total": "n * s" }, "derived_fmt": { "total": "debt" },
-    "constraints": ["abs(total) <= 20000"],
-    "model": "total / n", "given": ["total", "n"], "answer_fmt": "share_debt",
-    "labels": { "part": "sahabat" },
-    "asked": { "options": ["Bagian utang tiap sahabat", "Utang seluruhnya", "Banyak sahabat"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "application", "akm_context": "socio_cultural" }
+    "derived": {
+      "total": "n * s"
+    },
+    "derived_fmt": {
+      "total": "debt"
+    },
+    "constraints": [
+      "abs(total) <= 20000"
+    ],
+    "model": "total / n",
+    "given": [
+      "total",
+      "n"
+    ],
+    "answer_fmt": "share_debt",
+    "labels": {
+      "part": "sahabat"
+    },
+    "asked": {
+      "options": [
+        "Bagian utang tiap sahabat",
+        "Utang seluruhnya",
+        "Banyak sahabat"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "socio_cultural"
+    }
   },
   {
-    "id": "ex-num-mix", "kind": "numeric", "schema_type": "MIX", "context": "abstract_wide", "level": 3, "pool": "exam",
+    "id": "ex-num-mix",
+    "kind": "numeric",
+    "schema_type": "MIX",
+    "context": "abstract_wide",
+    "level": 3,
+    "pool": "exam",
     "text": "Hitunglah {model}",
     "vars": {
-      "a": { "range": [-6, 6], "nonzero": true, "fmt": "operand" },
-      "b": { "range": [-6, 6], "nonzero": true, "fmt": "operand" },
-      "q": { "range": [-6, 6], "nonzero": true, "fmt": "operand" },
-      "d": { "range": [-5, 5], "nonzero": true, "fmt": "operand" }
+      "a": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "q": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "d": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
     },
-    "derived": { "c": "q * d" }, "derived_fmt": { "c": "operand" },
-    "constraints": ["abs(a) >= 2", "abs(b) >= 2", "abs(q) >= 2", "abs(d) >= 2", "abs(a * b + q) <= 45", "a < 0 or b < 0", "c < 0 or d < 0"],
-    "model": "a * b + c / d", "given": ["a", "b", "c", "d"],
-    "literacy": { "indicators": ["LM5"], "process": "employ", "cognitive_level": "reasoning", "akm_context": "personal" }
+    "derived": {
+      "c": "q * d"
+    },
+    "derived_fmt": {
+      "c": "operand"
+    },
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 2",
+      "abs(q) >= 2",
+      "abs(d) >= 2",
+      "abs(a * b + q) <= 45",
+      "a < 0 or b < 0",
+      "c < 0 or d < 0"
+    ],
+    "model": "a * b + c / d",
+    "given": [
+      "a",
+      "b",
+      "c",
+      "d"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
   },
   {
-    "id": "ex-temp-rpt-start", "kind": "story", "schema_type": "RPT", "unknown": "end", "context": "temperature", "level": 3, "pool": "exam",
+    "id": "ex-temp-rpt-start",
+    "kind": "story",
+    "schema_type": "RPT",
+    "unknown": "end",
+    "context": "temperature",
+    "level": 3,
+    "pool": "exam",
     "text": "Suhu sebuah ruang pendingin mula-mula {start}. Setelah mesin dinyalakan, suhunya {r} setiap menit. Berapa suhu ruang itu setelah {n} menit?",
     "question": "Berapa suhu ruang itu setelah {n} menit?",
     "vars": {
-      "start": { "range": [4, 12], "fmt": "state" },
-      "r": { "range": [-5, -2], "fmt": "change" },
-      "n": { "range": [3, 4], "fmt": "count" }
+      "start": {
+        "range": [
+          4,
+          12
+        ],
+        "fmt": "state"
+      },
+      "r": {
+        "range": [
+          -5,
+          -2
+        ],
+        "fmt": "change"
+      },
+      "n": {
+        "range": [
+          3,
+          4
+        ],
+        "fmt": "count"
+      }
     },
-    "derived": { "end": "start + n * r" },
-    "constraints": ["end <= -1", "end >= -18"],
-    "model": "start + n * r", "given": ["start", "r", "n"], "answer_fmt": "state",
-    "labels": { "start": "mula-mula", "end": "akhir" },
-    "asked": { "options": ["Suhu ruang setelah beberapa menit", "Suhu ruang mula-mula", "Perubahan suhu setiap menit"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6", "LM7"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "scientific" }
+    "derived": {
+      "end": "start + n * r"
+    },
+    "constraints": [
+      "end <= -1",
+      "end >= -18"
+    ],
+    "model": "start + n * r",
+    "given": [
+      "start",
+      "r",
+      "n"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "mula-mula",
+      "end": "akhir"
+    },
+    "asked": {
+      "options": [
+        "Suhu ruang setelah beberapa menit",
+        "Suhu ruang mula-mula",
+        "Perubahan suhu setiap menit"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6",
+        "LM7"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-sea-mlt-change", "kind": "story", "schema_type": "MLT", "unknown": "change", "context": "sea_depth", "level": 3, "pool": "exam",
+    "id": "ex-sea-mlt-change",
+    "kind": "story",
+    "schema_type": "MLT",
+    "unknown": "change",
+    "context": "sea_depth",
+    "level": 3,
+    "pool": "exam",
     "text": "Seorang penyelam mula-mula berada {start}. Ia {c1}. Setelah bergerak sekali lagi, ia berada {end}. Berapa meter dan ke arah mana gerakan keduanya?",
     "question": "Berapa meter dan ke arah mana gerakan keduanya?",
     "vars": {
-      "start": { "range": [-12, -2], "fmt": "state" },
-      "c1": { "range": [-6, 6], "nonzero": true, "fmt": "change" },
-      "c2": { "range": [-6, 6], "nonzero": true, "fmt": "change" }
+      "start": {
+        "range": [
+          -12,
+          -2
+        ],
+        "fmt": "state"
+      },
+      "c1": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      },
+      "c2": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
     },
-    "derived": { "mid": "start + c1", "end": "start + c1 + c2" },
-    "constraints": ["mid <= -1", "mid >= -18", "end <= -1", "end >= -18"],
-    "model": "end - start - c1", "given": ["start", "c1", "end"], "answer_fmt": "change",
-    "labels": { "start": "mula-mula", "end": "akhir" },
-    "asked": { "options": ["Gerakan kedua penyelam", "Posisi penyelam mula-mula", "Posisi penyelam terakhir"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6", "LM7"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "scientific" }
+    "derived": {
+      "mid": "start + c1",
+      "end": "start + c1 + c2"
+    },
+    "constraints": [
+      "mid <= -1",
+      "mid >= -18",
+      "end <= -1",
+      "end >= -18"
+    ],
+    "model": "end - start - c1",
+    "given": [
+      "start",
+      "c1",
+      "end"
+    ],
+    "answer_fmt": "change",
+    "labels": {
+      "start": "mula-mula",
+      "end": "akhir"
+    },
+    "asked": {
+      "options": [
+        "Gerakan kedua penyelam",
+        "Posisi penyelam mula-mula",
+        "Posisi penyelam terakhir"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6",
+        "LM7"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "scientific"
+    }
   },
   {
-    "id": "ex-money-mixed", "kind": "story", "schema_type": "PRT", "unknown": "mixed", "context": "money", "level": 3, "pool": "exam",
+    "id": "ex-money-mixed",
+    "kind": "story",
+    "schema_type": "PRT",
+    "unknown": "mixed",
+    "context": "money",
+    "level": 3,
+    "pool": "exam",
     "text": "Koperasi kelas {q1} pada bulan Juli. Pada bulan Agustus, koperasi itu {q2}. Hasil kedua bulan dibagi rata kepada {n} pengurus. Berapa bagian tiap pengurus?",
     "question": "Berapa bagian tiap pengurus?",
     "vars": {
-      "q1": { "range": [-9, 9], "nonzero": true, "step": 1000, "fmt": "item" },
-      "s": { "range": [-5, 5], "nonzero": true, "step": 1000, "fmt": "item" },
-      "n": { "range": [2, 4], "fmt": "count" }
+      "q1": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      },
+      "s": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "item"
+      },
+      "n": {
+        "range": [
+          2,
+          4
+        ],
+        "fmt": "count"
+      }
     },
-    "derived": { "q2": "n * s - q1" }, "derived_fmt": { "q2": "item" },
-    "constraints": ["q2 != 0", "q1 * q2 < 0", "abs(q2) <= 20000", "abs(n * s) <= 20000"],
-    "model": "(q1 + q2) / n", "given": ["q1", "q2", "n"], "answer_fmt": "share",
-    "labels": { "part": "pengurus" },
-    "asked": { "options": ["Bagian tiap pengurus", "Hasil bulan Juli", "Hasil kedua bulan"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM4", "LM5", "LM6", "LM7"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "socio_cultural" }
+    "derived": {
+      "q2": "n * s - q1"
+    },
+    "derived_fmt": {
+      "q2": "item"
+    },
+    "constraints": [
+      "q2 != 0",
+      "q1 * q2 < 0",
+      "abs(q2) <= 20000",
+      "abs(n * s) <= 20000"
+    ],
+    "model": "(q1 + q2) / n",
+    "given": [
+      "q1",
+      "q2",
+      "n"
+    ],
+    "answer_fmt": "share",
+    "labels": {
+      "part": "pengurus"
+    },
+    "asked": {
+      "options": [
+        "Bagian tiap pengurus",
+        "Hasil bulan Juli",
+        "Hasil kedua bulan"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6",
+        "LM7"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "socio_cultural"
+    }
   },
   {
-    "id": "ex-score", "kind": "story", "schema_type": "SCR", "context": "score", "level": 3, "pool": "exam",
+    "id": "ex-score",
+    "kind": "story",
+    "schema_type": "SCR",
+    "context": "score",
+    "level": 3,
+    "pool": "exam",
     "text": "Dalam lomba cerdas cermat, jawaban benar diberi skor {p}. Jawaban salah diberi skor {m}. Soal yang tidak dijawab diberi skor 0. Dari 20 soal, Nadia menjawab benar {b} soal dan salah {s} soal. Berapa skor akhir Nadia?",
     "question": "Berapa skor akhir Nadia?",
     "vars": {
-      "p": { "range": [3, 5], "fmt": "score" },
-      "m": { "range": [-2, -1], "fmt": "score" },
-      "b": { "range": [8, 14], "fmt": "count" },
-      "s": { "range": [2, 6], "fmt": "count" }
+      "p": {
+        "range": [
+          3,
+          5
+        ],
+        "fmt": "score"
+      },
+      "m": {
+        "range": [
+          -2,
+          -1
+        ],
+        "fmt": "score"
+      },
+      "b": {
+        "range": [
+          8,
+          14
+        ],
+        "fmt": "count"
+      },
+      "s": {
+        "range": [
+          2,
+          6
+        ],
+        "fmt": "count"
+      }
     },
-    "constraints": ["b + s <= 18"],
-    "model": "b * p + s * m", "given": ["p", "m", "b", "s"], "answer_fmt": "state",
-    "asked": { "options": ["Skor akhir Nadia", "Banyak jawaban benar Nadia", "Banyak soal yang tidak dijawab"], "correct": 0 },
-    "literacy": { "indicators": ["LM1", "LM2", "LM3", "LM4", "LM5", "LM6"], "process": "formulate", "cognitive_level": "reasoning", "akm_context": "socio_cultural" }
+    "constraints": [
+      "b + s <= 18"
+    ],
+    "model": "b * p + s * m",
+    "given": [
+      "p",
+      "m",
+      "b",
+      "s"
+    ],
+    "answer_fmt": "state",
+    "asked": {
+      "options": [
+        "Skor akhir Nadia",
+        "Banyak jawaban benar Nadia",
+        "Banyak soal yang tidak dijawab"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM3",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "socio_cultural"
+    }
+  },
+  {
+    "id": "rep-game",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "score",
+    "level": 1,
+    "text": "Dalam sebuah game online, Bima {a}. Tuliskan perubahan skor Bima sebagai bilangan bulat.",
+    "question": "Tuliskan perubahan skor Bima sebagai bilangan bulat.",
+    "vars": {
+      "a": {
+        "range": [
+          -20,
+          20
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
+    },
+    "constraints": [
+      "abs(a) >= 3"
+    ],
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "emoney-chg-end",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "end",
+    "context": "emoney",
+    "level": 1,
+    "text": "Saldo e-money Sinta mula-mula {start}. Lalu ia {change}. Berapa saldo e-money Sinta sekarang?",
+    "question": "Berapa saldo e-money Sinta sekarang?",
+    "vars": {
+      "start": {
+        "range": [
+          5,
+          20
+        ],
+        "step": 1000,
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -15,
+          15
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "change"
+      }
+    },
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end >= 1000",
+      "end <= 40000"
+    ],
+    "model": "start + change",
+    "given": [
+      "start",
+      "change"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "awal",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Saldo Sinta sekarang",
+        "Saldo Sinta mula-mula",
+        "Uang yang keluar atau masuk"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "game-chg-change",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "change",
+    "context": "score",
+    "level": 2,
+    "text": "Skor Arka di sebuah game mula-mula {start}. Setelah satu ronde, skornya menjadi {end}. Berapa perubahan skor Arka?",
+    "question": "Berapa perubahan skor Arka?",
+    "vars": {
+      "start": {
+        "range": [
+          -15,
+          40
+        ],
+        "nonzero": true,
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -25,
+          25
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
+    },
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end >= -20",
+      "end <= 60",
+      "end != 0"
+    ],
+    "model": "end - start",
+    "forward_model": "start + end",
+    "given": [
+      "start",
+      "end"
+    ],
+    "answer_fmt": "change",
+    "labels": {
+      "start": "awal",
+      "end": "akhir"
+    },
+    "asked": {
+      "options": [
+        "Perubahan skor Arka",
+        "Skor Arka mula-mula",
+        "Skor Arka sekarang"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "stairs-mlt",
+    "kind": "story",
+    "schema_type": "MLT",
+    "unknown": "end",
+    "context": "stairs",
+    "level": 2,
+    "text": "Di tangga sekolah, Rani berdiri di {start}. Ia {c1}, lalu {c2}. Di anak tangga ke berapa Rani sekarang?",
+    "question": "Di anak tangga ke berapa Rani sekarang?",
+    "vars": {
+      "start": {
+        "range": [
+          2,
+          12
+        ],
+        "fmt": "state"
+      },
+      "c1": {
+        "range": [
+          -8,
+          8
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      },
+      "c2": {
+        "range": [
+          -8,
+          8
+        ],
+        "nonzero": true,
+        "fmt": "change"
+      }
+    },
+    "derived": {
+      "mid": "start + c1",
+      "end": "start + c1 + c2"
+    },
+    "constraints": [
+      "mid >= 1",
+      "mid <= 20",
+      "end >= 1",
+      "end <= 20",
+      "c1 * c2 < 0"
+    ],
+    "model": "start + c1 + c2",
+    "given": [
+      "start",
+      "c1",
+      "c2"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "mulai",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Posisi Rani sekarang",
+        "Posisi Rani mula-mula",
+        "Banyak anak tangga yang dilewati"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "game-score",
+    "kind": "story",
+    "schema_type": "SCR",
+    "context": "score",
+    "level": 2,
+    "text": "Dalam sebuah game online, menang diberi {p} poin dan kalah diberi {m} poin. Dodi menang {b} kali dan kalah {s} kali. Berapa total poin Dodi?",
+    "question": "Berapa total poin Dodi?",
+    "vars": {
+      "p": {
+        "range": [
+          3,
+          6
+        ],
+        "fmt": "score"
+      },
+      "m": {
+        "range": [
+          -3,
+          -1
+        ],
+        "fmt": "score"
+      },
+      "b": {
+        "range": [
+          3,
+          8
+        ],
+        "fmt": "count"
+      },
+      "s": {
+        "range": [
+          2,
+          7
+        ],
+        "fmt": "count"
+      }
+    },
+    "model": "b * p + s * m",
+    "given": [
+      "p",
+      "m",
+      "b",
+      "s"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "plus": "menang",
+      "minus": "kalah"
+    },
+    "asked": {
+      "options": [
+        "Total poin Dodi",
+        "Banyak kemenangan Dodi",
+        "Poin untuk satu kemenangan"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM3",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-add3",
+    "kind": "numeric",
+    "schema_type": "ADD3",
+    "context": "abstract_wide",
+    "level": 1,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "c": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "t": {
+        "range": [
+          -2,
+          2
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "derived": {
+      "a": "10 * t - c"
+    },
+    "derived_fmt": {
+      "a": "operand"
+    },
+    "constraints": [
+      "abs(c) >= 2",
+      "abs(b) >= 2",
+      "abs(a) <= 25",
+      "abs(a) >= 3"
+    ],
+    "model": "a + b + c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-mul3",
+    "kind": "numeric",
+    "schema_type": "MUL3",
+    "context": "abstract_100",
+    "level": 2,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "a": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "c": {
+        "range": [
+          -2,
+          2
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "constraints": [
+      "abs(a) == 5",
+      "abs(c) == 2",
+      "abs(b) >= 3",
+      "a < 0 or b < 0 or c < 0"
+    ],
+    "model": "a * b * c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-dist",
+    "kind": "numeric",
+    "schema_type": "DIST",
+    "context": "abstract_100",
+    "level": 2,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "a": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "t": {
+        "range": [
+          -1,
+          1
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "derived": {
+      "c": "10 * t - b"
+    },
+    "derived_fmt": {
+      "c": "operand"
+    },
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 2",
+      "abs(c) >= 2",
+      "abs(b + c) == 10"
+    ],
+    "model": "a * b + a * c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-div2",
+    "kind": "numeric",
+    "schema_type": "DIV2",
+    "context": "abstract_100",
+    "level": 2,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "q": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "c": {
+        "range": [
+          -3,
+          3
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "derived": {
+      "a": "q * b * c"
+    },
+    "derived_fmt": {
+      "a": "operand"
+    },
+    "constraints": [
+      "abs(q) >= 2",
+      "abs(b) >= 2",
+      "abs(c) >= 2",
+      "abs(a) <= 100",
+      "q < 0 or b < 0 or c < 0"
+    ],
+    "model": "a / b / c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-mix-a",
+    "kind": "numeric",
+    "schema_type": "MIX2",
+    "context": "abstract_wide",
+    "level": 2,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "a": {
+        "range": [
+          -20,
+          20
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "c": {
+        "range": [
+          -6,
+          6
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 2",
+      "abs(c) >= 2",
+      "abs(a + b * c) <= 45",
+      "a < 0 or b < 0 or c < 0"
+    ],
+    "model": "a + b * c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "num-mix-paren",
+    "kind": "numeric",
+    "schema_type": "MIX2",
+    "context": "abstract_wide",
+    "level": 2,
+    "text": "Hitunglah {model}",
+    "vars": {
+      "a": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "c": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "constraints": [
+      "abs(c) >= 2",
+      "a + b != 0",
+      "abs((a + b) * c) <= 45",
+      "a < 0 or b < 0 or c < 0"
+    ],
+    "model": "(a + b) * c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "application",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "ex-rep-game",
+    "kind": "represent",
+    "schema_type": "REP",
+    "context": "score",
+    "level": 1,
+    "pool": "exam",
+    "text": "Di akhir sebuah game, skor Tono tercatat {a}. Tuliskan skor itu sebagai bilangan bulat.",
+    "question": "Tuliskan skor itu sebagai bilangan bulat.",
+    "vars": {
+      "a": {
+        "range": [
+          -20,
+          20
+        ],
+        "nonzero": true,
+        "fmt": "state_words"
+      }
+    },
+    "constraints": [
+      "abs(a) >= 5"
+    ],
+    "model": "a",
+    "given": [],
+    "literacy": {
+      "indicators": [
+        "LM1"
+      ],
+      "process": "formulate",
+      "cognitive_level": "understanding",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "ex-emoney-chg-start",
+    "kind": "story",
+    "schema_type": "CHG",
+    "unknown": "start",
+    "context": "emoney",
+    "level": 2,
+    "pool": "exam",
+    "text": "Dina {change} dengan kartu e-money. Sekarang saldo kartunya {end}. Berapa saldo kartu Dina mula-mula?",
+    "question": "Berapa saldo kartu Dina mula-mula?",
+    "vars": {
+      "start": {
+        "range": [
+          5,
+          25
+        ],
+        "step": 1000,
+        "fmt": "state"
+      },
+      "change": {
+        "range": [
+          -15,
+          15
+        ],
+        "nonzero": true,
+        "step": 1000,
+        "fmt": "change"
+      }
+    },
+    "derived": {
+      "end": "start + change"
+    },
+    "constraints": [
+      "end >= 1000",
+      "end <= 40000"
+    ],
+    "model": "end - change",
+    "forward_model": "end + change",
+    "given": [
+      "change",
+      "end"
+    ],
+    "answer_fmt": "state",
+    "labels": {
+      "start": "awal",
+      "end": "sekarang"
+    },
+    "asked": {
+      "options": [
+        "Saldo Dina mula-mula",
+        "Saldo Dina sekarang",
+        "Uang yang keluar atau masuk"
+      ],
+      "correct": 0
+    },
+    "literacy": {
+      "indicators": [
+        "LM1",
+        "LM2",
+        "LM4",
+        "LM5",
+        "LM6"
+      ],
+      "process": "formulate",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "ex-num-dist",
+    "kind": "numeric",
+    "schema_type": "DIST",
+    "context": "abstract_100",
+    "level": 2,
+    "pool": "exam",
+    "text": "Hitunglah {model}",
+    "vars": {
+      "a": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -19,
+          19
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "t": {
+        "range": [
+          -1,
+          1
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "derived": {
+      "c": "20 * t - b"
+    },
+    "derived_fmt": {
+      "c": "operand"
+    },
+    "constraints": [
+      "abs(a) >= 2",
+      "abs(b) >= 3",
+      "abs(c) >= 3",
+      "abs(b + c) == 20"
+    ],
+    "model": "a * b + a * c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
+  },
+  {
+    "id": "ex-num-div2",
+    "kind": "numeric",
+    "schema_type": "DIV2",
+    "context": "abstract_100",
+    "level": 2,
+    "pool": "exam",
+    "text": "Hitunglah {model}",
+    "vars": {
+      "q": {
+        "range": [
+          -9,
+          9
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "b": {
+        "range": [
+          -5,
+          5
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      },
+      "c": {
+        "range": [
+          -3,
+          3
+        ],
+        "nonzero": true,
+        "fmt": "operand"
+      }
+    },
+    "derived": {
+      "a": "q * b * c"
+    },
+    "derived_fmt": {
+      "a": "operand"
+    },
+    "constraints": [
+      "abs(q) >= 7",
+      "abs(b) >= 2",
+      "abs(c) >= 2",
+      "abs(a) <= 100",
+      "q < 0 or b < 0 or c < 0"
+    ],
+    "model": "a / b / c",
+    "given": [
+      "a",
+      "b",
+      "c"
+    ],
+    "literacy": {
+      "indicators": [
+        "LM5"
+      ],
+      "process": "employ",
+      "cognitive_level": "reasoning",
+      "akm_context": "personal"
+    }
   }
 ]

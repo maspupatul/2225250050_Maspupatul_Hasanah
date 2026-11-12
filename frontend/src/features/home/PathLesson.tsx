@@ -4,12 +4,20 @@ import { t } from '../../i18n/id';
 import type { LessonSummary } from '../../lib/types';
 import type { LessonState } from '../../store/progress';
 
-export const ROW_HEIGHT = 96;
+export const ROW_HEIGHT = 108;
+const CARD_HEIGHT = 88;
 export const LANE_WIDTH = 96;
 const NODE = 56;
 const MotionLink = motion.create(Link);
 
+/** Pop gradient of a module (kategori): node fill and card lip. Never the sign colours. */
+export interface ModuleTone {
+  node: string;
+  badge: string;
+}
+
 type Props = {
+  tone: ModuleTone;
   lesson: LessonSummary;
   number: number;
   state: LessonState;
@@ -44,7 +52,7 @@ function ProgressArc({ progress }: { progress: number }) {
 }
 
 /** One stop on the learning path: a round icon node on the path plus an info card. */
-export function PathLesson({ lesson, number, state, laneX, segmentProgress, stars, resumable, onLocked }: Props) {
+export function PathLesson({ tone, lesson, number, state, laneX, segmentProgress, stars, resumable, onLocked }: Props) {
   const shake = useAnimationControls();
   const locked = state === 'locked';
   const current = state === 'current';
@@ -65,13 +73,9 @@ export function PathLesson({ lesson, number, state, laneX, segmentProgress, star
       )}
       <span
         className={`relative grid h-full w-full place-items-center rounded-full text-[26px] shadow-sm ring-4 ${
-          done
-            ? 'bg-accent-soft ring-accent'
-            : current
-              ? 'bg-white ring-white'
-              : locked
-                ? 'bg-lavender-100 ring-lavender-50'
-                : 'bg-white ring-lavender-200'
+          locked
+            ? 'bg-lavender-100 ring-lavender-50'
+            : `bg-gradient-to-br ${tone.node} ${done ? 'ring-accent' : 'ring-white'}`
         }`}
       >
         {current && <ProgressArc progress={segmentProgress} />}
@@ -100,12 +104,12 @@ export function PathLesson({ lesson, number, state, laneX, segmentProgress, star
 
   const card = (
     <span
-      className={`flex h-[76px] items-center gap-3 rounded-3xl px-4 transition-shadow ${
+      className={`flex h-[88px] items-center gap-3 rounded-3xl px-4 transition-[transform,box-shadow] duration-100 ${
         current
-          ? 'bg-white shadow-card ring-2 ring-accent/60'
+          ? 'border-2 border-accent bg-white shadow-pop-accent group-active:translate-y-1 group-active:shadow-none'
           : locked
-            ? 'border border-dashed border-lavender-300 bg-lavender-50'
-            : 'bg-white shadow-sm ring-1 ring-lavender-200 group-hover:shadow-card'
+            ? 'border-2 border-dashed border-lavender-300 bg-lavender-50'
+            : 'card-3d group-active:translate-y-1 group-active:shadow-none'
       }`}
     >
       <span className="min-w-0 flex-1">
@@ -114,13 +118,13 @@ export function PathLesson({ lesson, number, state, laneX, segmentProgress, star
         >
           {t.home.lesson} {number}
         </span>
-        <span className={`block truncate font-extrabold ${locked ? 'text-ink-muted' : 'text-ink'}`}>
+        <span className={`line-clamp-2 font-extrabold leading-tight ${locked ? 'text-ink-muted' : 'text-ink'}`}>
           {lesson.title}
         </span>
-        <span className="block truncate text-xs text-ink-muted">{lesson.subtitle}</span>
+        <span className="mt-0.5 line-clamp-1 text-xs text-ink-muted">{lesson.subtitle}</span>
       </span>
       {current && (
-        <span className="shrink-0 rounded-full bg-accent px-3.5 py-2 text-xs font-extrabold text-white shadow-sm">
+        <span className="shrink-0 rounded-full bg-accent px-3 py-2 text-[11px] font-extrabold text-white shadow-[0_3px_0_#c2410c]">
           {resumable ? t.home.resume : t.home.start} ›
         </span>
       )}
@@ -160,7 +164,7 @@ export function PathLesson({ lesson, number, state, laneX, segmentProgress, star
         }}
         aria-label={`${label} (${t.home.locked})`}
         className={`${rowClass} w-full text-left`}
-        style={{ height: ROW_HEIGHT, paddingTop: (ROW_HEIGHT - 76) / 2 }}
+        style={{ height: ROW_HEIGHT, paddingTop: (ROW_HEIGHT - CARD_HEIGHT) / 2 - 2 }}
       >
         {inner}
       </motion.button>
@@ -174,7 +178,7 @@ export function PathLesson({ lesson, number, state, laneX, segmentProgress, star
       whileTap={{ scale: 0.97 }}
       aria-label={label}
       className={rowClass}
-      style={{ height: ROW_HEIGHT, paddingTop: (ROW_HEIGHT - 76) / 2 }}
+      style={{ height: ROW_HEIGHT, paddingTop: (ROW_HEIGHT - CARD_HEIGHT) / 2 - 2 }}
     >
       {inner}
     </MotionLink>
