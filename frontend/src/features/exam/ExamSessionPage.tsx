@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
-import { examScore, type Outcome } from '../../lib/score';
+import { examScore, stageScores, type Outcome } from '../../lib/score';
 import type { ExamStart, Problem } from '../../lib/types';
 import { useApi } from '../../lib/useApi';
 import { bestExamScore, examUnlocked, useProgress } from '../../store/progress';
@@ -57,7 +58,11 @@ export function ExamSessionPage() {
         {error ? (
           <div>
             <p className="text-sm">{error}</p>
-            <button type="button" onClick={() => void start()} className="mt-3 rounded-2xl bg-accent px-5 py-2 text-sm font-extrabold">
+            <button
+              type="button"
+              onClick={() => void start()}
+              className="mt-3 rounded-2xl bg-accent px-5 py-2 text-sm font-extrabold"
+            >
               {t.home.retry}
             </button>
           </div>
@@ -79,7 +84,8 @@ export function ExamSessionPage() {
     const score = examScore(outcomes);
     const best = bestExamScore(useProgress.getState().examResults);
     setNewBest(best !== null && score > best);
-    recordExam(score);
+    const stages = Object.fromEntries(stageScores(outcomes, exam?.stages ?? []).map((st) => [st.key, st.score]));
+    recordExam(score, stages);
   };
 
   return (
@@ -88,7 +94,7 @@ export function ExamSessionPage() {
       total={exam.total}
       fetchProblem={fetchProblem}
       title={t.exam.title}
-      icon="🏆"
+      icon={<Icon name="trophy" size={18} />}
       onClose={() => navigate('/ujian-akhir')}
       onProblemDone={onProblemDone}
       onComplete={onComplete}

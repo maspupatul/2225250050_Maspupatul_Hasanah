@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '../../components/ui/Icon';
 import { InstallCard } from '../../components/ui/InstallCard';
 import { ProgressRings } from '../../components/ui/ProgressRings';
 import { RoundButton } from '../../components/ui/RoundButton';
+import { STAT_TONE } from '../../components/ui/statTones';
 import { StatTile } from '../../components/ui/StatTile';
 import { Toggle } from '../../components/ui/Toggle';
+import { TrophyArt } from '../../components/ui/TrophyArt';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { todayISO } from '../../lib/format';
 import { useApi } from '../../lib/useApi';
+import { useAuth } from '../../store/auth';
 import { bestExamScore, moduleMastery, useProgress } from '../../store/progress';
+import { ClassCodeCard } from './ClassCodeCard';
 
 const RING_COLORS = ['#22c7d6', '#f0597a', '#2bc48a', '#f5a524'];
 
@@ -27,10 +32,10 @@ function currentWeek(): Date[] {
 export function ProfilePage() {
   const navigate = useNavigate();
   const { data: modules } = useApi(() => api.modules(), []);
-  const { name, lessons, activeDays, stats, guided, examResults, setName, setGuided, reset } = useProgress();
+  const { name, lessons, activeDays, stats, guided, examResults, setGuided } = useProgress();
+  const { user, signOut } = useAuth();
   const bestExam = bestExamScore(examResults);
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(name);
 
   const rings = (modules ?? []).map((m, i) => ({
     id: m.id,
@@ -42,67 +47,56 @@ export function ProfilePage() {
   const activeThisWeek = week.filter((d) => activeDays.includes(todayISO(d))).length;
 
   const skills = [
-    { icon: '✅', value: stats.correct, label: t.profile.correct },
-    { icon: '🌟', value: stats.selfFound, label: t.profile.selfFound },
-    { icon: '💡', value: stats.hintsUsed, label: t.profile.hintsUsed },
-    { icon: '🔁', value: stats.deferred, label: t.profile.deferred },
-  ];
+    { icon: 'check-circle', tone: STAT_TONE.correct, value: stats.correct, label: t.profile.correct },
+    { icon: 'sparkles', tone: STAT_TONE.selfFound, value: stats.selfFound, label: t.profile.selfFound },
+    { icon: 'lightbulb', tone: STAT_TONE.hints, value: stats.hintsUsed, label: t.profile.hintsUsed },
+    { icon: 'refresh', tone: STAT_TONE.deferred, value: stats.deferred, label: t.profile.deferred },
+  ] as const;
 
   return (
     <div className="min-h-dvh bg-lavender-50 pb-32">
       <header className="rounded-b-[2.5rem] bg-plum-800 px-6 pb-12 pt-[calc(env(safe-area-inset-top)+16px)] text-center text-white">
         <div className="flex items-center justify-between">
           <RoundButton label={t.common.close} onClick={() => navigate('/')}>
-            ✕
+            <Icon name="close" size={20} />
           </RoundButton>
-          <RoundButton label={t.profile.settings} onClick={() => setEditing((v) => !v)}>
-            ⚙
+          <RoundButton label={t.profile.settings} onClick={() => setEditing((v) => !v)} aria-pressed={editing}>
+            <Icon name="settings" size={20} />
           </RoundButton>
         </div>
         <div className="mx-auto -mt-2 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-amber-300 to-accent text-4xl font-black text-plum-900 shadow-card">
-          {name.charAt(0).toUpperCase() || '🙂'}
+          {name.charAt(0).toUpperCase() || <Icon name="user" size={36} />}
         </div>
         <h1 className="mt-3 text-xl font-extrabold">{name}</h1>
-        <p className="text-xs text-white/60">{t.profile.student}</p>
+        <p className="text-xs text-white/60">
+          {user?.kelas ? `${t.teacher.kelas(user.kelas)} · ${t.appName}` : t.profile.student}
+        </p>
       </header>
 
       <main className="-mt-8 space-y-4 px-4">
         {editing && (
-          <section className="rounded-4xl bg-white p-5 shadow-card">
+          <section className="card-3d space-y-4 p-5">
             <h2 className="text-sm font-extrabold text-ink">{t.profile.settings}</h2>
-            <label className="mt-3 block text-xs font-bold text-ink-muted" htmlFor="profile-name">
-              {t.profile.name}
-            </label>
-            <div className="mt-1 flex gap-2">
-              <input
-                id="profile-name"
-                value={draft}
-                maxLength={30}
-                onChange={(e) => setDraft(e.target.value)}
-                className="min-w-0 flex-1 rounded-2xl border-2 border-lavender-200 px-3 py-2 font-bold text-ink outline-none focus:border-accent"
-              />
-              <button
-                type="button"
-                disabled={!draft.trim()}
-                onClick={() => {
-                  setName(draft);
-                  setEditing(false);
-                }}
-                className="rounded-2xl bg-accent px-4 text-sm font-extrabold text-white disabled:opacity-40"
-              >
-                {t.profile.save}
-              </button>
-            </div>
-            <div className="mt-4 flex items-center justify-between text-sm font-bold text-ink">
+            <p className="text-sm text-ink-muted">
+              @{user?.username}
+              {user?.kelas ? ` · ${t.teacher.kelas(user.kelas)}` : ''}
+            </p>
+            <div className="flex items-center justify-between text-sm font-bold text-ink">
               {t.profile.guideDefault}
               <Toggle checked={guided} onChange={setGuided} label={t.profile.guideDefault} />
             </div>
             <button
               type="button"
-              onClick={() => window.confirm(t.profile.resetConfirm) && reset()}
-              className="mt-4 w-full rounded-2xl border-2 border-negative/30 py-2.5 text-sm font-extrabold text-negative"
+              onClick={() => {
+                if (window.confirm(t.auth.logoutConfirm)) {
+                  signOut();
+                  navigate('/masuk', { replace: true });
+                }
+              }}
+              className="btn-3d-soft flex w-full items-center justify-center gap-2 text-plum-700"
             >
-              {t.profile.reset}
+              <Icon name="logout" size={18} />
+              {t.auth.logout}
             </button>
           </section>
         )}
@@ -121,11 +115,8 @@ export function ProfilePage() {
         </section>
 
         <section className="flex items-center gap-4 rounded-4xl bg-white p-5">
-          <span
-            className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-amber-300 to-accent text-2xl"
-            aria-hidden="true"
-          >
-            🏆
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#2D2142]">
+            <TrophyArt size={32} />
           </span>
           <span className="flex-1 text-sm font-bold text-ink">{t.profile.examBest}</span>
           <span className="text-2xl font-black text-ink">{bestExam ?? t.profile.examNone}</span>
@@ -155,10 +146,12 @@ export function ProfilePage() {
           {/* fixed grid: 2 × 2 on phones, 4 in a row on wider screens, never a horizontal scrollbar */}
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {skills.map((s, i) => (
-              <StatTile key={s.label} icon={s.icon} value={s.value} label={s.label} index={i} />
+              <StatTile key={s.label} icon={s.icon} tone={s.tone} value={s.value} label={s.label} index={i} />
             ))}
           </ul>
         </section>
+
+        <ClassCodeCard />
 
         <InstallCard />
       </main>

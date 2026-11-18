@@ -308,10 +308,10 @@ Hindari: "Salah!", "Gagal", "Bodoh", tanda seru berlebihan, istilah teknis tanpa
 
 ## Pembaruan Beranda & Navigasi (November 2026)
 
-- **Navigasi bawah** berbentuk *floating pill* dengan 4 tab: **Belajar** (`/`), **Latihan** (`/latihan`: Latihan Acak 5 soal dari pelajaran yang sudah dibuka + Antrean Ulang), **Ujian Akhir** (`/ujian-akhir`), **Profil**. Tab aktif ditandai pil oranye yang bergeser (Framer Motion `layoutId`).
+- **Navigasi bawah** berbentuk *floating pill* dengan 4 tab: **Belajar** (`/`), **Latihan** (`/latihan`: Latihan Acak 5 soal dari pelajaran yang sudah dibuka + Antrean Ulang + **Latihan per Topik** 2×2, yaitu latihan acak yang dibatasi satu modul lewat `/latihan/acak?topik=m1..m4`), **Ujian Akhir** (`/ujian-akhir`), **Profil**. Tab aktif ditandai pil oranye yang bergeser (Framer Motion `layoutId`).
 - **Header Beranda**: progress bar beranimasi di bawah "x% Bilangan Bulat", lencana 🔥 hari berturut-turut dan ⭐ bintang (1–3 per pelajaran selesai, dari nilai mastery).
 - **Alur belajar** berupa jalur berkelok: simpul ikon + kartu. Pelajaran aktif diberi cahaya lembut dan tombol "Mulai/Lanjutkan". Pelajaran terkunci tetap berwarna pastel dengan lencana gembok; saat diketuk, kartu bergetar dan muncul toast "Selesaikan pelajaran sebelumnya untuk membuka!".
-- **Kartu Ujian Akhir** dibingkai gradien emas–ungu dengan progres prasyarat "x/10 Pelajaran Selesai".
+- **Kartu Ujian Akhir** ("Tantangan Akhir Bab") adalah **simpul terakhir** jalur: garis jalur dari pelajaran terakhir bersambung ke medali piala yang menonjol di tepi atas kartu. Permukaan ungu gelap matte `#2D2142` (tanpa bingkai gradien), tekstur geometris halus di sudut kanan atas, tombol bulat amber, dan progres prasyarat "x/y Pelajaran Selesai".
 - Batasan (CLAUDE.md §5.8): animasi hanya di Beranda dan navigasi, singkat, dan otomatis mati bila perangkat meminta "kurangi gerakan" (`MotionConfig reducedMotion="user"`). Layar pelajaran dan latihan tetap tenang.
 
 ## Sistem UI "Pop 3D" (November 2026)
@@ -343,7 +343,13 @@ Tujuannya agar tampilan tidak datar seperti formulir. Animasi tetap singkat (≈
 | `PopButton` | Semua tombol aksi; ada pantulan pegas kecil saat diketuk |
 | `SlideIn` | Pergantian soal dan layar pelajaran: geser + pudar + pegas (`AnimatePresence mode="wait"`); arah mengikuti Lanjut/Kembali |
 | `BadgeCard` | Aturan, petunjuk, langkah Soal Kembar: badge bulat bernomor/ikon, bukan bullet |
-| `StatTile` | Statistik dalam `grid` (Profil 2×2 / 4 kolom, rekap 3 kolom); **tanpa** scroll horizontal |
+| `StatTile` | Statistik dalam `grid` (Profil 2×2 / 4 kolom, rekap 3 kolom); **tanpa** scroll horizontal. Ikon di lencana bulat pastel, warnanya dari `statTones.ts` |
+| `Icon` | **Semua ikon UI.** Ikon garis duotone SVG 24 px (`currentColor`). **Jangan memakai emoji sistem** di UI karena tampilannya berbeda di tiap perangkat |
+| `LessonIcon` | Mengubah emoji `icon` di `lessons.json` menjadi `Icon` (konten tidak diubah) |
+| `TrophyArt` | Ilustrasi piala bermahkota duotone emas–oranye untuk Ujian Akhir |
+| `PocketBookDrawer` | **Buku Saku** (hanya di Latihan, **tidak** di Ujian Akhir): ringkasan aturan dalam 5 akordeon (garis bilangan, tambah & kurang, kali & bagi, urutan operasi, sifat operasi). Lembar bawah di HP, panel samping di layar ≥ 1024 px. Hanya lapisan di atas soal, jadi jawaban dan progres tidak hilang. Contoh angka memakai warna tanda |
+| `ScratchpadCanvas` | **Papan Coretan** di bawah teks soal (Latihan & Ujian Akhir): kanvas kertas kotak, jari/pena/mouse. Pena ungu, oranye, **hijau** (biru/merah tidak dipakai karena berarti tanda bilangan), penghapus, Bersihkan. Tidak disimpan dan tidak dinilai. Bersih sendiri saat pindah soal (`key = attempt_id`) |
+| `InstallCard` | Kartu horizontal ringkas: logo · judul + 1 baris · tombol "Pasang" (atau "Cara" yang membuka langkah manual di iOS/browser lain) |
 
 Lembar Soal Kembar meluncur dari bawah (spring). Umpan balik "belum tepat" bergetar ringan, sedangkan "benar" muncul dengan pantulan. `html, body` memakai `overflow-x: clip` sebagai pengaman di layar 360 px.
 
@@ -351,3 +357,6 @@ Lembar Soal Kembar meluncur dari bawah (spring). Umpan balik "belum tepat" berge
 - `BottomNav` dirender **sekali** di `App.tsx` (di luar `<Routes>`), hanya tampil di 4 halaman tab. Jangan merender `BottomNav` di dalam halaman: jika nav ikut dibongkar-pasang saat pindah tab, indikator `layoutId="activeTabIndicator"` tidak bisa meluncur dan akan "loncat". Pegas indikator: `stiffness 400, damping 30`.
 - `SlideIn`: masuk dari ±120 px, `scale 0.95 → 1`, pegas `stiffness 300, damping 25`; keluar cepat (0,16 dtk) ke arah berlawanan. Wadahnya wajib `overflow-hidden`.
 - Logo `ZLogo`: huruf ℤ (*Zahlen*, himpunan bilangan bulat) double-struck pada badge oranye 3D. Aksen **+ biru** dan **− merah** mengikuti warna tanda (§5.4). Favicon memakai gambar yang sama.
+
+### Pergantian soal (pembaruan)
+Atas permintaan pengguna, pergantian antar-soal dan antar-langkah di Latihan dan Ujian Akhir **tanpa animasi** (langsung berganti). `SlideIn` hanya dipakai untuk pergantian layar pelajaran.

@@ -1,3 +1,4 @@
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import { averageWeight, type Outcome } from '../../lib/score';
 import { OutcomeStats } from './OutcomeStats';
@@ -10,9 +11,15 @@ export function SessionSummary({ outcomes, onHome, onAgain }: Props) {
 
   return (
     <div className="text-center">
-      <p className="text-4xl tracking-widest" aria-label={`${stars} / 3`}>
-        {'★'.repeat(stars)}
-        <span className="text-lavender-300">{'★'.repeat(3 - stars)}</span>
+      <p className="flex justify-center gap-1" role="img" aria-label={`${stars} / 3`}>
+        {[0, 1, 2].map((i) => (
+          <Icon
+            key={i}
+            name="star"
+            size={40}
+            className={i < stars ? 'text-amber-400 [&_path]:[fill-opacity:1]' : 'text-lavender-300'}
+          />
+        ))}
       </p>
       <h2 className="mt-2 text-2xl font-extrabold text-ink">{t.summary.title}</h2>
       <OutcomeStats outcomes={outcomes} />
@@ -20,7 +27,10 @@ export function SessionSummary({ outcomes, onHome, onAgain }: Props) {
         {t.summary.home}
       </button>
       <button type="button" onClick={onAgain} className="btn-3d-soft mt-3 w-full text-plum-700">
-        ↺ {t.summary.again}
+        <span className="inline-flex items-center gap-1.5">
+          <Icon name="refresh" size={18} />
+          {t.summary.again}
+        </span>
       </button>
     </div>
   );

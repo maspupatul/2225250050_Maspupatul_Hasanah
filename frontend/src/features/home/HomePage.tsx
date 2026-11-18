@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon, type IconName } from '../../components/ui/Icon';
 import { Toast, type ToastMessage } from '../../components/ui/Toast';
 import { ZLogo } from '../../components/ui/ZLogo';
 import { t } from '../../i18n/id';
@@ -16,9 +17,9 @@ import {
   useProgress,
 } from '../../store/progress';
 import { ExamCard } from './ExamCard';
-import { LessonPath } from './LessonPath';
+import { laneX, LessonPath } from './LessonPath';
 
-function Badge({ icon, value, label }: { icon: string; value: number; label: string }) {
+function Badge({ icon, value, label }: { icon: IconName; value: number; label: string }) {
   return (
     <motion.span
       initial={{ scale: 0.6, opacity: 0 }}
@@ -28,7 +29,7 @@ function Badge({ icon, value, label }: { icon: string; value: number; label: str
       title={label}
       aria-label={label}
     >
-      <span aria-hidden="true">{icon}</span>
+      <Icon name={icon} size={18} className="text-amber-300" />
       {value}
     </motion.span>
   );
@@ -69,14 +70,14 @@ export function HomePage() {
             <span className="text-lg font-black tracking-tight">{t.appName}</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <Badge icon="🔥" value={streak} label={t.home.streak(streak)} />
-            <Badge icon="⭐" value={stars} label={t.home.stars(stars)} />
+            <Badge icon="flame" value={streak} label={t.home.streak(streak)} />
+            <Badge icon="star" value={stars} label={t.home.stars(stars)} />
             <Link
               to="/profil"
               aria-label={t.nav.profile}
               className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-accent text-lg font-black text-plum-900 ring-2 ring-white/30 transition active:scale-90"
             >
-              {name.charAt(0).toUpperCase() || '🙂'}
+              {name.charAt(0).toUpperCase() || <Icon name="user" size={20} />}
             </Link>
           </span>
         </div>
@@ -112,14 +113,17 @@ export function HomePage() {
               to="/latihan/ulang"
               className="mb-4 flex items-center gap-3 rounded-3xl bg-accent-soft px-4 py-3 text-ink shadow-sm"
             >
-              <span className="text-2xl" aria-hidden="true">
-                🔁
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-accent">
+                <Icon name="refresh" size={22} />
               </span>
               <span className="flex-1">
                 <span className="block text-sm font-extrabold">{t.home.reviewTitle}</span>
                 <span className="block text-xs text-ink-muted">{t.home.reviewBody(queue)}</span>
               </span>
-              <span className="text-sm font-extrabold text-accent">{t.home.reviewCta} ›</span>
+              <span className="flex items-center text-sm font-extrabold text-accent">
+                {t.home.reviewCta}
+                <Icon name="chevron-right" size={16} />
+              </span>
             </Link>
           </motion.div>
         )}
@@ -156,6 +160,7 @@ export function HomePage() {
             lessonsTotal={allLessons.length}
             problemCount={examInfo?.total ?? 12}
             best={bestExam}
+            fromX={laneX((modules[modules.length - 1]?.lessons.length ?? 1) - 1)}
           />
         )}
       </main>

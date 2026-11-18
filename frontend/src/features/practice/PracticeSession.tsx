@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
 import { RoundButton } from '../../components/ui/RoundButton';
-import { SlideIn } from '../../components/ui/SlideIn';
 import { Toggle } from '../../components/ui/Toggle';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import type { Outcome } from '../../lib/score';
@@ -12,8 +12,11 @@ import type { Hint, Problem, StepKey, StepResult, Twin } from '../../lib/types';
 import { useProgress } from '../../store/progress';
 import { VisualView } from '../visuals/VisualView';
 import { HintStack } from './HintStack';
+import { isOfflineError, nextOfflineHint } from './offlineHints';
+import { PocketBookDrawer } from './PocketBookDrawer';
 import { ProblemText } from './ProblemText';
 import { ReviewCard } from './ReviewCard';
+import { ScratchpadCanvas } from './ScratchpadCanvas';
 import { StepPanel } from './StepPanel';
 import { TwinSheet } from './TwinSheet';
 
@@ -26,14 +29,23 @@ type Props = {
   total: number;
   fetchProblem: (index: number, guided: boolean) => Promise<Problem>;
   title: string;
-  icon: string;
+  icon: ReactNode;
   onClose: () => void;
   /** Called once per problem, when it is solved or deferred. */
   onProblemDone?: (outcome: Outcome, problem: Problem) => void;
   /** Called after the last problem, before the summary is shown. */
   onComplete?: (outcomes: Outcome[]) => void;
   renderSummary: (outcomes: Outcome[], restart: () => void) => ReactNode;
+  /** Show the Buku Saku button (practice only; never in the Ujian Akhir). */
+  pocketBook?: boolean;
 };
+
+const toolPill = (active: boolean) =>
+  `flex items-center gap-1 rounded-full border-2 px-2.5 py-1 text-[11px] font-extrabold normal-case tracking-normal transition active:translate-y-px ${
+    active
+      ? 'border-plum-800 bg-plum-800 text-white'
+      : 'border-lavender-200 bg-white text-plum-700 hover:border-lavender-300'
+  }`;
 
 /**
  * One practice session: problems one after another, step by step, with the
@@ -49,6 +61,7 @@ export function PracticeSession({
   onProblemDone,
   onComplete,
   renderSummary,
+  pocketBook = false,
 }: Props) {
   const guided = useProgress((s) => s.guided);
   const setGuided = useProgress((s) => s.setGuided);
@@ -63,6 +76,11 @@ export function PracticeSession({
   const [interpretOptions, setInterpretOptions] = useState<string[] | null>(null);
   const [hints, setHints] = useState<Hint[]>([]);
   const [hintCount, setHintCount] = useState(0);
+  const [hintLoading, setHintLoading] = useState(false);
+  // mirrors the server's "try before the next hint" rule for offline hints
+  const [triedSinceHint, setTriedSinceHint] = useState(false);
+  // hints opened offline; reported to the server before the next answer (mastery weight)
+  const pendingHints = useRef<{ attemptId: string; step: StepKey }[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
   const [twinAvailable, setTwinAvailable] = useState(false);
   const [twin, setTwin] = useState<Twin | null>(null);
@@ -73,6 +91,10 @@ export function PracticeSession({
   const [error, setError] = useState<string | null>(null);
   // bumps on every answer so the feedback bubble pops again, even with the same text
   const [feedbackKey, setFeedbackKey] = useState(0);
+  // tools: overlays only, so the current answer and progress are never reset
+  const [pocketOpen, setPocketOpen] = useState(false);
+  const [scratchOn, setScratchOn] = useState(false);
+  const closePocket = useCallback(() => setPocketOpen(false), []);
 
   const load = useCallback(
     async (i: number) => {
@@ -81,6 +103,8 @@ export function PracticeSession({
       setInterpretOptions(null);
       setHints([]);
       setHintCount(0);
+      setTriedSinceHint(false);
+      pendingHints.current = [];
       setNotice(null);
       setTwinAvailable(false);
       setTwin(null);
@@ -108,7 +132,11 @@ export function PracticeSession({
   const finishProblem = (outcome: Outcome, solved: Problem) => {
     const full = { ...outcome, stage: solved.exam?.stage };
     setOutcomes((list) => [...list, full]);
-    recordProblem({ correct: !outcome.deferred, selfFound: outcome.selfFound, hints: hintCount });
+    recordProblem({
+      correct: !outcome.deferred,
+      selfFound: outcome.selfFound,
+      hints: hintCount,
+    });
     onProblemDone?.(full, solved);
   };
 
@@ -117,8 +145,10 @@ export function PracticeSession({
     setBusy(true);
     setNotice(null);
     try {
+      await syncPendingHints();
       const r = await api.submitStep(problem.attempt_id, stepKey, answer);
       setResult(r);
+      if (!r.correct) setTriedSinceHint(true);
       setFeedbackKey((k) => k + 1);
       if (r.correct && r.attempt_status === 'correct') {
         setFinal(r);
@@ -151,18 +181,62 @@ export function PracticeSession({
     setStepKey(result.next_step);
     setResult(null);
     setHints([]);
+    setTriedSinceHint(false);
     setNotice(null);
   };
 
+  /** Report hints opened offline, in order. Stops quietly if still offline (retried later). */
+  const syncPendingHints = async () => {
+    while (pendingHints.current.length > 0) {
+      const { attemptId, step } = pendingHints.current[0];
+      try {
+        await api.hint(attemptId, step);
+      } catch (err) {
+        if (isOfflineError(err, navigator.onLine)) return;
+      }
+      pendingHints.current.shift();
+    }
+  };
+
+  /** Offline fallback: the static hint shipped with the problem, without an error message. */
+  const showLocalHint = (current: Problem) => {
+    const local = nextOfflineHint(current, stepKey, hints.length, triedSinceHint);
+    if (local.kind === 'hint') {
+      setHints((list) => [...list, local.hint]);
+      setHintCount((n) => n + 1);
+      setTriedSinceHint(false);
+      pendingHints.current.push({
+        attemptId: current.attempt_id,
+        step: stepKey,
+      });
+    } else if (local.kind === 'locked') {
+      setNotice(t.practice.hintLocked);
+    } else {
+      setNotice(t.errors.network);
+    }
+  };
+
   const askHint = async () => {
-    if (!problem || phase !== 'solving' || result?.correct) return;
+    if (!problem || phase !== 'solving' || result?.correct || hintLoading) return;
     setNotice(null);
+    if (!navigator.onLine) {
+      showLocalHint(problem);
+      return;
+    }
+    setHintLoading(true);
     try {
+      await syncPendingHints();
+      // The server always returns the static hint; Smart Hint text is added only when
+      // Gemini answered in time and passed the no-leak check.
       const hint = await api.hint(problem.attempt_id, stepKey);
       setHints((list) => [...list, hint]);
       setHintCount((n) => n + 1);
+      setTriedSinceHint(false);
     } catch (err) {
-      setNotice(message(err));
+      if (isOfflineError(err, navigator.onLine)) showLocalHint(problem);
+      else setNotice(message(err));
+    } finally {
+      setHintLoading(false);
     }
   };
 
@@ -211,19 +285,19 @@ export function PracticeSession({
       {/* top bar: close + hint (reference design) */}
       <div className="flex items-center justify-between">
         <RoundButton label={t.common.close} onClick={onClose}>
-          ✕
+          <Icon name="close" size={20} />
         </RoundButton>
         {/* same lesson number and title as on the home path */}
-        <p className="min-w-0 flex-1 truncate px-3 text-center text-xs font-bold uppercase tracking-widest text-white/70">
+        <p className="min-w-0 flex-1 px-3 text-center text-[11px] font-bold uppercase leading-snug tracking-wider text-white/70 [overflow-wrap:anywhere]">
           {title}
         </p>
         <RoundButton
           label={t.practice.hint}
           onClick={() => void askHint()}
-          disabled={phase !== 'solving' || Boolean(result?.correct) || hints.length >= 3}
+          disabled={phase !== 'solving' || Boolean(result?.correct) || hints.length >= 3 || hintLoading}
           badge={phase === 'solving' ? 3 - hints.length : undefined}
         >
-          💡
+          <Icon name="lightbulb" size={20} />
         </RoundButton>
       </div>
 
@@ -231,7 +305,7 @@ export function PracticeSession({
         <div className="relative grid h-16 w-16 place-items-center" aria-hidden="true">
           <span className="absolute inset-0 rounded-full border border-white/10" />
           <span className="absolute inset-2 rounded-full border border-white/15" />
-          <span className="text-2xl">{phase === 'summary' ? '🏁' : '✏️'}</span>
+          <Icon name={phase === 'summary' ? 'flag' : 'pencil'} size={28} className="text-amber-300" />
         </div>
         <p className="font-bold tracking-wide">{headerLabel}</p>
         {phase === 'solving' && steps.length > 1 && (
@@ -248,11 +322,8 @@ export function PracticeSession({
 
       {/* main white card */}
       <section className="mt-4 overflow-hidden rounded-4xl bg-white text-ink shadow-[0_6px_0_#231a2f]">
-        {/* one sheet per problem: slides in from the right when the problem number changes */}
-        <SlideIn
-          id={`${index}:${phase === 'summary' ? 'summary' : phase === 'loading' ? 'loading' : 'problem'}`}
-          className="p-5"
-        >
+        {/* problems change instantly (no slide/fade between problems) */}
+        <div className="p-5">
           {phase === 'loading' && (
             <div className="h-48 animate-pulse rounded-3xl bg-lavender-100" aria-label={t.common.loading} />
           )}
@@ -270,15 +341,44 @@ export function PracticeSession({
 
           {problem && (phase === 'solving' || finished) && (
             <>
-              <div className="mb-2 flex flex-wrap items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-ink-muted">
-                {examItem && (
-                  <span className="rounded-full bg-lavender-100 px-2.5 py-1 normal-case tracking-normal text-plum-700">
+              {examItem && (
+                <p className="mb-2 text-center">
+                  <span className="rounded-full bg-lavender-100 px-2.5 py-1 text-xs font-bold text-plum-700">
                     {t.exam.stage(examItem.stage_number)} · {examItem.stage_title}
                   </span>
-                )}
-                <span>{t.practice.problemOf(index + 1, total)}</span>
+                </p>
+              )}
+              {/* problem number + tools (Buku Saku, Coretan); the tools move to a second
+                  line on narrow phones instead of cutting the problem number */}
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink-muted">
+                <span className="mr-auto whitespace-nowrap">{t.practice.problemOf(index + 1, total)}</span>
+                <div className="ml-auto flex gap-2">
+                  {pocketBook && (
+                    <button
+                      type="button"
+                      onClick={() => setPocketOpen(true)}
+                      aria-haspopup="dialog"
+                      className={toolPill(false)}
+                    >
+                      <Icon name="book-open" size={15} />
+                      {t.tools.pocketBook}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setScratchOn((v) => !v)}
+                    aria-pressed={scratchOn}
+                    className={toolPill(scratchOn)}
+                  >
+                    <Icon name="pen" size={15} />
+                    {t.tools.scratchpad}
+                  </button>
+                </div>
               </div>
               <ProblemText text={problem.text} keywords={problem.keywords} highlight={highlight} />
+
+              {/* new problem = new attempt_id = a clean board */}
+              {scratchOn && <ScratchpadCanvas key={problem.attempt_id} />}
 
               {showVisual && phase === 'solving' && (
                 <div className="mt-4">
@@ -286,7 +386,7 @@ export function PracticeSession({
                 </div>
               )}
 
-              <SlideIn id={`${stepKey}:${phase}:${result?.correct ? 'ok' : 'ask'}`} className="mt-5">
+              <div className="mt-5">
                 {phase === 'solving' && step && !result?.correct && (
                   <StepPanel
                     key={`${problem.attempt_id}-${step.key}`}
@@ -303,7 +403,11 @@ export function PracticeSession({
                     <motion.p
                       initial={{ scale: 0.8, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 500,
+                        damping: 15,
+                      }}
                       className="rounded-3xl border-2 border-green-200 bg-green-50 px-4 py-3 text-center font-extrabold text-correct"
                     >
                       {result.feedback}
@@ -318,9 +422,7 @@ export function PracticeSession({
 
                 {phase === 'deferred' && result && (
                   <div className="rounded-3xl border-2 border-accent/30 bg-accent-soft px-4 py-4 text-center">
-                    <p className="text-2xl" aria-hidden="true">
-                      🔁
-                    </p>
+                    <Icon name="refresh" size={30} className="mx-auto text-accent" />
                     <p className="mt-1 font-extrabold">{t.practice.deferredTitle}</p>
                     <p className="mt-1 text-sm text-ink-muted">{result.feedback}</p>
                   </div>
@@ -328,10 +430,13 @@ export function PracticeSession({
 
                 {finished && (
                   <PopButton onClick={nextProblem} block className="mt-5">
-                    {index + 1 < total ? `${t.practice.nextProblem} ›` : `${t.practice.finish} 🏁`}
+                    <span className="inline-flex items-center gap-1.5">
+                      {index + 1 < total ? t.practice.nextProblem : t.practice.finish}
+                      <Icon name={index + 1 < total ? 'chevron-right' : 'flag'} size={18} />
+                    </span>
                   </PopButton>
                 )}
-              </SlideIn>
+              </div>
 
               {phase === 'solving' && result && !result.correct && (
                 <motion.p
@@ -342,7 +447,8 @@ export function PracticeSession({
                   className="mt-4 rounded-3xl border-2 border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-6 text-amber-800"
                   role="status"
                 >
-                  🟠 {result.feedback}
+                  <Icon name="alert" size={18} className="-mt-0.5 mr-1.5 inline-block text-amber-600" />
+                  {result.feedback}
                 </motion.p>
               )}
               {notice && (
@@ -352,12 +458,15 @@ export function PracticeSession({
               )}
               {phase === 'solving' && twinAvailable && (
                 <PopButton variant="soft" onClick={() => void openTwin()} block className="mt-4 text-sm text-accent">
-                  🔁 {t.practice.twinOpen}
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon name="refresh" size={18} />
+                    {t.practice.twinOpen}
+                  </span>
                 </PopButton>
               )}
             </>
           )}
-        </SlideIn>
+        </div>
 
         {/* control row (reference design: pills + green toggle) */}
         {phase === 'solving' && (
@@ -368,15 +477,17 @@ export function PracticeSession({
               aria-pressed={showVisual}
               className={`rounded-xl px-3 py-1.5 text-xs font-extrabold ${showVisual ? 'bg-lavender-100 text-ink' : 'text-ink-muted'}`}
             >
-              🖼 {t.practice.picture}
+              <Icon name="image" size={15} className="-mt-0.5 mr-1 inline-block" />
+              {t.practice.picture}
             </button>
             <button
               type="button"
               onClick={() => void askHint()}
-              disabled={Boolean(result?.correct) || hints.length >= 3}
+              disabled={Boolean(result?.correct) || hints.length >= 3 || hintLoading}
               className="rounded-xl bg-accent px-3 py-1.5 text-xs font-extrabold text-white disabled:opacity-40"
             >
-              💡 {t.practice.hint}
+              <Icon name="lightbulb" size={15} className="-mt-0.5 mr-1 inline-block" />
+              {t.practice.hint}
             </button>
             <label
               className="ml-auto flex items-center gap-2 text-xs font-bold text-ink-muted"
@@ -389,13 +500,14 @@ export function PracticeSession({
         )}
       </section>
 
-      {phase === 'solving' && <HintStack hints={hints} />}
+      {phase === 'solving' && <HintStack hints={hints} loading={hintLoading} />}
 
       <div className="mt-auto pt-4">
         <ProgressCard icon={icon} title={title} percent={percent} />
       </div>
 
       <AnimatePresence>{twin && <TwinSheet twin={twin} onClose={() => setTwin(null)} />}</AnimatePresence>
+      <AnimatePresence>{pocketOpen && <PocketBookDrawer onClose={closePocket} />}</AnimatePresence>
     </div>
   );
 }

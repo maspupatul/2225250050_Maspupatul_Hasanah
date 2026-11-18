@@ -152,6 +152,26 @@ Siswa melihat pesan apresiasi di setiap kondisi benar ("Kamu berhasil menemukann
 | Aturan tanda perkalian | (−3) × (−4) = −12 | "Negatif kali negatif hasilnya positif." |
 | Salah membandingkan | −7 > −2 | "Di garis bilangan, bilangan di sebelah kanan selalu lebih besar." |
 
+### 6.6 Smart Hint (Gemini)
+
+Smart Hint membuat kalimat petunjuk lebih ramah dan kontekstual. Tingkatnya tetap sama dengan §6.2. Bobot mastery (§6.4) juga tidak berubah.
+
+| Tingkat | Peran AI |
+|---|---|
+| 1 Makna | Analogi nyata (suhu, kedalaman laut, skor game, uang saku) + satu pertanyaan pemandu |
+| 2 Visual | Menjelaskan titik mulai dan **arah** di garis bilangan, atau operasi yang dikerjakan lebih dulu. Gambar statis tetap ditampilkan |
+| 3 Strategi | Langkah pertama saja, tanpa hasil. Kerangka statis dengan kotak kosong tetap ditampilkan |
+
+**Pengaman (kode: `backend/app/services/ai_hint.py`):**
+- Petunjuk statis selalu dibuat lebih dulu dan menjadi cadangan. Konten dan petunjuk bawaan tidak diubah.
+- Gemini hanya menerima teks soal, langkah, tingkat, petunjuk statis, dan jawaban keliru siswa. Gemini **tidak pernah** menerima jawaban.
+- Teks AI dibuang jika memuat hasil akhir atau hasil antara (angka atau kata, mis. "lima"). Pada langkah ③, teks juga dibuang jika semua bilangan muncul sekaligus (model lengkap).
+- Langkah ⑤ Tafsirkan selalu memakai petunjuk statis.
+- Maksimal 3 kalimat, tanpa emoji. Hasil disimpan di cache per (soal, langkah, tingkat, jawaban siswa) agar hemat kuota.
+- Gagal apa pun (kuota 429, waktu habis, offline) → petunjuk statis, tanpa pesan error.
+
+**Saat perangkat offline:** petunjuk statis Level 1–3 setiap langkah ikut dikirim bersama soal (`offline_hints`). Jika perangkat offline, aplikasi menampilkan petunjuk berikutnya dari salinan itu. Aturan "coba jawab dulu sebelum petunjuk berikutnya" tetap berlaku. Petunjuk yang dibuka saat offline dilaporkan ke server sebelum jawaban berikutnya dikirim, sehingga bobot mastery (§6.4) tetap benar. Langkah ⑤ Tafsirkan tidak punya salinan offline.
+
 ## 7. Mendukung Strategi Belajar Siswa (GL)
 
 - **Catatan pribadi** (GL1): selalu dapat diakses dari setiap layar pelajaran. Contoh dan rangkuman dapat disalin ke catatan.

@@ -1,33 +1,10 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist, type StateStorage } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 import { todayISO } from '../lib/format';
+import { safeStorage } from '../lib/safeStorage';
 import type { ModuleInfo } from '../lib/types';
 
-// Stage 1: progress lives on the device (no account yet). Storage access is wrapped
-// in try/catch because it can be blocked (private mode, cleared site data).
-const safeStorage: StateStorage = {
-  getItem: (key) => {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  setItem: (key, value) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      /* ignore */
-    }
-  },
-  removeItem: (key) => {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      /* ignore */
-    }
-  },
-};
+// Progress lives on the device and is synced to the student's account (lib/progressSync.ts).
 
 export interface LessonProgress {
   status: 'in_progress' | 'done';
@@ -45,6 +22,17 @@ export interface Stats {
 export interface ExamResult {
   score: number;
   date: string;
+  /** Score per stage, e.g. { dasar: 100, menengah: 75, hots: 50 } (teacher dashboard). */
+  stages?: Record<string, number>;
+}
+
+/** What is synced with the server (POST /progress/sync). */
+export interface ProgressSnapshot {
+  lessons: Record<string, LessonProgress>;
+  stats: Stats;
+  examResults: ExamResult[];
+  activeDays: string[];
+  reviewQueue: ReviewItem[];
 }
 
 export interface ReviewItem {
@@ -69,7 +57,11 @@ interface ProgressState {
   addReview: (templateId: string, lessonId: string) => void;
   removeReview: (templateId: string) => void;
   markActive: () => void;
-  recordExam: (score: number) => void;
+  recordExam: (score: number, stages?: Record<string, number>) => void;
+  /** Replace the device progress with the account's progress (after login). */
+  hydrate: (name: string, snapshot: ProgressSnapshot) => void;
+  /** Forget everything on this device (logout or shared device). */
+  signOut: () => void;
   reset: () => void;
 }
 
@@ -150,10 +142,21 @@ export const useProgress = create<ProgressState>()(
           if (s.activeDays.includes(today)) return s;
           return { activeDays: [...s.activeDays, today].slice(-90) };
         }),
-      recordExam: (score) =>
+      recordExam: (score, stages) =>
         set((s) => ({
-          examResults: [...s.examResults, { score, date: todayISO() }].slice(-10),
+          examResults: [...s.examResults, { score, date: todayISO(), ...(stages ? { stages } : {}) }].slice(-50),
         })),
+      hydrate: (name, snapshot) =>
+        set({
+          name: name.trim().slice(0, 30),
+          lessons: snapshot.lessons,
+          stats: snapshot.stats,
+          examResults: snapshot.examResults,
+          activeDays: snapshot.activeDays.slice(-90),
+          reviewQueue: snapshot.reviewQueue,
+        }),
+      signOut: () =>
+        set({ name: '', lessons: {}, activeDays: [], stats: EMPTY_STATS, reviewQueue: [], examResults: [] }),
       reset: () =>
         set({
           lessons: {},
@@ -244,4 +247,14 @@ export function streakDays(activeDays: string[], today = new Date()): number {
     day.setDate(day.getDate() - 1);
   }
   return streak;
+}
+
+export function snapshotOf(s: ProgressSnapshot): ProgressSnapshot {
+  return {
+    lessons: s.lessons,
+    stats: s.stats,
+    examResults: s.examResults,
+    activeDays: s.activeDays,
+    reviewQueue: s.reviewQueue,
+  };
 }

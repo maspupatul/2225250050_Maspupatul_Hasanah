@@ -1,5 +1,7 @@
 import { motion, useAnimationControls } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Icon } from '../../components/ui/Icon';
+import { LessonIcon } from '../../components/ui/LessonIcon';
 import { t } from '../../i18n/id';
 import type { LessonSummary } from '../../lib/types';
 import type { LessonState } from '../../store/progress';
@@ -79,23 +81,23 @@ export function PathLesson({ tone, lesson, number, state, laneX, segmentProgress
         }`}
       >
         {current && <ProgressArc progress={segmentProgress} />}
-        <span className={locked ? 'opacity-70 saturate-50' : ''} aria-hidden="true">
-          {lesson.icon}
+        <span className={locked ? 'text-ink-muted' : 'text-plum-800'}>
+          <LessonIcon emoji={lesson.icon} size={26} />
         </span>
         {locked && (
           <span
-            className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-plum-700 text-[11px] ring-2 ring-white"
+            className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-plum-700 text-white ring-2 ring-white"
             aria-hidden="true"
           >
-            🔒
+            <Icon name="lock" size={13} />
           </span>
         )}
         {done && (
           <span
-            className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-accent text-xs font-black text-white ring-2 ring-white"
+            className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full bg-accent text-white ring-2 ring-white"
             aria-hidden="true"
           >
-            ✓
+            <Icon name="check" size={14} strokeWidth={3} />
           </span>
         )}
       </span>
@@ -124,14 +126,21 @@ export function PathLesson({ tone, lesson, number, state, laneX, segmentProgress
         <span className="mt-0.5 line-clamp-1 text-xs text-ink-muted">{lesson.subtitle}</span>
       </span>
       {current && (
-        <span className="shrink-0 rounded-full bg-accent px-3 py-2 text-[11px] font-extrabold text-white shadow-[0_3px_0_#c2410c]">
-          {resumable ? t.home.resume : t.home.start} ›
+        <span className="flex shrink-0 items-center gap-0.5 rounded-full bg-accent py-2 pl-3 pr-2 text-[11px] font-extrabold text-white shadow-[0_3px_0_#c2410c]">
+          {resumable ? t.home.resume : t.home.start}
+          <Icon name="chevron-right" size={14} strokeWidth={3} />
         </span>
       )}
       {done && (
-        <span className="shrink-0 text-sm tracking-tight" aria-label={`${stars} / 3`}>
-          <span className="text-amber-400">{'★'.repeat(stars)}</span>
-          <span className="text-lavender-300">{'★'.repeat(3 - stars)}</span>
+        <span className="flex shrink-0" role="img" aria-label={`${stars} / 3`}>
+          {[0, 1, 2].map((i) => (
+            <Icon
+              key={i}
+              name="star"
+              size={16}
+              className={i < stars ? 'text-amber-400 [&_path]:[fill-opacity:1]' : 'text-lavender-300'}
+            />
+          ))}
         </span>
       )}
     </span>

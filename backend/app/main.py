@@ -15,6 +15,10 @@ from app.api.v1 import api_router
 from app.content.loader import content
 from app.core.config import settings
 from app.core.errors import install_error_handlers
+from app.db.database import SessionLocal, init_db
+from app.services import ai_hint
+from app.services.accounts import seed_demo
+from app.services.classes import migrate_legacy_classes
 
 app = FastAPI(title="Z-Math API", version="0.1.0")
 app.add_middleware(
@@ -27,6 +31,16 @@ install_error_handlers(app)
 app.include_router(api_router, prefix="/api/v1")
 
 content()  # validate content files at startup
+
+# accounts & progress database (stage 1: local SQLite in backend/.data/)
+init_db()
+with SessionLocal() as _db:
+    migrate_legacy_classes(_db)  # old free-text `kelas` → classes with join codes (idempotent)
+    if settings.seed_demo:
+        seed_demo(_db)
+
+# Smart Hint: list Gemini models in the background (never delays or breaks startup)
+ai_hint.warm_up_in_background()
 
 
 @app.get("/health")

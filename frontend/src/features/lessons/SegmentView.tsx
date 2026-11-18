@@ -3,6 +3,7 @@ import { Callout } from '../../components/ui/Callout';
 import { MathLines } from '../../components/ui/MathLines';
 import { Paragraphs } from '../../components/ui/Paragraphs';
 import { RichText } from '../../components/ui/RichText';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import type { Segment } from '../../lib/types';
 import { VisualView } from '../visuals/VisualView';
@@ -31,10 +32,10 @@ export function SegmentView({ segment }: { segment: Segment }) {
               className="flex gap-3 rounded-2xl bg-lavender-50 px-4 py-3 text-[15px] font-semibold leading-7 text-ink"
             >
               <span
-                className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent text-xs font-black text-white"
+                className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent text-white"
                 aria-hidden="true"
               >
-                ✓
+                <Icon name="check" size={14} strokeWidth={3} />
               </span>
               <RichText text={point} />
             </li>
@@ -61,7 +62,14 @@ function Explore({ segment }: { segment: Extract<Segment, { type: 'explore' }> }
         className={`rounded-2xl px-4 py-3 text-sm font-bold leading-6 ${reached ? 'bg-green-50 text-correct' : 'bg-lavender-50 text-ink-muted'}`}
         aria-live="polite"
       >
-        {reached ? `🎉 ${segment.success}` : t.lesson.exploreHint}
+        {reached ? (
+          <span className="flex items-start gap-2">
+            <Icon name="sparkles" size={18} className="mt-0.5" />
+            {segment.success}
+          </span>
+        ) : (
+          t.lesson.exploreHint
+        )}
       </p>
     </>
   );
@@ -104,7 +112,8 @@ function WorkedExample({ segment }: { segment: Extract<Segment, { type: 'worked_
           {segment.visual && <VisualView script={segment.visual} />}
           {segment.self_explain && (
             <p className="rounded-2xl bg-accent-soft px-4 py-3 text-sm font-semibold leading-6 text-ink">
-              💭 <span className="font-extrabold">{t.lesson.think}:</span> {segment.self_explain}
+              <Icon name="thought" size={18} className="-mt-0.5 mr-1.5 inline-block text-accent" />
+              <span className="font-extrabold">{t.lesson.think}:</span> {segment.self_explain}
             </p>
           )}
         </>

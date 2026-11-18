@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { BadgeCard } from '../../components/ui/BadgeCard';
+import { Icon, type IconName } from '../../components/ui/Icon';
+import { TrophyArt } from '../../components/ui/TrophyArt';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -14,7 +16,7 @@ const STEP_TONE = [
   'from-orange-400 to-accent shadow-pop-accent',
   'from-fuchsia-500 to-purple-600 shadow-pop-fuchsia',
 ];
-const RULE_ICONS = ['⏳', '💡', '🔍', '🔁'];
+const RULE_ICONS: IconName[] = ['hourglass', 'lightbulb', 'search', 'refresh'];
 const MotionLink = motion.create(Link);
 
 /** `/ujian-akhir`: what the exam contains, the rules, and the start button. */
@@ -32,14 +34,12 @@ export function ExamIntroPage() {
       <header className="rounded-b-[2.5rem] bg-plum-800 px-6 pb-14 pt-[calc(env(safe-area-inset-top)+24px)] text-white">
         <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">{t.appName}</p>
         <div className="mt-3 flex items-center gap-4">
-          <span
-            className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-gradient-to-br from-amber-300 to-accent text-3xl shadow-card"
-            aria-hidden="true"
-          >
-            🏆
+          <span className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-[#2D2142] shadow-card ring-1 ring-white/10">
+            <TrophyArt size={42} />
           </span>
           <div>
-            <h1 className="text-[28px] font-extrabold leading-tight">{t.exam.title}</h1>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-amber-300/90">{t.exam.title}</p>
+            <h1 className="text-[26px] font-extrabold leading-tight">{t.exam.cardTitle}</h1>
             <p className="text-sm text-white/70">{t.exam.subtitle}</p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function ExamIntroPage() {
           <h2 className="mb-3 px-1 text-sm font-extrabold text-ink">{t.exam.rulesTitle}</h2>
           <ul className="space-y-3">
             {t.exam.rules.map((rule, i) => (
-              <BadgeCard key={rule} badge={RULE_ICONS[i] ?? i + 1} index={i}>
+              <BadgeCard key={rule} badge={RULE_ICONS[i] ? <Icon name={RULE_ICONS[i]} size={20} /> : i + 1} index={i}>
                 <p className="font-semibold">{rule}</p>
               </BadgeCard>
             ))}
@@ -89,13 +89,16 @@ export function ExamIntroPage() {
 
         {unlocked ? (
           <MotionLink to="/ujian-akhir/mulai" whileTap={{ scale: 0.97 }} className="btn-3d-primary w-full py-4 text-lg">
-            {t.exam.start} ›
+            <span className="inline-flex items-center justify-center gap-1.5">
+              {t.exam.start}
+              <Icon name="chevron-right" size={22} />
+            </span>
           </MotionLink>
         ) : (
           <div className="card-3d p-5 text-center">
-            <p className="text-2xl" aria-hidden="true">
-              🔒
-            </p>
+            <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-lavender-100 text-plum-700">
+              <Icon name="lock" size={24} />
+            </span>
             <p className="mt-1 text-sm font-bold text-ink">{t.exam.lockedBody}</p>
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-lavender-200">
               <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${percent}%` }} />

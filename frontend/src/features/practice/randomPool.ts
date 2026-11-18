@@ -3,9 +3,13 @@ import type { LessonState } from '../../store/progress';
 
 export const RANDOM_COUNT = 5;
 
-/** Lessons a random practice may draw from: finished ones plus the current one. */
-export function randomPool(modules: ModuleInfo[], states: Record<string, LessonState>): string[] {
+/**
+ * Lessons a random practice may draw from: finished ones plus the current one.
+ * With `moduleId`, only that module's lessons (Latihan per Topik).
+ */
+export function randomPool(modules: ModuleInfo[], states: Record<string, LessonState>, moduleId?: string): string[] {
   return modules
+    .filter((m) => moduleId === undefined || m.id === moduleId)
     .flatMap((m) => m.lessons)
     .filter((l) => states[l.id] === 'done' || states[l.id] === 'current')
     .map((l) => l.id);

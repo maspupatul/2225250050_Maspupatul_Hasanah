@@ -22,6 +22,8 @@ Pengguna utama Z-Math adalah **anak di bawah umur (12–14 tahun)**. Karena itu,
 **Tidak dikumpulkan:** tanggal lahir lengkap, alamat, nomor HP, foto, lokasi, kontak, ID iklan.
 **Tidak digunakan:** SDK iklan, pelacak pihak ketiga, analitik yang menjual data.
 
+**Smart Hint (Google Gemini):** saat siswa membuka petunjuk, server (bukan perangkat siswa) mengirim teks soal dan jawaban keliru terakhir siswa ke Google Gemini. **Tidak ada** nama, akun, kelas, atau ID siswa yang dikirim. Kunci API hanya ada di `backend/.env`. Catatan: pada Free Tier, Google dapat memakai data permintaan untuk meningkatkan layanannya. Untuk pemakaian di sekolah, sebaiknya pakai Paid Tier atau matikan fitur ini dengan `ZMATH_AI_HINTS=0`.
+
 ## 3. Persetujuan
 
 1. Saat mendaftar, siswa mencentang: "Orang tua/wali saya sudah mengizinkan saya memakai aplikasi ini."
@@ -74,3 +76,7 @@ Pengguna utama Z-Math adalah **anak di bawah umur (12–14 tahun)**. Karena itu,
 - [ ] Formulir persetujuan orang tua sudah dikumpulkan untuk peserta uji coba.
 - [ ] Ekspor data penelitian hanya berisi data anonim.
 - [ ] Nama dan foto narasumber wawancara tidak ada di repositori.
+
+## Catatan Tahap 1 (Akun Lokal)
+
+Akun siswa/guru Tahap 1 memakai SQLite lokal, bukan Supabase. Aturan yang tetap dipenuhi: izin orang tua wajib saat siswa mendaftar, guru hanya melihat siswa sekelas, peran guru tidak bisa didaftarkan bebas (butuh kode sekolah), sandi di-hash (PBKDF2 + salt), dan perangkat dibersihkan saat keluar. Penyimpangan (PIN siswa ≥ 6 karakter, tanpa email) dicatat di [AKUN-DAN-PEMANTAUAN.md](AKUN-DAN-PEMANTAUAN.md) §6.

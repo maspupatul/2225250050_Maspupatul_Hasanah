@@ -4,6 +4,8 @@ import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
 import { RoundButton } from '../../components/ui/RoundButton';
 import { SlideIn } from '../../components/ui/SlideIn';
+import { Icon } from '../../components/ui/Icon';
+import { LessonIcon } from '../../components/ui/LessonIcon';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -47,14 +49,14 @@ export function LessonPage() {
     <div className="flex min-h-dvh flex-col bg-plum-800 px-4 pb-6 pt-[calc(env(safe-area-inset-top)+16px)] text-white">
       <div className="flex items-center justify-between">
         <RoundButton label={t.common.close} onClick={() => navigate('/')}>
-          ✕
+          <Icon name="close" size={20} />
         </RoundButton>
         <div className="text-center">
           <p className="text-xs uppercase tracking-widest text-white/60">
             {lesson ? `${t.home.lesson} ${lesson.number}` : ''}
           </p>
           <p className="font-extrabold">
-            {lesson && <span aria-hidden="true">{lesson.icon} </span>}
+            {lesson && <LessonIcon emoji={lesson.icon} size={18} className="-mt-0.5 mr-1.5 inline-block text-amber-300" />}
             {lesson?.title ?? t.common.loading}
           </p>
         </div>
@@ -101,13 +103,16 @@ export function LessonPage() {
           onClick={() => (last ? navigate(`/latihan/${lessonId}`) : go(current + 1))}
           className="text-sm"
         >
-          {last ? `${t.lesson.startPractice} ✏️` : `${t.lesson.next} ›`}
+          <span className="inline-flex items-center gap-1.5">
+            {last ? t.lesson.startPractice : t.lesson.next}
+            <Icon name={last ? 'pencil' : 'chevron-right'} size={18} />
+          </span>
         </PopButton>
       </div>
 
       <div className="mt-4">
         <ProgressCard
-          icon={lesson?.icon ?? '📘'}
+          icon={<LessonIcon emoji={lesson?.icon} size={18} />}
           title={lesson ? `${t.home.lesson} ${lesson.number} · ${lesson.title}` : ''}
           percent={((current + 1) / total) * 100}
         />

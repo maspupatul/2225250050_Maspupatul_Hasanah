@@ -21,6 +21,15 @@ describe('random practice', () => {
     expect(randomPool(modules, {})).toEqual([]);
   });
 
+  it('limits a topic practice to the lessons of that module', () => {
+    const two: ModuleInfo[] = [...modules, { id: 'n', title: 'N', order: 2, lessons: ['d', 'e'].map(lesson) }];
+    const states = { a: 'done', b: 'done', c: 'done', d: 'current', e: 'locked' } as const;
+    expect(randomPool(two, states, 'n')).toEqual(['d']);
+    expect(randomPool(two, states, 'm')).toEqual(['a', 'b', 'c']);
+    expect(randomPool(two, states, 'unknown')).toEqual([]);
+    expect(randomPool(two, states)).toEqual(['a', 'b', 'c', 'd']);
+  });
+
   it('uses every lesson before repeating one', () => {
     const picks = pickLessons(['a', 'b'], 5, () => 0.3);
     expect(picks).toHaveLength(5);

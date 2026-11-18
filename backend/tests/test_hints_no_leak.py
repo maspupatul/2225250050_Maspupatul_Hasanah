@@ -75,3 +75,24 @@ def test_problem_payload_has_no_answer(template):
         for step in payload["steps"]:
             if step["key"] == "interpret":
                 assert step["options"] is None
+
+
+@pytest.mark.parametrize("template", TEMPLATES, ids=lambda t: t.id)
+def test_offline_hints_in_payload_reveal_no_answer(template):
+    """Offline fallback: static hints shipped with the problem must be as safe as the endpoint."""
+    for seed in range(30):
+        payload = start_attempt(lesson_id=None, template_id=template.id, guided=True, seed=seed)
+        inst = instantiate(template, seed)
+        offline = payload["offline_hints"]
+        assert "interpret" not in offline
+        assert set(offline) == {s["key"] for s in payload["steps"]} - {"interpret"}
+        for step, hints in offline.items():
+            assert [h["hint_level"] for h in hints] == [1, 2, 3]
+            for hint in hints:
+                shown = numbers_in(hint["text"]) | numbers_in(hint.get("template") or "")
+                assert abs(inst.answer) not in shown, (template.id, seed, step, hint)
+                if hint.get("visual"):
+                    assert hint["visual"]["showEnd"] is False
+                    assert inst.answer not in visual_values(hint["visual"]), (template.id, seed, step)
+            if step == "model":
+                assert "□" in hints[2]["template"]

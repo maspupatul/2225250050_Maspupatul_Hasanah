@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { BadgeCard } from '../../components/ui/BadgeCard';
 import { PopButton } from '../../components/ui/PopButton';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import type { Twin } from '../../lib/types';
 import { VisualView } from '../visuals/VisualView';
@@ -28,8 +29,9 @@ export function TwinSheet({ twin, onClose }: { twin: Twin; onClose: () => void }
         transition={{ type: 'spring', stiffness: 320, damping: 34 }}
       >
         <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-lavender-300" />
-        <h2 id="twin-title" className="text-lg font-extrabold">
-          🔁 {t.practice.twinTitle}
+        <h2 id="twin-title" className="flex items-center gap-2 text-lg font-extrabold">
+          <Icon name="refresh" size={22} className="text-accent" />
+          {t.practice.twinTitle}
         </h2>
         <p className="mt-1 text-sm leading-6 text-ink-muted">{t.practice.twinOffer}</p>
         <p className="card-3d mt-4 px-4 py-3 font-bold leading-7">{twin.text}</p>

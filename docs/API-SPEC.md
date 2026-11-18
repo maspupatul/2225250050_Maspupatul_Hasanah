@@ -50,6 +50,9 @@ Field `message` selalu berbahasa Indonesia yang ramah siswa, sehingga dapat dita
 | POST | `/prerequisite/submit` | student | F-03 |
 | POST | `/practice/next` | student | F-09, F-23 |
 | GET | `/exam` | semua | F-23 |
+| POST | `/auth/register`, `/auth/login` · GET `/auth/me` · PUT `/auth/me/class` | publik / semua / siswa | F-01 (Tahap 1, lihat AKUN-DAN-PEMANTAUAN.md) |
+| GET · POST | `/progress` · `/progress/sync` | siswa | F-12 |
+| GET | `/guru/students-summary?class_code=`, `/guru/students/{id}` · GET/POST `/guru/classes` | guru | F-13 |
 | POST | `/exam/start` | student | F-23 |
 | POST | `/practice/attempts/{attempt_id}/steps` | student | F-06, F-10 |
 | POST | `/practice/attempts/{attempt_id}/hint` | student | F-10 |
@@ -204,6 +207,8 @@ Request: `{ "step": "result", "answer": 7 }`
 }
 ```
 
+> **`offline_hints`** (respons `POST /practice/next`): petunjuk statis Level 1–3 per langkah (tanpa langkah `interpret`), bentuknya sama dengan respons §3.12 dan `source: "static"`. Dipakai frontend saat perangkat offline. Isinya dijamin tanpa jawaban oleh `tests/test_hints_no_leak.py`.
+
 ### 3.12 `POST /practice/attempts/{attempt_id}/hint`
 Request: `{ "step": "model" }`
 
@@ -215,9 +220,13 @@ Request: `{ "step": "model" }`
   "kind": "visual",
   "text": "Lihat penyelamnya. Ke arah mana ia bergerak?",
   "visual": { "kind": "sea_depth", "unit": "m", "start": -4, "steps": [{ "op": "?", "value": null, "label": "lebih dalam 3" }], "showEnd": false, "mode": "hint" },
-  "hints_remaining": 1
+  "hints_remaining": 1,
+  "ai_text": "Bayangkan kamu menyelam makin dalam. Panahnya ke atas atau ke bawah?",
+  "source": "ai"
 }
 ```
+
+`ai_text` dan `source` berasal dari **Smart Hint** (Gemini, [DESAIN-PEDAGOGIS.md](DESAIN-PEDAGOGIS.md) §6.6). Jika `source` bernilai `"static"`, `ai_text` berisi `null` dan frontend menampilkan `text`. Ini terjadi bila kunci API tidak ada, kuota habis (429), waktu habis, server offline, langkah `interpret`, atau teks AI ditolak penjaga anti-bocor. `text`, `template`, dan `visual` statis selalu dikirim.
 
 | `hint_level` | `kind` | Isi |
 |---|---|---|
@@ -228,7 +237,7 @@ Request: `{ "step": "model" }`
 **409** `HINT_LOCKED`: siswa belum mencoba menjawab sejak petunjuk sebelumnya ("Coba jawab dulu ya, lalu buka petunjuk berikutnya.").
 **409** `NO_MORE_HINTS`: ketiga petunjuk sudah dibuka.
 
-> **Jaminan server:** respons petunjuk dibuat oleh `hint_generator` yang tidak menerima hasil akhir. Middleware test memastikan nilai hasil tidak muncul di `text`, `template`, maupun `visual`.
+> **Jaminan server:** respons petunjuk dibuat oleh `hint_generator` yang tidak menerima hasil akhir. Middleware test memastikan nilai hasil tidak muncul di `text`, `template`, maupun `visual`. Gemini hanya menerima `AIHintRequest` (tanpa jawaban), dan `ai_text` disaring di server: teks yang memuat hasil akhir atau hasil antara (angka maupun kata) dibuang (`tests/test_ai_hint.py`).
 
 ### 3.12a `POST /practice/attempts/{attempt_id}/twin`
 Tersedia hanya jika `twin_available: true`. Selain itu server mengembalikan **409** `TWIN_NOT_AVAILABLE`.

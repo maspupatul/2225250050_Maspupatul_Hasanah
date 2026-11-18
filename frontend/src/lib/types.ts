@@ -66,6 +66,8 @@ export interface Problem {
   current_step: StepKey;
   visual: VisualScript;
   hints_per_step: number;
+  /** Static hints 1–3 per step (no answer inside), used when the device is offline. */
+  offline_hints?: Partial<Record<StepKey, Hint[]>>;
   unit: string;
   thousands: boolean;
   /** Present only for Ujian Akhir problems. */
@@ -116,6 +118,9 @@ export interface Hint {
   template: string | null;
   highlight: string | null;
   hints_remaining: number;
+  /** Smart Hint: friendlier Gemini text, already checked on the server to contain no answer */
+  ai_text?: string | null;
+  source?: 'ai' | 'static';
 }
 
 export interface TwinStep {
@@ -216,4 +221,89 @@ export interface ExamItem {
 export interface ExamStart extends ExamInfo {
   seed: number;
   items: ExamItem[];
+}
+
+// ---------------------------------------------------------------- accounts & teacher dashboard
+
+export type Role = 'siswa' | 'guru';
+
+export interface AccountUser {
+  id: number;
+  name: string;
+  username: string;
+  role: Role;
+  /** Name of the joined class, e.g. "VII-A" (students only). */
+  kelas: string | null;
+  /** 6-character join code of that class, e.g. "ZM7A92". */
+  class_code: string | null;
+}
+
+/** A class made by a teacher (Kelola Kelas). */
+export interface SchoolClass {
+  id: number;
+  class_name: string;
+  class_code: string;
+  student_count: number;
+  created_at: string;
+}
+
+export type StudentStatus = 'tuntas' | 'berproses' | 'perlu_bimbingan';
+
+export interface ModuleProgress {
+  id: string;
+  title: string;
+  percent: number;
+  mastery: number | null;
+}
+
+export interface StudentSummary {
+  id: number;
+  name: string;
+  username: string;
+  kelas: string | null;
+  class_code: string | null;
+  modules: ModuleProgress[];
+  percent_done: number;
+  avg_mastery: number | null;
+  exam_best: number | null;
+  exam_attempts: number;
+  correct: number;
+  self_found: number;
+  hints_used: number;
+  deferred: number;
+  streak: number;
+  last_active: string | null;
+  status: StudentStatus;
+}
+
+export interface WeakLesson {
+  id: string;
+  number: number;
+  title: string;
+  status: 'done' | 'in_progress' | 'not_started';
+  mastery: number;
+}
+
+export interface StudentDetail extends StudentSummary {
+  exam_history: { score: number; date: string; stages?: Record<string, number> }[];
+  weak_lessons: WeakLesson[];
+  review_waiting: number;
+  active_days: number;
+}
+
+export interface ClassSummary {
+  /** Selected class (null = all of the teacher's classes). */
+  kelas: string | null;
+  class_code: string | null;
+  class_count: number;
+  kkm: number;
+  modules: { id: string; title: string }[];
+  class: {
+    total_students: number;
+    avg_exam_best: number | null;
+    completion_rate: number;
+    students_tuntas: number;
+    students_need_help: number;
+  };
+  students: StudentSummary[];
 }

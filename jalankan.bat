@@ -9,9 +9,11 @@ if not exist backend\.venv\Scripts\python.exe (
   echo [1/3] Menyiapkan Python (sekali saja^)...
   python -m venv backend\.venv
   if errorlevel 1 goto :error
-  backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
-  if errorlevel 1 goto :error
 )
+
+rem Selalu pastikan paket Python terpasang lengkap (cepat jika sudah ada)
+backend\.venv\Scripts\python.exe -m pip install -q -r backend\requirements.txt
+if errorlevel 1 goto :error
 
 if not exist frontend\node_modules (
   echo [2/3] Memasang paket JavaScript (sekali saja^)...

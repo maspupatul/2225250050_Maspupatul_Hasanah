@@ -14,6 +14,7 @@ from typing import Any
 
 from app.content.loader import content
 from app.core.errors import AppError
+from app.services import ai_hint
 from app.services.misconceptions import DEFERRED_MESSAGE, FEEDBACK, diagnose_result
 from app.services.modeling import visual_script
 from app.services.modeling.equivalence import check_model
@@ -57,6 +58,7 @@ class StepState:
     hint_level: int = 0
     tries_since_hint: int = 0
     wrong_after_last_hint: int = 0
+    last_wrong_answer: str | None = None  # for Smart Hint ("di mana kelirunya")
 
 
 @dataclass
@@ -198,9 +200,36 @@ def _problem_payload(attempt: Attempt) -> dict:
         "current_step": attempt.current_step,
         "visual": visual_script.explore(template, context, attempt.instance.givens),
         "hints_per_step": MAX_HINT_LEVEL,
+        "offline_hints": _offline_hints(attempt),
         "unit": context.unit,
         "thousands": context.thousands,
         "literacy": template.literacy,
+    }
+
+
+def _hint_view(attempt: Attempt) -> HintView:
+    template = attempt.instance.template
+    return HintView(
+        template=template,
+        context=content().contexts[template.context],
+        givens=attempt.instance.givens,  # never the answer
+        text=attempt.text,
+        keywords=attempt.keywords,
+    )
+
+
+def _offline_hints(attempt: Attempt) -> dict[str, list[dict]]:
+    """Static hints 1–3 per step, so the app can still help when the device is offline.
+    Same no-leak guarantee as the hint endpoint (tests/test_hints_no_leak.py). The
+    interpret step is left out: it is reached only online, after the result is found."""
+    view = _hint_view(attempt)
+    return {
+        step: [
+            make_hint(view, step, level) | {"hints_remaining": MAX_HINT_LEVEL - level, "source": "static"}
+            for level in range(1, MAX_HINT_LEVEL + 1)
+        ]
+        for step in attempt.steps
+        if step != "interpret"
     }
 
 
@@ -304,6 +333,7 @@ def submit_step(attempt_id: str, step: str, answer: Any) -> dict:
         return response
 
     state.tries_since_hint += 1
+    state.last_wrong_answer = _answer_text(answer)
     if attempt.twin_shown:
         attempt.status = "deferred"
         return {
@@ -373,17 +403,45 @@ def request_hint(attempt_id: str, step: str) -> dict:
     state.wrong_after_last_hint = 0
     attempt.hints_requested += 1
 
-    template = attempt.instance.template
-    view = HintView(
-        template=template,
-        context=content().contexts[template.context],
-        givens=attempt.instance.givens,  # never the answer
-        text=attempt.text,
-        keywords=attempt.keywords,
-    )
-    hint = make_hint(view, step, state.hint_level)
+    hint = make_hint(_hint_view(attempt), step, state.hint_level)
     hint["hints_remaining"] = MAX_HINT_LEVEL - state.hint_level
+    hint |= _smart_hint(attempt, step, hint, state.last_wrong_answer)
     return hint
+
+
+def _answer_text(answer: Any) -> str:
+    if isinstance(answer, list):
+        return ", ".join(str(a) for a in answer)[:80]
+    return str(answer)[:80]
+
+
+def _forbidden_numbers(attempt: Attempt) -> frozenset[int]:
+    """The answer and every intermediate result, minus numbers already printed in the problem."""
+    instance = attempt.instance
+    results = {abs(instance.answer)}
+    results |= {abs(s["result"]) for s in trace(parse(instance.template.model), instance.values)}
+    givens = {abs(v) for v in instance.givens.values()}
+    return frozenset(results - givens - {0})
+
+
+def _smart_hint(attempt: Attempt, step: str, hint: dict, last_wrong: str | None) -> dict:
+    """Gemini text on top of the static hint. The interpret step stays static (its options
+    would give the answer away)."""
+    if step == "interpret":
+        return {"ai_text": None, "source": "static"}
+    request = ai_hint.AIHintRequest(  # never the answer
+        problem_text=attempt.text,
+        step=step,
+        level=hint["hint_level"],
+        static_hint=hint["text"],
+        static_template=hint.get("template"),
+        student_answer=last_wrong,
+    )
+    guard = ai_hint.Guard(
+        forbidden=_forbidden_numbers(attempt),
+        givens=frozenset(abs(v) for v in attempt.instance.givens.values()),
+    )
+    return ai_hint.smart_hint(request, guard)
 
 
 def request_twin(attempt_id: str) -> dict:

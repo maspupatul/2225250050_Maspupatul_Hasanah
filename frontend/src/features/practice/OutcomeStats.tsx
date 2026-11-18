@@ -1,3 +1,4 @@
+import { STAT_TONE as TONE } from '../../components/ui/statTones';
 import { StatTile } from '../../components/ui/StatTile';
 import { t } from '../../i18n/id';
 import type { Outcome } from '../../lib/score';
@@ -7,14 +8,14 @@ export function OutcomeStats({ outcomes }: { outcomes: Outcome[] }) {
   const selfFound = outcomes.filter((o) => o.selfFound).length;
   const deferred = outcomes.filter((o) => o.deferred).length;
   const stats = [
-    { label: t.summary.selfFound, value: selfFound, icon: '🌟' },
-    { label: t.summary.withHints, value: outcomes.length - selfFound - deferred, icon: '💡' },
-    { label: t.summary.deferred, value: deferred, icon: '🔁' },
-  ];
+    { label: t.summary.selfFound, value: selfFound, icon: 'sparkles', tone: TONE.selfFound },
+    { label: t.summary.withHints, value: outcomes.length - selfFound - deferred, icon: 'lightbulb', tone: TONE.hints },
+    { label: t.summary.deferred, value: deferred, icon: 'refresh', tone: TONE.deferred },
+  ] as const;
   return (
     <ul className="mt-5 grid grid-cols-3 gap-2">
       {stats.map((s, i) => (
-        <StatTile key={s.label} icon={s.icon} value={s.value} label={s.label} index={i} />
+        <StatTile key={s.label} icon={s.icon} tone={s.tone} value={s.value} label={s.label} index={i} />
       ))}
     </ul>
   );

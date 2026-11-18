@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & { label: string; children: ReactNode; badge?: number };
 
-/** Small circular icon button used on dark headers (✕, 💡, ⚙). */
+/** Small circular icon button used on dark headers (close, hint, settings). */
 export function RoundButton({ label, children, badge, className = '', ...rest }: Props) {
   return (
     <button

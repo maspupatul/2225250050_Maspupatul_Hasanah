@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import type { Keyword } from '../../lib/types';
 
@@ -61,7 +62,8 @@ export function ProblemText({ text, keywords, highlight }: Props) {
       {activeKw && (
         <div className="mt-3 rounded-2xl bg-lavender-50 px-4 py-3 text-sm" role="status">
           <p className="font-extrabold text-ink">
-            🔎 {activeKw.phrase}
+            <Icon name="search" size={16} className="-mt-0.5 mr-1 inline-block text-plum-700" />
+            {activeKw.phrase}
             {activeKw.sign && (
               <span className={`ml-2 rounded-full bg-white px-2 py-0.5 text-xs ${SIGN_STYLE[activeKw.sign]}`}>
                 {t.practice.keywordSign[activeKw.sign]}

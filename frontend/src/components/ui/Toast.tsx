@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { Icon } from './Icon';
 
 export type ToastMessage = { id: number; text: string };
 
@@ -29,9 +30,10 @@ export function Toast({ toast, onDone, duration = 2600 }: Props) {
             initial={{ opacity: 0, y: 16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8 }}
-            className="rounded-2xl bg-plum-900 px-4 py-3 text-center text-sm font-bold text-white shadow-card"
+            className="flex items-center gap-2 rounded-2xl bg-plum-900 px-4 py-3 text-center text-sm font-bold text-white shadow-card"
           >
-            🔒 {toast.text}
+            <Icon name="lock" size={18} className="text-amber-300" />
+            {toast.text}
           </motion.p>
         )}
       </AnimatePresence>

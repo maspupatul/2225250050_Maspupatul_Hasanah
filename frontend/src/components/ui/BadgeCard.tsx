@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { Icon, type IconName } from './Icon';
 
 type Props = {
-  /** Number or emoji shown in the round badge. */
+  /** Number or icon shown in the round badge. */
   badge: ReactNode;
-  icon?: string;
+  icon?: IconName;
   title?: string;
   children: ReactNode;
   /** Badge gradient (Tailwind classes); never the sign colours. */
@@ -39,7 +40,7 @@ export function BadgeCard({
       <div className="min-w-0 flex-1 pt-0.5">
         {title && (
           <p className={`text-xs font-extrabold uppercase tracking-wider ${dark ? 'text-amber-300' : 'text-plum-700'}`}>
-            {icon && <span aria-hidden="true">{icon} </span>}
+            {icon && <Icon name={icon} size={14} className="-mt-0.5 mr-1 inline-block align-middle" />}
             {title}
           </p>
         )}

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Icon } from '../../components/ui/Icon';
+import { LessonIcon } from '../../components/ui/LessonIcon';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { averageWeight, type Outcome } from '../../lib/score';
@@ -18,6 +20,8 @@ export function PracticePage() {
   const { lessonId = '' } = useParams();
   const navigate = useNavigate();
   const mode: Mode = lessonId === 'ulang' ? 'review' : lessonId === 'acak' ? 'random' : 'lesson';
+  // `/latihan/acak?topik=m1`: random practice inside one module (Latihan per Topik)
+  const topic = useSearchParams()[0].get('topik') ?? undefined;
 
   const completeLesson = useProgress((s) => s.completeLesson);
   const addReview = useProgress((s) => s.addReview);
@@ -43,13 +47,13 @@ export function PracticePage() {
       api
         .modules()
         .then((modules) => {
-          const pool = randomPool(modules, lessonStates(modules, useProgress.getState().lessons));
+          const pool = randomPool(modules, lessonStates(modules, useProgress.getState().lessons), topic);
           randomLessons.current = pickLessons(pool, RANDOM_COUNT);
           setReady(true);
         })
         .catch(() => setFailed(true));
     }
-  }, [mode, lessonId]);
+  }, [mode, lessonId, topic]);
 
   const lessonFor = (i: number) =>
     mode === 'random' ? (randomLessons.current?.[i] ?? '') : mode === 'lesson' ? lessonId : queue.current[i].lessonId;
@@ -112,18 +116,29 @@ export function PracticePage() {
     mode === 'review'
       ? t.practice.reviewTitle
       : mode === 'random'
-        ? t.practiceHub.sessionTitle
+        ? topic && t.practiceHub.topics[topic]
+          ? t.practiceHub.topicSession(t.practiceHub.topics[topic])
+          : t.practiceHub.sessionTitle
         : t.practice.lessonTitle(lesson?.number ?? 0, lesson?.title ?? '');
   const back = mode === 'lesson' ? '/' : '/latihan';
 
   return (
     <PracticeSession
-      key={lessonId}
+      key={`${lessonId}-${topic ?? ''}`}
       total={total}
       fetchProblem={fetchProblem}
       title={title}
-      icon={mode === 'review' ? '🔁' : mode === 'random' ? '🎯' : (lesson?.icon ?? '✏️')}
+      icon={
+        mode === 'review' ? (
+          <Icon name="refresh" size={18} />
+        ) : mode === 'random' ? (
+          <Icon name="target" size={18} />
+        ) : (
+          <LessonIcon emoji={lesson?.icon} size={18} />
+        )
+      }
       onClose={() => navigate(back)}
+      pocketBook
       onProblemDone={onProblemDone}
       onComplete={onComplete}
       renderSummary={(outcomes, restart) => (

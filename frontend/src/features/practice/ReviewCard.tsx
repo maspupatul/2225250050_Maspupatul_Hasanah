@@ -1,3 +1,4 @@
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import type { Review } from '../../lib/types';
 import { VisualView } from '../visuals/VisualView';
@@ -35,7 +36,8 @@ export function ReviewCard({ review, feedback }: { review: Review; feedback: str
       )}
       <VisualView script={review.visual} />
       <p className="rounded-2xl border-2 border-dashed border-lavender-300 px-4 py-3 text-sm text-ink">
-        💭 <span className="font-extrabold">{t.practice.reflection}:</span> {review.reflection}
+        <Icon name="thought" size={18} className="-mt-0.5 mr-1.5 inline-block text-plum-700" />
+        <span className="font-extrabold">{t.practice.reflection}:</span> {review.reflection}
       </p>
     </div>
   );

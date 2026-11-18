@@ -13,7 +13,7 @@ const MODULE_TONES: ModuleTone[] = [
 
 // Node centres swing gently left and right: a winding path, not a straight list.
 const SWING = [30, 54, 66, 54];
-const laneX = (i: number) => SWING[i % SWING.length];
+export const laneX = (i: number) => SWING[i % SWING.length];
 
 type Props = {
   module: ModuleInfo;

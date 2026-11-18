@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Stepper } from '../../components/ui/Stepper';
+import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import { fmtInt, fmtOperand } from '../../lib/format';
 import type { Arrow, Mark, VisualScript } from '../../lib/types';
@@ -228,7 +229,10 @@ export function NumberLineWalker({ initialStart = -3, initialOp = '+', initialOp
             onClick={() => setPhase('walking')}
             className="w-full rounded-2xl bg-accent py-3.5 font-extrabold text-white transition active:scale-95"
           >
-            {t.walker.lockGuess} 🔒
+            <span className="inline-flex items-center gap-1.5">
+              {t.walker.lockGuess}
+              <Icon name="lock" size={18} />
+            </span>
           </button>
         </div>
       )}
