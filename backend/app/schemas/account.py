@@ -61,6 +61,10 @@ class JoinClassRequest(BaseModel):
 # ------------------------------------------------------------------ classes (teacher)
 
 
+class AssistantSwitch(BaseModel):
+    enabled: bool
+
+
 class ClassCreate(BaseModel):
     class_name: str = Field(min_length=1, max_length=20)
 
@@ -76,6 +80,7 @@ class ClassOut(BaseModel):
     class_name: str
     class_code: str
     student_count: int
+    assistant_enabled: bool = True
     created_at: str
 
 

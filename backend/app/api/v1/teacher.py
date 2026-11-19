@@ -10,9 +10,16 @@ from app.core.errors import AppError
 from app.core.security import require_role
 from app.db.database import get_db
 from app.db.models import ROLE_TEACHER, User
-from app.schemas.account import ClassCreate, ClassOut
+from app.schemas.account import AssistantSwitch, ClassCreate, ClassOut
 from app.services.accounts import report_for, reset_student_password, students_of, teaches
-from app.services.classes import class_out, classes_of, create_class, normalize_class_code, student_counts
+from app.services.classes import (
+    class_out,
+    classes_of,
+    create_class,
+    normalize_class_code,
+    set_assistant,
+    student_counts,
+)
 from app.services.progress_report import KKM, class_report
 
 router = APIRouter(prefix="/guru", tags=["guru"])
@@ -37,6 +44,18 @@ def new_class(
 ) -> dict:
     """Create a class; the server picks a unique 6-character join code."""
     return class_out(create_class(db, teacher, body.class_name), 0)
+
+
+@router.put("/classes/{class_code}/assistant", response_model=ClassOut)
+def switch_assistant(
+    class_code: str,
+    body: AssistantSwitch,
+    teacher: User = Depends(require_role(ROLE_TEACHER)),
+    db: Session = Depends(get_db),
+) -> dict:
+    """Turn Tanya Asisten on or off for the students of one class."""
+    school_class = set_assistant(db, teacher, class_code, body.enabled)
+    return class_out(school_class, student_counts(db, [school_class.class_code]).get(school_class.class_code, 0))
 
 
 @router.get("/students-summary")

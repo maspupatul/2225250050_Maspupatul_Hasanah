@@ -55,3 +55,7 @@ def _add_missing_columns() -> None:
         with engine.begin() as conn:
             conn.execute(text("ALTER TABLE users ADD COLUMN class_code VARCHAR(6)"))
             conn.execute(text("CREATE INDEX IF NOT EXISTS ix_users_class_code ON users (class_code)"))
+    class_columns = {c["name"] for c in inspect(engine).get_columns("classes")}
+    if "assistant_enabled" not in class_columns:
+        with engine.begin() as conn:
+            conn.execute(text("ALTER TABLE classes ADD COLUMN assistant_enabled BOOLEAN NOT NULL DEFAULT TRUE"))

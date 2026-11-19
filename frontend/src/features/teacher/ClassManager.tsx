@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Icon } from '../../components/ui/Icon';
+import { Toggle } from '../../components/ui/Toggle';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import type { SchoolClass } from '../../lib/types';
@@ -8,6 +9,54 @@ type Props = {
   classes: SchoolClass[];
   onCreated: (created: SchoolClass) => void;
 };
+
+/** Tanya Asisten on/off for the students of one class (privacy: the teacher decides). */
+function AssistantSwitch({ school }: { school: SchoolClass }) {
+  const [on, setOn] = useState(school.assistant_enabled !== false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const change = async (next: boolean) => {
+    setBusy(true);
+    setError(null);
+    try {
+      const updated = await api.setClassAssistant(school.class_code, next);
+      setOn(updated.assistant_enabled);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t.errors.generic);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="mt-3 border-t border-lavender-200 pt-3">
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex min-w-0 items-center gap-1.5 text-xs font-extrabold text-ink">
+          <Icon name="chat" size={16} className="shrink-0 text-plum-700" />
+          {t.teacher.assistantSwitch}
+        </span>
+        <span className="flex shrink-0 items-center gap-2">
+          <span className="text-[11px] font-bold text-ink-muted">
+            {on ? t.teacher.assistantOn : t.teacher.assistantOff}
+          </span>
+          <span className={busy ? 'pointer-events-none opacity-60' : ''}>
+            <Toggle
+              checked={on}
+              onChange={(next) => void change(next)}
+              label={`${t.teacher.assistantSwitch} ${school.class_name}`}
+            />
+          </span>
+        </span>
+      </div>
+      {error && (
+        <p className="mt-1 text-xs font-bold text-amber-800" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
 
 function CopyButton({ code }: { code: string }) {
   const [state, setState] = useState<'idle' | 'copied' | 'failed'>('idle');
@@ -137,6 +186,7 @@ export function ClassManager({ classes, onCreated }: Props) {
                 <span className="select-all font-mono text-xl font-black tracking-[0.25em] text-accent">{c.class_code}</span>
                 <CopyButton code={c.class_code} />
               </div>
+              <AssistantSwitch school={c} />
             </li>
           ))}
         </ul>

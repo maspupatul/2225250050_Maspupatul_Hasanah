@@ -24,6 +24,14 @@ Pengguna utama Z-Math adalah **anak di bawah umur (12–14 tahun)**. Karena itu,
 
 **Smart Hint (Google Gemini):** saat siswa membuka petunjuk, server (bukan perangkat siswa) mengirim teks soal dan jawaban keliru terakhir siswa ke Google Gemini. **Tidak ada** nama, akun, kelas, atau ID siswa yang dikirim. Kunci API hanya ada di `backend/.env`. Catatan: pada Free Tier, Google dapat memakai data permintaan untuk meningkatkan layanannya. Untuk pemakaian di sekolah, sebaiknya pakai Paid Tier atau matikan fitur ini dengan `ZMATH_AI_HINTS=0`.
 
+**Tanya Asisten (Google Gemini, satu penyedia dengan Smart Hint):** siswa mengetik pertanyaan bebas, jadi aturannya lebih ketat:
+- Wajib masuk, dan guru dapat mematikannya per kelas (Dasbor Guru → Kelola Kelas).
+- Sebelum dikirim ke Gemini, server **menghapus nama dan username siswa**, alamat e-mail, dan nomor telepon (diganti `[nama]` / `[data pribadi]`). Yang dikirim hanya teks soal, langkah aktif, petunjuk statis, dan 6 pesan terakhir (masing-masing ≤ 300 karakter).
+- **Riwayat obrolan tidak disimpan**, baik di server maupun di penyimpanan perangkat. Obrolan hanya ada di memori halaman dan hilang saat langkah atau soal berganti. Server hanya menghitung jumlah pertanyaan per soal (batas 20) untuk menjaga kuota.
+- Layar asisten mengingatkan: "Jangan tulis nama atau data pribadi. Obrolan tidak disimpan."
+- Asisten tidak tersedia saat Ujian Akhir.
+- `ZMATH_AI_HINTS=0` mematikan Gemini untuk keduanya; asisten lalu menjawab dengan petunjuk statis saja.
+
 ## 3. Persetujuan
 
 1. Saat mendaftar, siswa mencentang: "Orang tua/wali saya sudah mengizinkan saya memakai aplikasi ini."

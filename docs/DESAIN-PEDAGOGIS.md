@@ -71,6 +71,41 @@ Semua pengaman di §6.6 tetap berlaku: Gemini tidak pernah menerima jawaban, tek
 - **Konkret lebih dulu.** Buku RMT menekankan bahwa konsep ilmiah tidak cukup dibangun dari pengalaman sehari-hari saja. ℤ-Math tetap memulai dari visual konkret (CLAUDE.md §5.3; langkah RMT 3), tetapi setiap visual konteks selalu dihubungkan ke **garis bilangan** sebagai alat matematis, dan aturan dirumuskan sebagai pola (langkah RMT 4–5).
 - **Isi materi tidak diubah.** Penyesuaian RMT hanya menambah penanda, fungsi kognitif, dan instruksi mediator. Soal, petunjuk statis, dan alur offline PWA tetap sama.
 
+### 0.7 Tanya Asisten: Pembimbing Proses Berpikir
+
+**Tanya Asisten** adalah chatbot interaktif di halaman latihan (soal literasi/soal cerita dan soal hitung). Asisten tidak menjawab pertanyaan secara bebas. Perannya **pembimbing proses berpikir matematis** (mediator RMT). Kode: `backend/app/services/assistant.py`, `frontend/src/features/practice/AssistantSheet.tsx`.
+
+**1. Membimbing literasi matematika secara bertahap.** Asisten hanya membahas **langkah yang sedang aktif** dari 4 langkah soal cerita (§5): Pahami → Ditanya → Buat Model → Hitung → Tafsirkan & Periksa. Langkah aktif ditentukan server dari attempt, bukan dari siswa. Obrolan dimulai ulang setiap kali langkah berganti. Jika siswa bertanya tentang langkah lain, asisten mengarahkan kembali ke langkah aktif.
+
+**2. Mengelola beban kognitif.**
+
+| Jenis beban | Cara asisten mengelolanya |
+|---|---|
+| **Intrinsik** (kompleksitas materi) | Satu langkah dan **satu pertanyaan** per balasan. Masalah dipecah menjadi langkah kecil; obrolan terikat pada langkah aktif |
+| **Ekstrinsik** (cara penyajian) | Paling banyak 3 kalimat, setiap kalimat ≤ 15 kata, kata sehari-hari, tanpa markdown atau emoji. Merujuk ke alat yang sudah ada di layar (garis bilangan, termometer). Tiga tombol pertanyaan siap pakai mengurangi beban mengetik. Tanpa animasi baru |
+| **Germane** (membangun skema) | Siswa diminta menjelaskan alasan, memeriksa caranya sendiri, dan menghubungkan dengan langkah sebelumnya (*self-explanation*) |
+
+**3. Petunjuk sesuai kesulitan, tanpa jawaban akhir.** Tingkat bantuan (`support_level`) mengikuti 3 tingkat petunjuk (§6.2):
+
+| Tingkat | Muncul saat | Isi |
+|---|---|---|
+| 1 Makna | Pertanyaan pertama | Arti kata/konteks + satu pertanyaan kecil |
+| 2 Visual | Siswa bertanya lagi atau menulis "bingung / nggak ngerti / susah" | Titik mulai dan arah di garis bilangan, tanpa tempat berhenti |
+| 3 Strategi | Siswa terus kesulitan | Langkah pertama saja; kalimat matematika dengan kotak kosong □ |
+
+Tingkat bantuan **paling tinggi satu tingkat di atas petunjuk yang sudah dibuka** siswa. Jadi asisten tidak menjadi jalan pintas yang melewati bobot mastery (§6.4). Untuk bantuan lebih konkret, siswa tetap membuka Petunjuk.
+
+Jika siswa meminta jawaban, asisten menolak dengan ramah lalu memberi pertanyaan pemandu. Asisten juga **tidak membenarkan atau menyalahkan tebakan angka**; siswa diminta memeriksa dengan alat atau tombol Periksa.
+
+**4. Tahapan RMT.** Asisten adalah mediator Fase 3 (praktik konstruksi konseptual, §0.2). Ia menyebut fungsi kognitif langkah aktif (§0.3), mendorong pemakaian alat psikologis khusus matematika (garis bilangan) dan alat konteks (suhu, kedalaman laut, skor, utang-piutang), serta meminta bukti logis. Kriteria MLE (§0.4): **intensionalitas** (fokus pada satu langkah), **makna** (tingkat 1), **transendensi** (menghubungkan dengan langkah sebelumnya), **rasa kompeten** (nada positif, menunjukkan di mana berpikir perlu dicek).
+
+**Pengaman (sama dengan Smart Hint, §6.6):**
+- Gemini tidak pernah menerima jawaban. Setiap balasan disaring: balasan yang memuat hasil akhir atau hasil antara (angka atau kata) dibuang dan diganti petunjuk statis tingkat yang sama.
+- Teks tetap di instruksi asisten tidak memuat angka sama sekali, agar angka label tidak tertukar dengan jawaban.
+- Gagal apa pun (kuota, waktu habis > `ZMATH_ASSISTANT_TIMEOUT_MS` = 20 detik, offline) → petunjuk statis.
+- Tidak tersedia saat Ujian Akhir. Maksimal 20 pertanyaan per soal.
+- Privasi: nama/username/e-mail/nomor telepon dihapus sebelum dikirim; riwayat obrolan tidak disimpan; guru dapat mematikan asisten per kelas ([KEAMANAN-PRIVASI.md](KEAMANAN-PRIVASI.md)).
+
 ## 1. Landasan Teori
 
 **Cognitive Load Theory (CLT)** (Sweller, 1988; Sweller, van Merriënboer & Paas, 2019) berangkat dari fakta bahwa memori kerja manusia terbatas, kira-kira 4 ± 1 elemen baru dalam satu waktu. Beban saat belajar terdiri atas:

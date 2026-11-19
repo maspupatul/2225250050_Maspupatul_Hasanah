@@ -91,6 +91,6 @@ def start_exam_problem(*, exam_seed: int, index: int, guided: bool) -> dict:
         raise AppError("NOT_FOUND", "Soal ujian tidak ditemukan.", 404)
     item = plan[index]
     payload = start_attempt(
-        lesson_id=None, template_id=item.template_id, guided=guided, seed=item.seed
+        lesson_id=None, template_id=item.template_id, guided=guided, seed=item.seed, exam=True
     )
     return payload | {"exam": item.public() | {"total": len(plan)}}

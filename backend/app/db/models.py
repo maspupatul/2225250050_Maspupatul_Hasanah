@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String, true
 from sqlalchemy.orm import Mapped, foreign, mapped_column, relationship
 
 from app.db.database import Base
@@ -58,6 +58,8 @@ class SchoolClass(Base):
     class_name: Mapped[str] = mapped_column(String(20))  # e.g. "VII-A"
     class_code: Mapped[str] = mapped_column(String(6), unique=True, index=True)  # e.g. "ZM7A92"
     teacher_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    # Tanya Asisten (AI chat) for students of this class; the teacher can switch it off.
+    assistant_enabled: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 

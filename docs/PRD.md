@@ -97,6 +97,7 @@ Prioritas memakai metode MoSCoW: **M** = Must, **S** = Should, **C** = Could, **
 | F-21 | Misi Literasi: stimulus (teks/tabel/grafik) + 3–5 soal pemahaman → penerapan → penalaran | M | IL1, EL1 (tujuan G5) |
 | F-22 | Pemodel Bebas: siswa mengetik soal cerita sendiri, aplikasi membantu memodelkannya | C | GL1, GL3 |
 | F-23 | Ujian Akhir: evaluasi rangkuman semua materi, bertahap Dasar → Menengah → HOTS, bank soal terpisah dari latihan | S | G2, G5 |
+| F-24 | Tanya Asisten: chatbot pembimbing proses berpikir (mediator RMT, 4 langkah literasi, kelola beban kognitif, tanpa jawaban akhir); guru dapat mematikannya per kelas | S | IL1, EL1, GL2 |
 
 ## 7. User Stories dan Acceptance Criteria
 

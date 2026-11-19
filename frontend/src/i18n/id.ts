@@ -314,6 +314,9 @@ export const t = {
     copied: 'Tersalin',
     copyFailed: (code: string) => `Salin manual: ${code}`,
     codeLabel: 'Kode kelas',
+    assistantSwitch: 'Tanya Asisten untuk siswa',
+    assistantOn: 'Aktif',
+    assistantOff: 'Mati',
     studentsJoined: (n: number) => `${n} siswa bergabung`,
     allClasses: 'Semua Kelas',
     filterClass: 'Pilih kelas',
@@ -436,6 +439,25 @@ export const t = {
   errors: {
     network: 'Tidak terhubung ke server. Periksa koneksi internetmu.',
     generic: 'Ada yang tidak beres. Coba lagi ya.',
+  },
+
+  /** Tanya Asisten: chat tutor that guides the thinking, never gives the answer. */
+  assistant: {
+    open: 'Tanya Asisten',
+    title: 'Asisten Belajar',
+    subtitle: 'Membimbing caramu berpikir, bukan memberi jawaban.',
+    close: 'Tutup asisten',
+    stepNow: (label: string) => `Sekarang: ${label}`,
+    greeting: 'Hai! Aku bantu kamu berpikir langkah demi langkah. Bagian mana yang membuatmu bingung?',
+    quick: ['Aku bingung mulai dari mana', 'Apa arti kata di soal ini?', 'Cek cara berpikirku'],
+    placeholder: 'Tulis pertanyaanmu…',
+    send: 'Kirim',
+    thinking: 'Asisten sedang berpikir…',
+    privacy: 'Jangan tulis nama atau data pribadi. Obrolan tidak disimpan.',
+    offline: 'Asisten butuh internet. Sementara, buka Petunjuk ya.',
+    you: 'Kamu',
+    bot: 'Asisten',
+    turnsLeft: (n: number) => `Sisa ${n} pertanyaan untuk soal ini`,
   },
 
   /** Rigorous Mathematical Thinking (Kinard & Kozulin, 2008): phase + thinking action per screen. */

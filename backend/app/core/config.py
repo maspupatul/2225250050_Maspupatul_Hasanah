@@ -52,6 +52,10 @@ class Settings:
     gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip())
     ai_hints: bool = field(default_factory=lambda: os.getenv("ZMATH_AI_HINTS", "1") == "1")
     ai_timeout_ms: int = field(default_factory=lambda: int(os.getenv("ZMATH_AI_TIMEOUT_MS", "12000")))
+    # Tanya Asisten may wait longer than a hint: the chat shows "Asisten sedang berpikir…"
+    assistant_timeout_ms: int = field(
+        default_factory=lambda: int(os.getenv("ZMATH_ASSISTANT_TIMEOUT_MS", "20000"))
+    )
     # Optional: force one model name, e.g. "gemini-2.5-flash". Empty = pick automatically.
     gemini_model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "").strip())
 

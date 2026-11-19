@@ -244,7 +244,22 @@ export interface SchoolClass {
   class_name: string;
   class_code: string;
   student_count: number;
+  assistant_enabled: boolean;
   created_at: string;
+}
+
+/** Tanya Asisten: one chat message, kept only in memory on the device. */
+export interface ChatMessage {
+  role: 'siswa' | 'asisten';
+  text: string;
+}
+
+export interface AssistantReply {
+  reply: string;
+  source: 'ai' | 'static';
+  step: StepKey;
+  support_level: 1 | 2 | 3;
+  turns_left: number;
 }
 
 export type StudentStatus = 'tuntas' | 'berproses' | 'perlu_bimbingan';

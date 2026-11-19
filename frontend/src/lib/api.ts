@@ -2,6 +2,8 @@ import { t } from '../i18n/id';
 import type { ProgressSnapshot } from '../store/progress';
 import type {
   AccountUser,
+  AssistantReply,
+  ChatMessage,
   ClassSummary,
   ExamInfo,
   ExamStart,
@@ -80,6 +82,11 @@ export const api = {
     post<StepResult>(`/practice/attempts/${attemptId}/steps`, { step, answer }),
   hint: (attemptId: string, step: StepKey) => post<Hint>(`/practice/attempts/${attemptId}/hint`, { step }),
   twin: (attemptId: string) => post<{ twin: Twin; message: string }>(`/practice/attempts/${attemptId}/twin`),
+  /** Tanya Asisten: on for this student? (their teacher may switch it off) */
+  assistantStatus: () => request<{ enabled: boolean; ai: boolean }>('/practice/assistant'),
+  /** The recent messages go to the server once; nothing is stored there. */
+  askAssistant: (attemptId: string, messages: ChatMessage[]) =>
+    post<AssistantReply>(`/practice/attempts/${attemptId}/assistant`, { messages }),
   exam: () => request<ExamInfo>('/exam'),
   startExam: () => post<ExamStart>('/exam/start', {}),
 
@@ -105,6 +112,11 @@ export const api = {
     request<ClassSummary>(
       `/guru/students-summary${classCode ? `?class_code=${encodeURIComponent(classCode)}` : ''}`,
     ),
+  setClassAssistant: (classCode: string, enabled: boolean) =>
+    request<SchoolClass>(`/guru/classes/${encodeURIComponent(classCode)}/assistant`, {
+      method: 'PUT',
+      body: JSON.stringify({ enabled }),
+    }),
   studentDetail: (id: number) => request<StudentDetail>(`/guru/students/${id}`),
   /** Forgotten password: the server sets a temporary one and returns it once. */
   resetStudentPassword: (id: number) =>

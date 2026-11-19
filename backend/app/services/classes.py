@@ -89,12 +89,30 @@ def student_counts(db: Session, codes: list[str]) -> dict[str, int]:
     return {code: count for code, count in db.execute(stmt)}
 
 
+def set_assistant(db: Session, teacher: User, class_code: str, enabled: bool) -> SchoolClass:
+    """Switch Tanya Asisten on or off for one of the teacher's own classes."""
+    code = normalize_class_code(class_code)
+    school_class = next((c for c in classes_of(db, teacher) if c.class_code == code), None)
+    if school_class is None:
+        raise AppError("NOT_FOUND", "Kelas tidak ditemukan di daftar kelas Anda.", 404)
+    school_class.assistant_enabled = enabled
+    db.commit()
+    return school_class
+
+
+def assistant_allowed(student: User) -> bool:
+    """A student without a class may use the assistant; otherwise their teacher decides."""
+    school_class = student.school_class
+    return school_class is None or school_class.assistant_enabled is not False
+
+
 def class_out(school_class: SchoolClass, student_count: int) -> dict:
     return {
         "id": school_class.id,
         "class_name": school_class.class_name,
         "class_code": school_class.class_code,
         "student_count": student_count,
+        "assistant_enabled": school_class.assistant_enabled is not False,
         "created_at": school_class.created_at.isoformat(),
     }
 

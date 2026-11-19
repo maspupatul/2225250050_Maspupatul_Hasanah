@@ -9,9 +9,10 @@ import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import type { Outcome } from '../../lib/score';
-import type { Hint, Problem, StepKey, StepResult, Twin } from '../../lib/types';
+import type { ChatMessage, Hint, Problem, StepKey, StepResult, Twin } from '../../lib/types';
 import { useProgress } from '../../store/progress';
 import { VisualView } from '../visuals/VisualView';
+import { AssistantSheet } from './AssistantSheet';
 import { HintStack } from './HintStack';
 import { isOfflineError, nextOfflineHint } from './offlineHints';
 import { PocketBookDrawer } from './PocketBookDrawer';
@@ -39,6 +40,8 @@ type Props = {
   renderSummary: (outcomes: Outcome[], restart: () => void) => ReactNode;
   /** Show the Buku Saku button (practice only; never in the Ujian Akhir). */
   pocketBook?: boolean;
+  /** Show Tanya Asisten (practice only; never in the Ujian Akhir). */
+  assistant?: boolean;
 };
 
 const toolPill = (active: boolean) =>
@@ -63,6 +66,7 @@ export function PracticeSession({
   onComplete,
   renderSummary,
   pocketBook = false,
+  assistant = false,
 }: Props) {
   const guided = useProgress((s) => s.guided);
   const setGuided = useProgress((s) => s.setGuided);
@@ -96,6 +100,24 @@ export function PracticeSession({
   const [pocketOpen, setPocketOpen] = useState(false);
   const [scratchOn, setScratchOn] = useState(false);
   const closePocket = useCallback(() => setPocketOpen(false), []);
+  // Tanya Asisten: the teacher may switch it off; offline the button stays and explains itself
+  const [assistantOn, setAssistantOn] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
+  // chat of the active step only, in memory (never stored on the device or the server)
+  const [chat, setChat] = useState<{ key: string; messages: ChatMessage[] }>({ key: '', messages: [] });
+  const closeAssistant = useCallback(() => setAssistantOpen(false), []);
+
+  useEffect(() => {
+    if (!assistant) return;
+    let alive = true;
+    api
+      .assistantStatus()
+      .then((s) => alive && setAssistantOn(s.enabled))
+      .catch((err) => alive && setAssistantOn(isOfflineError(err, navigator.onLine)));
+    return () => {
+      alive = false;
+    };
+  }, [assistant]);
 
   const load = useCallback(
     async (i: number) => {
@@ -280,6 +302,9 @@ export function PracticeSession({
   const percent = ((index + (finished || phase === 'summary' ? 1 : 0)) / Math.max(1, total)) * 100;
   const headerLabel = phase === 'summary' ? t.summary.title : step ? `${step.label}…` : t.common.loading;
   const examItem = problem?.exam;
+  const chatKey = problem && step ? `${problem.attempt_id}:${step.key}` : '';
+  const chatMessages = chat.key === chatKey ? chat.messages : [];
+  const showAssistant = assistant && assistantOn && !examItem && phase === 'solving' && Boolean(step);
 
   return (
     <div className="flex min-h-dvh flex-col bg-plum-800 px-4 pb-6 pt-[calc(env(safe-area-inset-top)+16px)] text-white">
@@ -353,7 +378,18 @@ export function PracticeSession({
                   line on narrow phones instead of cutting the problem number */}
               <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink-muted">
                 <span className="mr-auto whitespace-nowrap">{t.practice.problemOf(index + 1, total)}</span>
-                <div className="ml-auto flex gap-2">
+                <div className="ml-auto flex flex-wrap justify-end gap-2">
+                  {showAssistant && (
+                    <button
+                      type="button"
+                      onClick={() => setAssistantOpen(true)}
+                      aria-haspopup="dialog"
+                      className={toolPill(false)}
+                    >
+                      <Icon name="chat" size={15} />
+                      {t.assistant.open}
+                    </button>
+                  )}
                   {pocketBook && (
                     <button
                       type="button"
@@ -512,6 +548,19 @@ export function PracticeSession({
 
       <AnimatePresence>{twin && <TwinSheet twin={twin} onClose={() => setTwin(null)} />}</AnimatePresence>
       <AnimatePresence>{pocketOpen && <PocketBookDrawer onClose={closePocket} />}</AnimatePresence>
+      <AnimatePresence>
+        {assistantOpen && showAssistant && problem && step && (
+          <AssistantSheet
+            attemptId={problem.attempt_id}
+            step={step}
+            messages={chatMessages}
+            onMessages={(update) =>
+              setChat((c) => ({ key: chatKey, messages: update(c.key === chatKey ? c.messages : []) }))
+            }
+            onClose={closeAssistant}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

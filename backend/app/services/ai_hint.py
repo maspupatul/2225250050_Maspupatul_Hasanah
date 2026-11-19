@@ -262,6 +262,12 @@ def rank_models(names: Iterable[str]) -> list[str]:
     return ranked + extras[:MAX_EXTRA_MODELS]
 
 
+def _client_timeout_ms() -> int:
+    """SDK timeout (per network phase) long enough for the slowest caller; each request is still
+    capped by its own wall-clock budget in generate_text."""
+    return max(settings.ai_timeout_ms, settings.assistant_timeout_ms)
+
+
 def _make_client(vertex: bool, timeout_ms: int):  # noqa: ANN202 - google.genai.Client
     from google import genai
     from google.genai import types
@@ -295,7 +301,7 @@ def resolve_models() -> list[str]:
             if _models is not None and (_models_listed or time.monotonic() < _list_retry_at):
                 return _models
             if settings.gemini_model:
-                client, models, listed = _make_client(False, settings.ai_timeout_ms), [settings.gemini_model], True
+                client, models, listed = _make_client(False, _client_timeout_ms()), [settings.gemini_model], True
             else:
                 client, models, listed, errors = None, list(FALLBACK_MODELS), False, []
                 for vertex in (False, True):  # AI Studio key first, then Vertex AI express key
@@ -304,12 +310,12 @@ def resolve_models() -> list[str]:
                     except Exception as exc:  # noqa: BLE001 - any failure falls back to the guess
                         errors.append(f"{'vertex' if vertex else 'gemini-api'}: {type(exc).__name__} {_error_code(exc)}")
                         continue
-                    client, models, listed = _make_client(vertex, settings.ai_timeout_ms), ranked or models, True
+                    client, models, listed = _make_client(vertex, _client_timeout_ms()), ranked or models, True
                     log.warning("Smart Hint models (%s): %s", "vertex" if vertex else "gemini-api", models)
                     break
                 if not listed:
                     log.warning("Smart Hint could not list models (%s); retrying later", "; ".join(errors))
-                    client = _make_client(False, settings.ai_timeout_ms)
+                    client = _make_client(False, _client_timeout_ms())
             with _lock:
                 _client, _models, _models_listed = client, models, listed
                 if not listed:
@@ -333,14 +339,14 @@ def _models_for_request() -> list[str] | None:
     return current
 
 
-def _call(model: str, prompt: str) -> str | None:
+def _call(model: str, prompt: str, system: str = SYSTEM_PROMPT) -> str | None:
     """One model. Uses the lowest thinking level the model accepts (fast answers)."""
     from google.genai import types
 
     for i in range(_thinking.get(model, 0), len(THINKING_LEVELS)):
         level = THINKING_LEVELS[i]
         config = types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
+            system_instruction=system,
             temperature=0.4,
             max_output_tokens=1024,
             thinking_config=types.ThinkingConfig(thinking_level=level) if level else None,
@@ -360,6 +366,10 @@ def _call(model: str, prompt: str) -> str | None:
 
 
 def _gemini_generate(req: AIHintRequest) -> str | None:
+    return generate_text(build_prompt(req), SYSTEM_PROMPT)
+
+
+def generate_text(prompt: str, system: str, budget_ms: int | None = None) -> str | None:
     """Walk the model chain within one time budget (ZMATH_AI_TIMEOUT_MS).
 
     The budget is a hard wall-clock limit: a student never waits longer. Each model except the
@@ -370,8 +380,7 @@ def _gemini_generate(req: AIHintRequest) -> str | None:
     models = _models_for_request()
     if not models:
         return None
-    prompt = build_prompt(req)
-    deadline = time.monotonic() + settings.ai_timeout_ms / 1000
+    deadline = time.monotonic() + (budget_ms or settings.ai_timeout_ms) / 1000
     candidates = [m for m in list(models) if _model_paused.get(m, 0.0) <= time.monotonic()]
     for i, model in enumerate(candidates):
         remaining_ms = int((deadline - time.monotonic()) * 1000)
@@ -381,7 +390,7 @@ def _gemini_generate(req: AIHintRequest) -> str | None:
         shared = model == models[0] and i < len(candidates) - 1
         budget_ms = max(MIN_CALL_MS, int(remaining_ms * MODEL_SHARE)) if shared else remaining_ms
         try:
-            text = _call_within(model, prompt, budget_ms)
+            text = _call_within(model, prompt, budget_ms, system)
         except Exception as exc:
             code = _error_code(exc)
             if code == 429 or _is_network_error(exc):
@@ -403,10 +412,10 @@ def _gemini_generate(req: AIHintRequest) -> str | None:
 _executor = ThreadPoolExecutor(max_workers=8, thread_name_prefix="zmath-ai")
 
 
-def _call_within(model: str, prompt: str, budget_ms: int) -> str | None:
+def _call_within(model: str, prompt: str, budget_ms: int, system: str = SYSTEM_PROMPT) -> str | None:
     """`_call` with a hard wall-clock limit (the SDK timeout is per network phase, not total).
     On timeout the call is abandoned; its thread ends when the SDK timeout fires."""
-    future = _executor.submit(_call, model, prompt)
+    future = _executor.submit(_call, model, prompt, system)
     try:
         return future.result(timeout=budget_ms / 1000)
     except FutureTimeout:
@@ -436,15 +445,7 @@ def smart_hint(req: AIHintRequest, guard: Guard) -> dict:
     try:
         raw = generate(req)
     except Exception as exc:  # noqa: BLE001 - quota, timeout, offline, SDK errors: all fall back
-        code = _error_code(exc)
-        if code == 429:
-            _pause(COOLDOWN_QUOTA_S, "quota (429)")
-        elif code in {400, 401, 403}:
-            _pause(COOLDOWN_AUTH_S, f"key rejected ({code})")
-        elif code is not None and 500 <= code < 600:
-            pass  # busy/slow models are already skipped one by one; others may still work
-        else:
-            _pause(COOLDOWN_ERROR_S, type(exc).__name__)
+        note_failure(exc)
         return static
     text = clean(raw or "")
     if not text or not is_safe(text, guard, req.step):
@@ -456,6 +457,19 @@ def smart_hint(req: AIHintRequest, guard: Guard) -> dict:
         while len(_cache) > CACHE_SIZE:
             _cache.popitem(last=False)
     return {"ai_text": text, "source": "ai"}
+
+
+def note_failure(exc: Exception) -> None:
+    """Pause every AI call after a failure that would hit the next request too."""
+    code = _error_code(exc)
+    if code == 429:
+        _pause(COOLDOWN_QUOTA_S, "quota (429)")
+    elif code in {400, 401, 403}:
+        _pause(COOLDOWN_AUTH_S, f"key rejected ({code})")
+    elif code is not None and 500 <= code < 600:
+        pass  # busy/slow models are already skipped one by one; others may still work
+    else:
+        _pause(COOLDOWN_ERROR_S, type(exc).__name__)
 
 
 def warm_up_in_background() -> None:

@@ -52,7 +52,7 @@ Progres tetap disimpan di perangkat (aplikasi tetap jalan saat offline), lalu **
 
 | Bagian | Isi |
 |---|---|
-| Kelola Kelas | Tombol "Buat Kelas Baru"; kartu tiap kelas berisi nama, kode kelas + tombol **Salin Kode**, dan jumlah siswa yang bergabung |
+| Kelola Kelas | Tombol "Buat Kelas Baru"; kartu tiap kelas berisi nama, kode kelas + tombol **Salin Kode**, jumlah siswa yang bergabung, dan sakelar **Tanya Asisten untuk siswa** (Aktif/Mati, bawaan Aktif). Jika dimatikan, tombol Tanya Asisten tidak muncul untuk siswa kelas itu dan server menolak permintaannya (403) |
 | Filter kelas | Pil "Semua Kelas" · per kelas (muncul jika guru punya > 1 kelas). Ringkasan, daftar siswa, dan Export CSV mengikuti kelas yang dipilih |
 | Ringkasan kelas | Siswa terdaftar, rata-rata nilai ujian terbaik, ketuntasan materi (rata-rata % pelajaran selesai), jumlah siswa perlu bimbingan |
 | Daftar siswa | Kartu (HP) atau tabel (laptop): progres 4 subbab, nilai ujian terbaik, jumlah petunjuk, status. Siswa "perlu bimbingan" tampil paling atas |
@@ -78,6 +78,9 @@ Progres tetap disimpan di perangkat (aplikasi tetap jalan saat offline), lalu **
 | POST | `/api/v1/progress/sync` | siswa |
 | GET | `/api/v1/guru/classes` | guru: daftar kelasnya + `student_count` |
 | POST | `/api/v1/guru/classes` | guru: `{"class_name": "VII-A"}` → kelas baru + `class_code` (201; 409 jika nama sudah dipakai) |
+| PUT | `/api/v1/guru/classes/{class_code}/assistant` | guru (kelasnya sendiri; 404 jika bukan): `{"enabled": false}` mematikan Tanya Asisten |
+| GET | `/api/v1/practice/assistant` | siswa: apakah Tanya Asisten aktif untuknya |
+| POST | `/api/v1/practice/attempts/{id}/assistant` | siswa yang sedang masuk. Lihat [API-SPEC.md](API-SPEC.md) §3.12d |
 | GET | `/api/v1/guru/students-summary?class_code=…` | guru: semua kelasnya, atau satu kelas (404 jika kode bukan miliknya) |
 | GET | `/api/v1/guru/students/{id}` | guru (kelasnya sendiri) |
 | PUT | `/api/v1/auth/me/password` | siswa/guru yang sedang masuk: ubah kata sandi sendiri (wajib kata sandi lama; salah 5× → tunggu 5 menit) |

@@ -81,6 +81,8 @@ class Attempt:
     twin_available: bool = False
     twin_shown: bool = False
     hints_requested: int = 0
+    exam: bool = False  # Ujian Akhir: Tanya Asisten is off
+    assistant_turns: int = 0  # questions asked to Tanya Asisten (a count only, never the text)
 
     @property
     def current_step(self) -> str:
@@ -124,7 +126,7 @@ def _open_attempt(attempt_id: str, step: str | None = None) -> Attempt:
 
 
 def start_attempt(
-    *, lesson_id: str | None, template_id: str | None, guided: bool, seed: int | None = None
+    *, lesson_id: str | None, template_id: str | None, guided: bool, seed: int | None = None, exam: bool = False
 ) -> dict:
     c = content()
     if template_id:
@@ -177,6 +179,7 @@ def start_attempt(
         known_options=known_options,
         asked_options=asked_options,
         asked_correct=asked_correct,
+        exam=exam,
     )
     _save(attempt)
     return _problem_payload(attempt)

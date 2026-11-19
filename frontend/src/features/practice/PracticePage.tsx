@@ -144,6 +144,7 @@ export function PracticePage() {
       }
       onClose={() => navigate(back)}
       pocketBook
+      assistant
       onProblemDone={onProblemDone}
       onComplete={onComplete}
       renderSummary={(outcomes, restart) => (

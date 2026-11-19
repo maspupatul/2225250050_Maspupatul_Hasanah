@@ -241,6 +241,28 @@ Request: `{ "step": "model" }`
 
 > **Jaminan server:** respons petunjuk dibuat oleh `hint_generator` yang tidak menerima hasil akhir. Middleware test memastikan nilai hasil tidak muncul di `text`, `template`, maupun `visual`. Gemini hanya menerima `AIHintRequest` (tanpa jawaban), dan `ai_text` disaring di server: teks yang memuat hasil akhir atau hasil antara (angka maupun kata) dibuang (`tests/test_ai_hint.py`).
 
+### 3.12c `GET /practice/assistant` (Tanya Asisten)
+Wajib masuk. **200** `{ "enabled": true, "ai": true }`. `enabled` = `false` jika guru mematikan asisten untuk kelas siswa. `ai` = `false` jika Gemini tidak aktif (asisten tetap menjawab dengan petunjuk statis).
+
+### 3.12d `POST /practice/attempts/{attempt_id}/assistant` (Tanya Asisten)
+Wajib masuk. Request: percakapan terakhir yang **hanya disimpan di memori perangkat**. Server membaca 6 pesan terakhir lalu melupakannya.
+```json
+{ "messages": [ { "role": "siswa", "text": "Aku bingung mulai dari mana" } ] }
+```
+`role`: `siswa` | `asisten`; `text` 1–300 karakter; maksimal 12 pesan; pesan terakhir wajib dari siswa.
+
+**200**
+```json
+{ "reply": "Coba lihat kata turun di soal. Tandanya positif atau negatif?", "source": "ai", "step": "known", "support_level": 1, "turns_left": 19 }
+```
+- `step` selalu langkah yang sedang aktif di attempt; asisten tidak membahas langkah lain.
+- `support_level` 1 Makna · 2 Visual · 3 Strategi. Naik sesuai kesulitan siswa, tetapi paling tinggi satu tingkat di atas petunjuk yang sudah dibuka.
+- `source: "static"` → `reply` berisi petunjuk statis tingkat yang sama (kunci API tidak ada, kuota habis, waktu habis lebih dari `ZMATH_ASSISTANT_TIMEOUT_MS`, atau balasan AI ditolak penjaga anti-bocor).
+
+**401** belum masuk. **403** `ASSISTANT_OFF`: dimatikan guru, atau soal Ujian Akhir. **409** `ATTEMPT_CLOSED`. **429** `ASSISTANT_LIMIT`: sudah 20 pertanyaan untuk soal ini.
+
+> **Jaminan server:** nama, username, e-mail, dan nomor telepon dihapus sebelum dikirim ke Gemini. Gemini tidak pernah menerima jawaban. Setiap balasan melewati penjaga yang sama dengan Smart Hint (`tests/test_assistant.py`).
+
 ### 3.12a `POST /practice/attempts/{attempt_id}/twin`
 Tersedia hanya jika `twin_available: true`. Selain itu server mengembalikan **409** `TWIN_NOT_AVAILABLE`.
 **200**: worked example isomorfik (jenis skema sama, **konteks dan angka berbeda**)
