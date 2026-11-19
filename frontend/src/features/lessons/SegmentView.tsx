@@ -4,6 +4,7 @@ import { MathLines } from '../../components/ui/MathLines';
 import { Paragraphs } from '../../components/ui/Paragraphs';
 import { RichText } from '../../components/ui/RichText';
 import { Icon } from '../../components/ui/Icon';
+import { RmtTag } from '../../components/ui/RmtTag';
 import { t } from '../../i18n/id';
 import type { Segment } from '../../lib/types';
 import { VisualView } from '../visuals/VisualView';
@@ -12,7 +13,11 @@ import { VisualView } from '../visuals/VisualView';
 export function SegmentView({ segment }: { segment: Segment }) {
   return (
     <div className="space-y-5">
-      {segment.title && <h2 className="text-xl font-extrabold leading-snug text-ink">{segment.title}</h2>}
+      {/* RMT phase + thinking action, kept right above the title it describes */}
+      <div className="space-y-2">
+        <RmtTag phase={t.rmt.segment[segment.type].phase} action={t.rmt.segment[segment.type].action} />
+        {segment.title && <h2 className="text-xl font-extrabold leading-snug text-ink">{segment.title}</h2>}
+      </div>
       {segment.type === 'explore' ? (
         <Explore segment={segment} />
       ) : segment.type === 'worked_example' ? (

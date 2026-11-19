@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
+import { RmtTag } from '../../components/ui/RmtTag';
 import { RoundButton } from '../../components/ui/RoundButton';
 import { Toggle } from '../../components/ui/Toggle';
 import { Icon } from '../../components/ui/Icon';
@@ -387,6 +388,9 @@ export function PracticeSession({
               )}
 
               <div className="mt-5">
+                {phase === 'solving' && step && !result?.correct && (
+                  <RmtTag phase={t.rmt.step[step.key].phase} action={t.rmt.step[step.key].action} className="mb-3" />
+                )}
                 {phase === 'solving' && step && !result?.correct && (
                   <StepPanel
                     key={`${problem.attempt_id}-${step.key}`}

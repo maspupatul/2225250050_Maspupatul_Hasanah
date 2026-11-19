@@ -1,4 +1,75 @@
-# Desain Pedagogis — Berbasis Teori Beban Kognitif
+# Desain Pedagogis — Model RMT dengan Prinsip Beban Kognitif
+
+## 0. Model Pembelajaran: Rigorous Mathematical Thinking (RMT)
+
+Model pembelajaran ℤ-Math ditetapkan oleh dosen pembimbing: **Rigorous Mathematical Thinking (RMT)** (Kinard & Kozulin, 2008). Teori Beban Kognitif (§1–§2) tetap dipakai sebagai **prinsip desain tampilan**, agar setiap layar tidak membebani memori kerja. Pembagian perannya:
+
+| | Menjawab pertanyaan | Dipakai untuk |
+|---|---|---|
+| **RMT** | *Proses berpikir apa yang dibangun?* | Urutan fase belajar, fungsi kognitif tiap langkah, cara petunjuk memediasi |
+| **Teori Beban Kognitif** | *Bagaimana menyajikannya agar tidak membebani?* | Satu konsep per layar, tempo dikendalikan siswa, teks pendek, warna tanda |
+
+### 0.1 Landasan RMT
+
+RMT menggabungkan dua teori:
+- **Alat psikologis** (Vygotsky): simbol, garis bilangan, tabel, bidang koordinat, dan bahasa matematika adalah *alat untuk berpikir*, bukan sekadar isi pelajaran. Siswa mula-mula memakai alat itu di luar kepala, lalu menginternalisasinya ("garis bilangan di kepala").
+- **Pengalaman belajar termediasi** (*Mediated Learning Experience*, MLE; Feuerstein): seorang mediator menempatkan diri di antara siswa dan tugas, dengan kriteria **intensionalitas & resiprositas**, **makna**, dan **transendensi** (melampaui soal yang sedang dikerjakan).
+
+*Rigor* adalah kualitas berpikir yang teliti, tepat, dan gigih ingin memahami secara mendalam, bukan sekadar mendapat jawaban.
+
+### 0.2 Tiga Fase dan Enam Langkah RMT → Fitur ℤ-Math
+
+Proses RMT (Kinard & Kozulin, 2008, Bab 5) terdiri atas tiga fase dan enam langkah. Fase-fase ini tidak harus berjalan kaku berurutan, tetapi semuanya harus ada.
+
+| Fase RMT | Langkah RMT | Wujud di ℤ-Math | Penanda di layar |
+|---|---|---|---|
+| **Fase 1 — Pengembangan kognitif** | 1. Memaknai alat psikologis umum berdasarkan hubungan struktur–fungsinya | Layar **Pemantik** (`hook`): situasi nyata + visual (termometer, skala laut) yang diamati dan diberi nama | `RMT Fase 1 · Amati & beri nama` |
+| | 2. Memakai alat itu untuk tugas kognitif sehingga terbentuk fungsi kognitif tingkat tinggi | Pertanyaan "Coba pikirkan" dan visual interaktif pada pemantik | (layar yang sama) |
+| **Fase 2 — Konten sebagai proses** | 3. Membangun konsep dasar dari pengalaman dan bahasa sehari-hari | Kata sehari-hari (*di bawah nol, turun, utang*) dipetakan ke tanda; kata kunci dapat diketuk (glosarium) | `RMT Fase 2 · Temukan pola & hubungan` (layar `concept`) |
+| | 4. Menemukan dan merumuskan pola serta hubungan matematis | Layar **Konsep**: aturan muncul *setelah* pengalaman visual, sebagai rumusan pola | (layar `concept`) |
+| | 5. Memaknai alat psikologis **khusus matematika** (garis bilangan, tabel, bahasa matematika) | Layar **Eksplorasi** (`explore`): garis bilangan interaktif sebagai alat; tombol "Lihat sebagai garis bilangan" menghubungkan visual konteks ke garis bilangan | `RMT Fase 2 · Pakai alat berpikir` |
+| **Fase 3 — Praktik konstruksi konseptual** | 6. Berlatih memakai alat khusus matematika untuk mengatur fungsi kognitif dan membangun pemahaman konsep | **Contoh lengkap** dengan "Mengapa?" (`worked_example`), **Rangkuman** (`summary`), dan seluruh **Latihan** 4 langkah (§5) | `RMT Fase 3 · Beri bukti logis`, `RMT Fase 3 · Refleksi & generalisasi`, dan penanda per langkah latihan (§0.3) |
+
+Penanda dibuat dengan komponen `frontend/src/components/ui/RmtTag.tsx`; teksnya ada di `frontend/src/i18n/id.ts` (`t.rmt`). Warnanya ungu muda agar tidak bentrok dengan warna tanda positif (biru) dan negatif (merah). Tooltip penanda menyebut nama lengkap fasenya.
+
+### 0.3 Fungsi Kognitif pada Setiap Langkah Latihan
+
+RMT menuntut siswa **menyadari dan menamai** tindakan berpikirnya (fungsi kognitif). Karena itu, setiap langkah latihan menampilkan nama fungsi kognitif yang sedang dilatih, dengan kata sederhana (≤ 5 kata).
+
+| Langkah latihan (§5) | Fungsi kognitif RMT (Kinard & Kozulin, Tabel 4.1) | Teks penanda |
+|---|---|---|
+| ① Pahami (Diketahui) | Mencari informasi secara sistematis; memberi label (*labeling*) | `Cari info dengan teliti` |
+| ② Ditanya | Merumuskan masalah (*defining the problem*) | `Rumuskan masalah` |
+| ③ Buat Model | *Encoding* ke bahasa matematika; membentuk hubungan | `Tulis dalam bahasa matematika` |
+| ④a Hitung | Memakai alat khusus matematika (garis bilangan, skala) serta menganalisis–mengintegrasikan bilangan | `Hitung dengan alat visual` |
+| ④b Tafsirkan & Periksa | Memberi bukti logis (*providing logical evidence*); berpikir inferensial | `Beri bukti logis` |
+
+### 0.4 Kriteria Mediasi (MLE) dalam Aplikasi
+
+| Kriteria MLE | Penerapan di ℤ-Math |
+|---|---|
+| **Intensionalitas & resiprositas** | Tempo dikendalikan siswa (tanpa *auto-advance*), tujuan tiap layar terlihat dari penanda RMT, siswa harus mencoba dulu sebelum petunjuk berikutnya terbuka |
+| **Makna** | Petunjuk 1 (Makna), kata kunci yang dapat diketuk, langkah Tafsirkan & Periksa ("Apa artinya hasil ini dalam cerita?") |
+| **Transendensi** | Soal Kembar (strategi sama, konteks beda), Rangkuman "Refleksi & generalisasi", Misi Literasi, variasi struktur soal (GL3) |
+| **Rasa kompeten** | Umpan balik positif yang menunjukkan *di mana* berpikir perlu dicek (§6.5) dan apresiasi "Kamu berhasil menemukannya sendiri" (§6.4) |
+
+Aturan "jangan pernah memberi jawaban langsung" (§6) sejalan dengan RMT: mediator menuntun proses berpikir dan tidak mengambil alih langkah terakhir siswa.
+
+### 0.5 Smart Hint sebagai Mediator RMT
+
+Instruksi sistem Gemini (`backend/app/services/ai_hint.py`: `SYSTEM_PROMPT`, `LEVEL_RULES`, `STEP_FUNCTIONS`) menjadikan Gemini **mediator kognitif RMT**:
+- Mengajukan **pertanyaan pemantik ketelitian** dan hubungan antar-konsep, bukan trik hafalan (contoh yang dilarang: "minus ketemu minus jadi plus").
+- Mendorong siswa memakai **alat representasi**: garis bilangan, termometer, kedalaman laut, skor, dan utang-piutang.
+- Menyebut fungsi kognitif langkah yang sedang dikerjakan (§0.3) agar petunjuk melatih tindakan berpikir itu.
+- Level 1 = mediasi makna; Level 2 = memakai garis bilangan sebagai alat; Level 3 = merencanakan langkah pertama dan meminta bukti logis.
+
+Semua pengaman di §6.6 tetap berlaku: Gemini tidak pernah menerima jawaban, teks yang memuat hasil akhir atau hasil antara dibuang, dan petunjuk statis selalu menjadi cadangan (termasuk saat offline). Test `test_prompt_is_rmt_mediation_for_every_step` memeriksa instruksi RMT ini, dan test "tanpa bocor" yang lama tetap wajib lolos.
+
+### 0.6 Catatan dan Batasan
+
+- **Fase 1 di kelas.** Dalam RMT asli, Fase 1 memakai instrumen *Instrumental Enrichment* (Feuerstein) yang dipandu guru terlatih. Instrumen itu berhak cipta dan tidak disalin ke aplikasi. ℤ-Math mewakili Fase 1 lewat layar pemantik (mengamati, memberi nama, membandingkan). Guru dapat melengkapinya dengan kegiatan di kelas.
+- **Konkret lebih dulu.** Buku RMT menekankan bahwa konsep ilmiah tidak cukup dibangun dari pengalaman sehari-hari saja. ℤ-Math tetap memulai dari visual konkret (CLAUDE.md §5.3; langkah RMT 3), tetapi setiap visual konteks selalu dihubungkan ke **garis bilangan** sebagai alat matematis, dan aturan dirumuskan sebagai pola (langkah RMT 4–5).
+- **Isi materi tidak diubah.** Penyesuaian RMT hanya menambah penanda, fungsi kognitif, dan instruksi mediator. Soal, petunjuk statis, dan alur offline PWA tetap sama.
 
 ## 1. Landasan Teori
 
@@ -154,13 +225,13 @@ Siswa melihat pesan apresiasi di setiap kondisi benar ("Kamu berhasil menemukann
 
 ### 6.6 Smart Hint (Gemini)
 
-Smart Hint membuat kalimat petunjuk lebih ramah dan kontekstual. Tingkatnya tetap sama dengan §6.2. Bobot mastery (§6.4) juga tidak berubah.
+Smart Hint membuat kalimat petunjuk lebih ramah dan kontekstual. Gemini berperan sebagai mediator kognitif RMT (§0.5). Tingkatnya tetap sama dengan §6.2. Bobot mastery (§6.4) juga tidak berubah.
 
 | Tingkat | Peran AI |
 |---|---|
-| 1 Makna | Analogi nyata (suhu, kedalaman laut, skor game, uang saku) + satu pertanyaan pemandu |
-| 2 Visual | Menjelaskan titik mulai dan **arah** di garis bilangan, atau operasi yang dikerjakan lebih dulu. Gambar statis tetap ditampilkan |
-| 3 Strategi | Langkah pertama saja, tanpa hasil. Kerangka statis dengan kotak kosong tetap ditampilkan |
+| 1 Makna | Mediasi makna: analogi nyata (suhu, kedalaman laut, skor game, utang-piutang) + satu pertanyaan pemantik ketelitian |
+| 2 Visual | Mengajak memakai garis bilangan sebagai alat berpikir: titik mulai dan **arah**, atau operasi yang dikerjakan lebih dulu, diakhiri pertanyaan pembanding. Gambar statis tetap ditampilkan |
+| 3 Strategi | Langkah pertama saja, tanpa hasil, lalu meminta bukti logis ("Mengapa tandanya begitu?"). Kerangka statis dengan kotak kosong tetap ditampilkan |
 
 **Pengaman (kode: `backend/app/services/ai_hint.py`):**
 - Petunjuk statis selalu dibuat lebih dulu dan menjadi cadangan. Konten dan petunjuk bawaan tidak diubah.
@@ -190,6 +261,9 @@ Smart Hint membuat kalimat petunjuk lebih ramah dan kontekstual. Tingkatnya teta
 
 ## 9. Referensi
 
+- Kinard, J. T., & Kozulin, A. (2008). *Rigorous Mathematical Thinking: Conceptual Formation in the Mathematics Classroom*. Cambridge University Press.
+- Feuerstein, R., Rand, Y., Hoffman, M., & Miller, R. (1980). *Instrumental Enrichment*. University Park Press.
+- Vygotsky, L. S. (1978). *Mind in Society*. Harvard University Press.
 - Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. *Cognitive Science, 12*(2), 257–285.
 - Sweller, J., van Merriënboer, J. J. G., & Paas, F. (2019). Cognitive architecture and instructional design: 20 years later. *Educational Psychology Review, 31*, 261–292.
 - Mayer, R. E. (2021). *Multimedia Learning* (3rd ed.). Cambridge University Press.

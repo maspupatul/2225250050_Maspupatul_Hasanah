@@ -45,6 +45,19 @@ def test_prompt_contains_only_request_data():
     assert "Suhu −2 °C" in prompt and "Jawaban siswa yang masih keliru: 1" in prompt
 
 
+@pytest.mark.parametrize("step", ["known", "asked", "model", "result"])
+def test_prompt_is_rmt_mediation_for_every_step(step):
+    """RMT: each step names its cognitive function; the system prompt asks for probing
+    questions and thinking tools, never shortcuts."""
+    prompt = ai_hint.build_prompt(_request(step=step))
+    assert ai_hint.STEP_FUNCTIONS[step] in prompt
+    assert "Rigorous Mathematical Thinking" in ai_hint.SYSTEM_PROMPT
+    assert "garis bilangan" in ai_hint.SYSTEM_PROMPT
+    assert "DILARANG KERAS memberikan jawaban akhir" in ai_hint.SYSTEM_PROMPT
+    for level in (1, 2, 3):
+        assert "?" in ai_hint.LEVEL_RULES[level] or "pertanyaan" in ai_hint.LEVEL_RULES[level]
+
+
 # ------------------------------------------------------------------ guard
 
 

@@ -56,26 +56,46 @@ STEP_TASKS = {
     "result": "menghitung hasil",
 }
 
+# RMT (Kinard & Kozulin, 2008): the cognitive function each step exercises. Named in the
+# prompt so the hint mediates that thinking action instead of giving a shortcut.
+STEP_FUNCTIONS = {
+    "known": "mencari informasi secara teliti dan memberi label tanda (+ atau −)",
+    "asked": "merumuskan masalah: apa tepatnya yang harus dicari",
+    "model": "mengubah cerita ke bahasa matematika (encoding) dan membentuk hubungan antarbilangan",
+    "result": "memakai garis bilangan sebagai alat berpikir dan memberi bukti logis",
+}
+
 LEVEL_RULES = {
     1: (
-        "Petunjuk 1 (Makna). Bantu siswa memahami arti kata atau konsep. "
-        "Pakai analogi nyata yang dekat dengan siswa: suhu, kedalaman laut, skor game, "
-        "atau uang saku. Akhiri dengan satu pertanyaan pemandu."
+        "Petunjuk 1 (Makna). Mediasi makna: hubungkan kata di soal dengan pengalaman siswa. "
+        "Pakai alat representasi yang dekat: suhu di termometer, kedalaman laut, skor game, "
+        "atau utang-piutang uang saku. Akhiri dengan satu pertanyaan pemantik ketelitian, "
+        "misalnya 'Kata mana yang menunjukkan arah atau tanda?'"
     ),
     2: (
-        "Petunjuk 2 (Visual). Gambarkan dengan kata-kata: mulai dari mana di garis bilangan, "
-        "lalu ke arah mana (kanan/kiri, naik/turun). Jika ada beberapa operasi, sebutkan "
-        "operasi mana yang dikerjakan lebih dulu. Jangan sebut tempat berhentinya."
+        "Petunjuk 2 (Visual). Ajak siswa memakai garis bilangan sebagai alat berpikir: "
+        "mulai dari mana, lalu ke arah mana (kanan/kiri, naik/turun). Jika ada beberapa operasi, "
+        "tanyakan operasi mana yang dikerjakan lebih dulu. Jangan sebut tempat berhentinya. "
+        "Akhiri dengan pertanyaan yang membuat siswa membandingkan atau memeriksa arah."
     ),
     3: (
-        "Petunjuk 3 (Strategi). Beri langkah pertama saja, tanpa hasil hitungannya. "
-        "Biarkan siswa sendiri yang menghitung sampai selesai. "
+        "Petunjuk 3 (Strategi). Bantu siswa merencanakan: beri langkah pertama saja, tanpa hasil "
+        "hitungannya. Minta siswa menyiapkan bukti logis, misalnya 'Mengapa tandanya begitu?'. "
         "Jika memakai kalimat matematika, sisakan minimal satu kotak kosong □."
     ),
 }
 
-SYSTEM_PROMPT = """Kamu adalah tutor matematika kelas VII SMP yang ramah dan suportif \
-di aplikasi Z-Math (Bab 1: Bilangan Bulat).
+SYSTEM_PROMPT = """Kamu adalah mediator berpikir matematika untuk siswa kelas VII SMP \
+di aplikasi Z-Math (Bab 1: Bilangan Bulat). Model belajarnya Rigorous Mathematical \
+Thinking (RMT): kamu tidak mengajari trik cepat, tetapi menuntun siswa berpikir teliti.
+
+Cara memediasi:
+- Ajukan pertanyaan pemantik yang membuat siswa teliti dan mencari hubungan antar-konsep.
+- Dorong siswa memakai alat berpikir: garis bilangan, termometer, kedalaman laut, skor, \
+atau utang-piutang.
+- Sebut tindakan berpikirnya dengan kata sederhana, misalnya membandingkan, memberi tanda, \
+atau memberi bukti.
+- Jangan memberi rumus hafalan atau trik cepat seperti "minus ketemu minus jadi plus".
 
 Aturan wajib:
 - Tulis 2 sampai 3 kalimat singkat dalam Bahasa Indonesia sederhana.
@@ -118,6 +138,7 @@ def build_prompt(req: AIHintRequest) -> str:
     lines = [
         f"Soal:\n{req.problem_text.strip()}",
         f"Siswa sedang di langkah: {STEP_TASKS.get(req.step, req.step)}.",
+        f"Tindakan berpikir (fungsi kognitif RMT) yang dilatih: {STEP_FUNCTIONS.get(req.step, 'berpikir teliti')}.",
         LEVEL_RULES[req.level],
         f"Petunjuk dasar dari guru (boleh dibuat lebih ramah, isinya jangan ditambah hasil): "
         f"{req.static_hint.strip()}",

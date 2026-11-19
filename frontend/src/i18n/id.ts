@@ -438,5 +438,25 @@ export const t = {
     generic: 'Ada yang tidak beres. Coba lagi ya.',
   },
 
+  /** Rigorous Mathematical Thinking (Kinard & Kozulin, 2008): phase + thinking action per screen. */
+  rmt: {
+    phase: (n: 1 | 2 | 3) => `RMT Fase ${n}`,
+    phaseName: { 1: 'Pengembangan kognitif', 2: 'Konten sebagai proses', 3: 'Praktik konstruksi konsep' },
+    segment: {
+      hook: { phase: 1, action: 'Amati & beri nama' },
+      explore: { phase: 2, action: 'Pakai alat berpikir' },
+      concept: { phase: 2, action: 'Temukan pola & hubungan' },
+      worked_example: { phase: 3, action: 'Beri bukti logis' },
+      summary: { phase: 3, action: 'Refleksi & generalisasi' },
+    },
+    step: {
+      known: { phase: 3, action: 'Cari info dengan teliti' },
+      asked: { phase: 3, action: 'Rumuskan masalah' },
+      model: { phase: 3, action: 'Tulis dalam bahasa matematika' },
+      result: { phase: 3, action: 'Hitung dengan alat visual' },
+      interpret: { phase: 3, action: 'Beri bukti logis' },
+    },
+  },
+
   common: { close: 'Tutup', loading: 'Memuat…' },
 } as const;
