@@ -100,5 +100,5 @@ Z-Math adalah **PWA (Progressive Web App)**. Aplikasi dibuka di browser lalu dip
 - Deploy ke hosting HTTPS
 
 Perbedaan Tahap 1 dari rencana awal:
-- Progres disimpan di perangkat (mode tamu) dan percobaan soal disimpan di memori server. Supabase belum dipakai.
+- Progres disimpan di perangkat (mode tamu) dan di database. Percobaan soal juga disimpan di database (SQLite lokal, atau PostgreSQL Supabase saat deploy). Cara deploy ke Netlify + Vercel + Supabase: [docs/DEPLOY.md](docs/DEPLOY.md).
 - Aplikasi dibagikan sebagai PWA, bukan APK Capacitor. Ini sesuai permintaan agar bisa dipasang di Android, Windows, Mac, dan iOS tanpa toko aplikasi.

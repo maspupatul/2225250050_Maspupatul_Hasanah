@@ -1,0 +1,38 @@
+# Netlify: the ℤ-Math web app (React PWA). The API (FastAPI) runs on Vercel and the database on
+# Supabase — see docs/DEPLOY.md.
+#
+# WAJIB DIGANTI sebelum deploy: alamat backend Vercel pada redirect /api/* di bawah
+# (contoh: https://zmath-api.vercel.app). Netlify tidak bisa membaca variabel lingkungan di sini.
+
+[build]
+  base = "frontend"          # npm install + build dijalankan di folder frontend/
+  command = "npm run build"  # tsc --noEmit && vite build
+  publish = "dist"           # relatif terhadap base → frontend/dist
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# API → Vercel. Status 200 = proxy: the browser keeps talking to the Netlify address,
+# so no CORS setup is needed and the app keeps calling /api/v1/... as before.
+[[redirects]]
+  from = "/api/*"
+  to = "https://GANTI-DENGAN-BACKEND-VERCEL.vercel.app/api/:splat"
+  status = 200
+  force = true
+
+# SPA fallback: every other path (e.g. /latihan/m1-t1 after a refresh) loads the app.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# The service worker and the page must always be checked for a new version (PWA updates).
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String, true
+from sqlalchemy import JSON, BigInteger, Boolean, DateTime, Float, ForeignKey, Integer, String, true
 from sqlalchemy.orm import Mapped, foreign, mapped_column, relationship
 
 from app.db.database import Base
@@ -85,3 +85,31 @@ class StudentProgress(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 
     user: Mapped[User] = relationship(back_populates="progress")
+
+
+class PracticeAttempt(Base):
+    """One practice problem in progress (docs/DESAIN-PEDAGOGIS.md §6.3).
+
+    Kept in the database, not in server memory, so any server instance (Vercel functions) can
+    continue it. The problem itself is rebuilt from template + seed; `data` holds only the
+    progress (current step, hint levels, options shown). No chat text is ever stored here.
+    """
+
+    __tablename__ = "practice_attempts"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    template_id: Mapped[str] = mapped_column(String(80))
+    seed: Mapped[int] = mapped_column(BigInteger)
+    data: Mapped[dict] = mapped_column(JSON)
+    updated_at: Mapped[float] = mapped_column(Float, index=True)  # epoch seconds, for clean-up
+
+
+class LoginFailure(Base):
+    """One wrong password (or wrong teacher code) for a throttle key; rows older than the
+    window are deleted. Shared by all server instances, unlike a counter in memory."""
+
+    __tablename__ = "login_failures"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    key: Mapped[str] = mapped_column(String(120), index=True)
+    at: Mapped[float] = mapped_column(Float, index=True)  # epoch seconds

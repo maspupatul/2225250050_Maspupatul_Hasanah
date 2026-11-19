@@ -174,6 +174,6 @@ def test_hots_score_problem_full_flow():
     assert step("asked", attempt.asked_correct)["correct"]
     assert step("model", f"{v['b']} × {v['p']} + {v['s']} × ({v['m']})")["correct"]
     assert step("result", attempt.instance.answer)["interpret_options"]
-    final = step("interpret", attempt.interpret_correct)
+    final = step("interpret", get_attempt(aid).interpret_correct)  # options exist only now
     assert final["attempt_status"] == "correct"
     assert final["review"]["visual"]["marks"][-1]["value"] == attempt.instance.answer

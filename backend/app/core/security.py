@@ -13,18 +13,18 @@ import hashlib
 import hmac
 import secrets
 import time
-from collections import defaultdict, deque
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 
 import jwt
 from fastapi import Depends, Header
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
-from app.core.config import settings
+from app.core.config import ON_VERCEL, settings
 from app.core.errors import AppError
-from app.db.database import get_db
-from app.db.models import User
+from app.db.database import SessionLocal, get_db
+from app.db.models import LoginFailure, User
 
 _ALGORITHM = "HS256"
 
@@ -58,6 +58,8 @@ def verify_password(password: str, stored: str) -> bool:
 def _secret() -> str:
     if settings.jwt_secret:
         return settings.jwt_secret
+    if ON_VERCEL:  # every instance would make its own secret and reject the others' tokens
+        raise RuntimeError("ZMATH_JWT_SECRET belum diisi di Environment Variables Vercel.")
     path = settings.data_dir / "jwt_secret"
     if not path.exists():
         settings.data_dir.mkdir(parents=True, exist_ok=True)
@@ -101,20 +103,30 @@ def require_role(role: str) -> Callable[..., User]:
 
 MAX_FAILURES = 5
 WINDOW_SECONDS = 300
-_failures: dict[str, deque[float]] = defaultdict(deque)
+KEY_LENGTH = 120  # login_failures.key
 
 
 def check_login_allowed(username: str) -> None:
-    attempts = _failures[username]
-    while attempts and time.monotonic() - attempts[0] > WINDOW_SECONDS:
-        attempts.popleft()
-    if len(attempts) >= MAX_FAILURES:
+    since = time.time() - WINDOW_SECONDS
+    with SessionLocal() as db:
+        count = db.scalar(
+            select(func.count())
+            .select_from(LoginFailure)
+            .where(LoginFailure.key == username[:KEY_LENGTH], LoginFailure.at > since)
+        )
+    if (count or 0) >= MAX_FAILURES:
         raise AppError("TOO_MANY_ATTEMPTS", "Terlalu banyak percobaan. Tunggu 5 menit, lalu coba lagi.", 429)
 
 
 def record_login_failure(username: str) -> None:
-    _failures[username].append(time.monotonic())
+    now = time.time()
+    with SessionLocal() as db:
+        db.execute(delete(LoginFailure).where(LoginFailure.at < now - WINDOW_SECONDS))  # old rows, any key
+        db.add(LoginFailure(key=username[:KEY_LENGTH], at=now))
+        db.commit()
 
 
 def clear_login_failures(username: str) -> None:
-    _failures.pop(username, None)
+    with SessionLocal() as db:
+        db.execute(delete(LoginFailure).where(LoginFailure.key == username[:KEY_LENGTH]))
+        db.commit()

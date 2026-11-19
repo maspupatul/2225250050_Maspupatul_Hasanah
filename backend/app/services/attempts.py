@@ -1,19 +1,26 @@
 """Practice attempts: the step-by-step state machine (docs/DESAIN-PEDAGOGIS.md §6.3).
 
-Stage 1 keeps attempts in memory (no Supabase yet). Restarting the server clears
-open attempts; student progress itself is stored on the device by the frontend.
+Attempts are kept in the database (table practice_attempts), not in server memory, so every
+server instance can continue them (serverless deployment, docs/DEPLOY.md). Only the template,
+the seed and the progress are stored; the problem is rebuilt from template + seed. Attempts
+untouched for ATTEMPT_TTL_S are deleted.
 """
 
 from __future__ import annotations
 
 import random
 import secrets
-from collections import OrderedDict
-from dataclasses import dataclass, field
+import time
+from dataclasses import asdict, dataclass, field, fields
+from functools import lru_cache
 from typing import Any
+
+from sqlalchemy import delete
 
 from app.content.loader import content
 from app.core.errors import AppError
+from app.db.database import SessionLocal
+from app.db.models import PracticeAttempt
 from app.services import ai_hint
 from app.services.misconceptions import DEFERRED_MESSAGE, FEEDBACK, diagnose_result
 from app.services.modeling import visual_script
@@ -32,7 +39,7 @@ MAX_HINT_LEVEL = 3
 WRONG_AFTER_LAST_HINT_FOR_TWIN = 2
 HINT_WEIGHTS = {0: 1.0, 1: 0.8, 2: 0.6, 3: 0.4}
 TWIN_WEIGHT = 0.2
-MAX_STORED_ATTEMPTS = 5000
+ATTEMPT_TTL_S = 2 * 24 * 3600  # an unfinished problem is kept two days
 
 PROMPTS = {
     "known": "Bilangan apa saja yang diketahui? Pilih beserta tandanya.",
@@ -96,21 +103,58 @@ class Attempt:
         return self.states.setdefault(step, StepState())
 
 
-_STORE: OrderedDict[str, Attempt] = OrderedDict()
+# ------------------------------------------------------------------ storage
+
+_NOT_STORED = {"id", "instance"}  # the instance is rebuilt from template + seed
 
 
-def _save(attempt: Attempt) -> None:
-    _STORE[attempt.id] = attempt
-    _STORE.move_to_end(attempt.id)
-    while len(_STORE) > MAX_STORED_ATTEMPTS:
-        _STORE.popitem(last=False)
+def attempt_data(attempt: Attempt) -> dict:
+    """Pure: the progress of an attempt as plain JSON."""
+    data = {f.name: getattr(attempt, f.name) for f in fields(Attempt) if f.name not in _NOT_STORED}
+    data["states"] = {step: asdict(state) for step, state in attempt.states.items()}
+    return data
+
+
+@lru_cache(maxsize=4096)
+def _instance(template_id: str, seed: int) -> Instance:
+    return instantiate(content().templates[template_id], seed)
+
+
+def attempt_from(row: PracticeAttempt) -> Attempt:
+    data = dict(row.data)
+    states = {step: StepState(**state) for step, state in data.pop("states", {}).items()}
+    return Attempt(id=row.id, instance=_instance(row.template_id, row.seed), states=states, **data)
+
+
+def _save(attempt: Attempt, *, new: bool = False) -> None:
+    now = time.time()
+    with SessionLocal() as db:
+        if new:
+            db.execute(delete(PracticeAttempt).where(PracticeAttempt.updated_at < now - ATTEMPT_TTL_S))
+            db.add(
+                PracticeAttempt(
+                    id=attempt.id,
+                    template_id=attempt.instance.template.id,
+                    seed=attempt.instance.seed,
+                    data=attempt_data(attempt),
+                    updated_at=now,
+                )
+            )
+        else:
+            row = db.get(PracticeAttempt, attempt.id)
+            if row is None:
+                raise AppError("ATTEMPT_NOT_FOUND", "Soal tidak ditemukan. Yuk, mulai soal baru.", 404)
+            row.data = attempt_data(attempt)
+            row.updated_at = now
+        db.commit()
 
 
 def get_attempt(attempt_id: str) -> Attempt:
-    attempt = _STORE.get(attempt_id)
-    if attempt is None:
+    with SessionLocal() as db:
+        row = db.get(PracticeAttempt, attempt_id[:32])
+    if row is None or row.template_id not in content().templates:
         raise AppError("ATTEMPT_NOT_FOUND", "Soal tidak ditemukan. Yuk, mulai soal baru.", 404)
-    return attempt
+    return attempt_from(row)
 
 
 def _open_attempt(attempt_id: str, step: str | None = None) -> Attempt:
@@ -181,7 +225,7 @@ def start_attempt(
         asked_correct=asked_correct,
         exam=exam,
     )
-    _save(attempt)
+    _save(attempt, new=True)
     return _problem_payload(attempt)
 
 
@@ -307,6 +351,12 @@ def _check(attempt: Attempt, step: str, answer: Any) -> tuple[bool, str | None]:
 
 def submit_step(attempt_id: str, step: str, answer: Any) -> dict:
     attempt = _open_attempt(attempt_id, step)
+    response = _submit(attempt, step, answer)
+    _save(attempt)
+    return response
+
+
+def _submit(attempt: Attempt, step: str, answer: Any) -> dict:
     ok, code = _check(attempt, step, answer)
     state = attempt.state(step)
 
@@ -405,6 +455,7 @@ def request_hint(attempt_id: str, step: str) -> dict:
     state.tries_since_hint = 0
     state.wrong_after_last_hint = 0
     attempt.hints_requested += 1
+    _save(attempt)  # before the (slow) AI call: the opened hint counts even if the AI fails
 
     hint = make_hint(_hint_view(attempt), step, state.hint_level)
     hint["hints_remaining"] = MAX_HINT_LEVEL - state.hint_level
@@ -453,6 +504,7 @@ def request_twin(attempt_id: str) -> dict:
         raise AppError("TWIN_NOT_AVAILABLE", "Soal kembar belum tersedia. Coba petunjuknya dulu ya.", 409)
     attempt.twin_available = False
     attempt.twin_shown = True
+    _save(attempt)
     c = content()
     rng = random.Random(attempt.instance.seed ^ 0x9E3779B9)
     return {

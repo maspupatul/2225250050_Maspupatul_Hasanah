@@ -12,7 +12,7 @@ if not exist backend\.venv\Scripts\python.exe (
 )
 
 rem Selalu pastikan paket Python terpasang lengkap (cepat jika sudah ada)
-backend\.venv\Scripts\python.exe -m pip install -q -r backend\requirements.txt
+backend\.venv\Scripts\python.exe -m pip install -q -r backend\requirements-dev.txt
 if errorlevel 1 goto :error
 
 if not exist frontend\node_modules (

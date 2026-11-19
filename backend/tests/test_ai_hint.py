@@ -267,6 +267,7 @@ def test_leaky_gemini_never_reaches_student(ai_on, monkeypatch, template):
                 leak["text"] = f"Coba pikirkan. Hasilnya {n}."
                 state = attempt.state(step)
                 state.hint_level, state.tries_since_hint = 0, 1
+                attempts._save(attempt)  # attempts live in the database: store the jump to this step
                 hint = attempts.request_hint(attempt.id, step)
                 assert hint["source"] == "static" and hint["ai_text"] is None, (template.id, seed, step, n)
                 assert hint["text"]  # static hint always present

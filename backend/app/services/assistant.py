@@ -175,6 +175,7 @@ def reply(attempt_id: str, messages: list[Message], private: list[str]) -> dict:
             "ASSISTANT_LIMIT", "Kamu sudah banyak bertanya di soal ini. Coba buka petunjuk atau jawab dulu ya.", 429
         )
     attempt.assistant_turns += 1
+    attempts._save(attempt)  # the count only; the chat text is never stored
 
     step = attempt.current_step
     recent = [Message(m.role, scrub(m.text[:MAX_TEXT], private)) for m in messages[-MAX_MESSAGES:]]

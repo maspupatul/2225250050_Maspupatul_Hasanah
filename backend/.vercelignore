@@ -1,0 +1,9 @@
+# Never uploaded to Vercel (secrets, local data, tests, tooling)
+.env
+.env.*
+.venv/
+.data/
+tests/
+.pytest_cache/
+__pycache__/
+requirements-dev.txt

@@ -1,0 +1,5 @@
+# Local development only (not installed on Vercel).
+-r requirements.txt
+# Pure-Python PostgreSQL driver for machines that cannot load the psycopg binary
+# (e.g. Windows Smart App Control). Use with ZMATH_PG_DRIVER=pg8000. See docs/DEPLOY.md.
+pg8000==1.31.6  # 1.31.5 breaks with scramp 1.5 (make_channel_binding removed)

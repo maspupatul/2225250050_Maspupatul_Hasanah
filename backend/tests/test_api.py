@@ -46,7 +46,7 @@ def test_full_guided_story_flow_reveals_review_only_at_the_end():
     assert r["correct"] and r["next_step"] == "result"
     r = step(aid, "result", inst.answer).json()
     assert r["correct"] and r["interpret_options"]
-    final = step(aid, "interpret", attempt.interpret_correct).json()
+    final = step(aid, "interpret", get_attempt(aid).interpret_correct).json()  # options exist only now
     assert final["attempt_status"] == "correct"
     assert final["mastery_weight"] == 1.0
     assert final["review"]["answer"] == inst.answer

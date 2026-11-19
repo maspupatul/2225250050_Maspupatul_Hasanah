@@ -26,7 +26,7 @@ Jika kode dan dokumen bertentangan, **tanyakan dulu kepada pengguna**. Jangan me
 | Frontend | React 18, Vite 6, TypeScript (strict), Tailwind CSS, React Router, Zustand, `vite-plugin-pwa` |
 | Distribusi | **PWA** yang dipasang langsung dari browser (Android/Windows/Mac/iOS, tanpa toko aplikasi). Capacitor opsional di tahap lanjut |
 
-> **Status Tahap 1:** belum ada Supabase. Akun siswa/guru dan progres disimpan di SQLite lokal (`backend/.data/`, SQLAlchemy) dan disinkronkan otomatis dari perangkat (`frontend/src/lib/progressSync.ts`); detail di [docs/AKUN-DAN-PEMANTAUAN.md](docs/AKUN-DAN-PEMANTAUAN.md). Percobaan soal disimpan di memori server (`backend/app/services/attempts.py`). Konten ada di `backend/app/content/*.json`. Jika `frontend/dist` ada, backend juga menyajikan aplikasi web dari `:8000`.
+> **Status Tahap 1:** belum ada Supabase. Akun siswa/guru dan progres disimpan di SQLite lokal (`backend/.data/`, SQLAlchemy) dan disinkronkan otomatis dari perangkat (`frontend/src/lib/progressSync.ts`); detail di [docs/AKUN-DAN-PEMANTAUAN.md](docs/AKUN-DAN-PEMANTAUAN.md). Percobaan soal dan penghitung salah login disimpan di database (`practice_attempts`, `login_failures`), sehingga backend bisa berjalan serverless. Deploy: Netlify (frontend) + Vercel (FastAPI) + Supabase PostgreSQL (`DATABASE_URL`), lihat [docs/DEPLOY.md](docs/DEPLOY.md). Konten ada di `backend/app/content/*.json`. Jika `frontend/dist` ada, backend juga menyajikan aplikasi web dari `:8000`.
 | Backend | Python 3.12, FastAPI, Pydantic v2, `supabase-py`, `python-jose` (verifikasi JWT), Uvicorn |
 | Database/Auth | Supabase (PostgreSQL 15, Supabase Auth, Row Level Security) |
 | Test | Vitest + React Testing Library, Playwright (E2E), pytest + httpx |
