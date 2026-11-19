@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Icon, type IconName } from '../../components/ui/Icon';
 import { Toast, type ToastMessage } from '../../components/ui/Toast';
 import { ZLogo } from '../../components/ui/ZLogo';
+import { BrandName, BrandText } from '../../components/ui/BrandName';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -67,7 +68,7 @@ export function HomePage() {
         <div className="relative flex items-center justify-between gap-2">
           <span className="flex items-center gap-2.5">
             <ZLogo size={40} />
-            <span className="text-lg font-black tracking-tight">{t.appName}</span>
+            <BrandName className="font-brand text-lg font-extrabold tracking-tight" />
           </span>
           <span className="flex items-center gap-1.5">
             <Badge icon="flame" value={streak} label={t.home.streak(streak)} />
@@ -75,7 +76,7 @@ export function HomePage() {
             <Link
               to="/profil"
               aria-label={t.nav.profile}
-              className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-accent text-lg font-black text-plum-900 ring-2 ring-white/30 transition active:scale-90"
+              className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-amber-300 to-accent font-brand text-lg font-extrabold tracking-tight text-plum-900 ring-2 ring-white/30 transition active:scale-90"
             >
               {name.charAt(0).toUpperCase() || <Icon name="user" size={20} />}
             </Link>
@@ -84,7 +85,7 @@ export function HomePage() {
 
         <p className="relative mt-7 text-sm tracking-wide text-white/70">{t.home.completed}</p>
         <h1 className="relative text-[28px] font-extrabold leading-tight">
-          {percent}% {t.subject}
+          <span className="tabular-nums">{percent}%</span> {t.subject}
         </h1>
         <div
           className="relative mt-3 h-3 overflow-hidden rounded-full bg-plum-950/60 ring-1 ring-white/10"
@@ -138,7 +139,9 @@ export function HomePage() {
 
         {error && !modules && (
           <div className="rounded-3xl bg-white p-5 text-center shadow-sm">
-            <p className="text-sm text-ink">{t.home.loadError}</p>
+            <p className="text-sm text-ink">
+              <BrandText text={t.home.loadError} />
+            </p>
             <button
               type="button"
               onClick={reload}

@@ -353,9 +353,15 @@ Tujuannya agar tampilan tidak datar seperti formulir. Animasi tetap singkat (≈
 
 Lembar Soal Kembar meluncur dari bawah (spring). Umpan balik "belum tepat" bergetar ringan, sedangkan "benar" muncul dengan pantulan. `html, body` memakai `overflow-x: clip` sebagai pengaman di layar 360 px.
 
+### Tipografi & nama aplikasi (pembaruan)
+- **Nunito** (`font-sans`) tetap menjadi font aplikasi untuk semua teks isi, soal, judul, dan tombol.
+- **Plus Jakarta Sans 800** (`font-brand`) **hanya** untuk: judul **ℤ-Math** di halaman Masuk, header Beranda, dan subjudul Profil; serta huruf inisial avatar di Profil dan tombol profil Beranda (`font-extrabold tracking-tight`). Jangan dipakai di tempat lain.
+- Angka persen penguasaan dan skor memakai `tabular-nums` agar sejajar.
+- Nama aplikasi ditulis **ℤ-Math**. Nunito dan Plus Jakarta Sans **tidak punya glif ℤ (U+2124)**, jadi di layar `ℤ` digambar sebagai SVG tebal (`BrandName`, `BrandText`) yang mengikuti warna dan font teks di sekitarnya; pembaca layar tetap membaca "ℤ-Math".
+
 ### Navigasi bawah & logo (pembaruan)
-- `BottomNav` dirender **sekali** di `App.tsx` (di luar `<Routes>`), hanya tampil di 4 halaman tab. Jangan merender `BottomNav` di dalam halaman: jika nav ikut dibongkar-pasang saat pindah tab, indikator `layoutId="activeTabIndicator"` tidak bisa meluncur dan akan "loncat". Pegas indikator: `stiffness 400, damping 30`.
-- `SlideIn`: masuk dari ±120 px, `scale 0.95 → 1`, pegas `stiffness 300, damping 25`; keluar cepat (0,16 dtk) ke arah berlawanan. Wadahnya wajib `overflow-hidden`.
+- `BottomNav` dirender **sekali** di `App.tsx` (di luar `<Routes>`), hanya tampil di 4 halaman tab. Jangan merender `BottomNav` di dalam halaman: jika nav ikut dibongkar-pasang saat pindah tab, indikator `layoutId="activeTabIndicator"` tidak bisa meluncur dan akan "loncat". Indikator dan warna ikon/label: 250 ms, `cubic-bezier(0.22, 1, 0.36, 1)`. Tekan: `active:scale-95` 150 ms (CSS) + `touch-action: manipulation`. Bar punya lapisan GPU sendiri (`translateZ(0)`) agar tidak berkedip saat halaman berganti.
+- `SlideIn` (antar-slide pelajaran, dan masuk ke Latihan dari slide terakhir): slide baru masuk dari arah gerak, **16 px + fade, 260 ms, `cubic-bezier(0.22, 1, 0.36, 1)`**. Maju = dari kanan, Kembali = dari kiri. **Tanpa animasi keluar**, sehingga layar baru langsung bisa diketuk. Mati total saat "kurangi gerakan". Setiap pindah slide: scroll ke atas (halus; instan saat "kurangi gerakan"). Kartu slide punya tinggi minimum 60dvh agar tombol tidak melompat.
 - Logo `ZLogo`: huruf ℤ (*Zahlen*, himpunan bilangan bulat) double-struck pada badge oranye 3D. Aksen **+ biru** dan **− merah** mengikuti warna tanda (§5.4). Favicon memakai gambar yang sama.
 
 ### Pergantian soal (pembaruan)

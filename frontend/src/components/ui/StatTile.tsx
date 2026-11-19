@@ -22,7 +22,7 @@ export function StatTile({ icon, value, label, tone = 'bg-lavender-100 text-plum
       <span className={`grid h-10 w-10 place-items-center rounded-full ${tone}`}>
         <Icon name={icon} size={22} />
       </span>
-      <span className="mt-1.5 text-2xl font-black leading-tight text-ink">{value}</span>
+      <span className="mt-1.5 text-2xl font-black leading-tight tabular-nums text-ink">{value}</span>
       <span className="text-[11px] font-bold leading-tight text-ink-muted">{label}</span>
     </motion.li>
   );

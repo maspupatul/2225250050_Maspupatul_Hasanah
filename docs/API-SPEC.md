@@ -53,6 +53,8 @@ Field `message` selalu berbahasa Indonesia yang ramah siswa, sehingga dapat dita
 | POST | `/auth/register`, `/auth/login` · GET `/auth/me` · PUT `/auth/me/class` | publik / semua / siswa | F-01 (Tahap 1, lihat AKUN-DAN-PEMANTAUAN.md) |
 | GET · POST | `/progress` · `/progress/sync` | siswa | F-12 |
 | GET | `/guru/students-summary?class_code=`, `/guru/students/{id}` · GET/POST `/guru/classes` | guru | F-13 |
+| PUT | `/auth/me/password` `{ current_password, new_password }` → `UserOut`. 400 `WRONG_PASSWORD` / `WEAK_PASSWORD` (siswa < 6, guru < 8) / `SAME_PASSWORD`; 429 setelah 5× salah | login | F-01 |
+| POST | `/guru/students/{id}/reset-password` → `{ username, temporary_password }` (hanya siswa di kelas guru itu; selain itu 404) | guru | F-01 |
 | POST | `/exam/start` | student | F-23 |
 | POST | `/practice/attempts/{attempt_id}/steps` | student | F-06, F-10 |
 | POST | `/practice/attempts/{attempt_id}/hint` | student | F-10 |

@@ -1,7 +1,7 @@
 // Semua teks antarmuka (CLAUDE.md §6). Bahasa Indonesia sederhana, kalimat pendek.
 
 export const t = {
-  appName: 'Z-Math',
+  appName: 'ℤ-Math',
   tagline: 'Belajar bilangan bulat dengan gambar, cerita, dan petunjuk bertahap.',
   subject: 'Bilangan Bulat',
 
@@ -19,7 +19,7 @@ export const t = {
     reviewTitle: 'Antrean Ulang',
     reviewBody: (n: number) => `${n} soal menunggu dicoba lagi dengan angka berbeda.`,
     reviewCta: 'Coba lagi',
-    loadError: 'Materi belum bisa dimuat. Pastikan server Z-Math menyala.',
+    loadError: 'Materi belum bisa dimuat. Pastikan server ℤ-Math menyala.',
     retry: 'Coba lagi',
     start: 'Mulai',
     resume: 'Lanjutkan',
@@ -115,7 +115,7 @@ export const t = {
   },
 
   profile: {
-    student: 'Siswa · Z-Math',
+    student: 'Siswa · ℤ-Math',
     activeDays: (n: number) => `${n} Hari Aktif`,
     days: ['S', 'S', 'R', 'K', 'J', 'S', 'M'],
     skills: 'Kemampuanku',
@@ -142,11 +142,22 @@ export const t = {
     classChange: 'Ganti Kelas',
     classSaved: (name: string) => `Kamu bergabung dengan kelas ${name}.`,
     classPrivacy: 'Gurumu bisa melihat progres belajarmu di kelas ini.',
+    passwordTitle: 'Kata sandi',
+    passwordLead: 'Dapat kata sandi sementara dari guru? Ganti dengan pilihanmu sendiri.',
+    passwordChange: 'Ubah',
+    passwordCurrent: 'Kata sandi lama',
+    passwordNew: 'Kata sandi baru',
+    passwordRepeat: 'Ulangi kata sandi baru',
+    passwordHint: 'Minimal 6 huruf atau angka. Jangan beri tahu teman.',
+    passwordMismatch: 'Kata sandi baru dan ulangannya belum sama.',
+    passwordShow: 'Tampilkan kata sandi',
+    passwordSave: 'Simpan',
+    passwordSaved: 'Kata sandi berhasil diubah. Pakai kata sandi baru saat masuk nanti.',
   },
 
   install: {
-    title: 'Pasang Z-Math',
-    installed: 'Z-Math sudah terpasang di perangkat ini.',
+    title: 'Pasang ℤ-Math',
+    installed: 'ℤ-Math sudah terpasang di perangkat ini.',
     button: 'Pasang',
     lead: 'Buka lebih cepat dari layar utama.',
     howTo: 'Cara',
@@ -251,7 +262,7 @@ export const t = {
     register: 'Daftar',
     asStudent: 'Siswa',
     asTeacher: 'Guru',
-    loginTitle: { siswa: 'Halo! Yuk, masuk dan lanjut belajar.', guru: 'Masuk ke Dasbor Pemantauan Kelas' } as Record<
+    loginTitle: { siswa: 'Halo! Yuk, masuk dan lanjut belajar.', guru: 'Selamat datang, Bapak/Ibu Guru.' } as Record<
       'siswa' | 'guru',
       string
     >,
@@ -259,10 +270,16 @@ export const t = {
     name: 'Nama panggilan',
     namePlaceholder: 'Misalnya: Sari',
     username: { siswa: 'Nama pengguna', guru: 'Email atau nama pengguna' } as Record<'siswa' | 'guru', string>,
+    usernamePlaceholder: { siswa: 'Masukkan nama pengguna', guru: 'Masukkan email atau nama pengguna' } as Record<
+      'siswa' | 'guru',
+      string
+    >,
     usernameHint: 'Huruf, angka, titik, atau garis bawah. Minimal 3 karakter.',
-    password: { siswa: 'PIN rahasia', guru: 'Kata sandi' } as Record<'siswa' | 'guru', string>,
+    password: { siswa: 'Kata sandi', guru: 'Kata sandi' } as Record<'siswa' | 'guru', string>,
+    passwordPlaceholder: 'Masukkan kata sandi',
+    forgotPassword: 'Lupa kata sandi? Minta bantuan gurumu untuk mengatur ulang.',
     passwordHint: {
-      siswa: 'Minimal 6 angka atau huruf. Jangan beri tahu teman.',
+      siswa: 'Minimal 6 huruf atau angka. Jangan beri tahu teman.',
       guru: 'Minimal 8 karakter.',
     } as Record<'siswa' | 'guru', string>,
     classCode: 'Kode Kelas (dari Guru)',
@@ -322,6 +339,14 @@ export const t = {
     detailTitle: 'Rincian Progres',
     perModule: 'Progres per subbab',
     mastery: (n: number | null) => (n === null ? 'Penguasaan: —' : `Penguasaan ${n}%`),
+    resetTitle: 'Kata sandi siswa',
+    resetLead: 'Siswa lupa kata sandi? Buat kata sandi sementara yang baru.',
+    resetButton: 'Atur Ulang Kata Sandi',
+    resetConfirm: (name: string) => `Atur ulang kata sandi ${name}? Kata sandi lama tidak bisa dipakai lagi.`,
+    resetYes: 'Ya, atur ulang',
+    resetDone: (username: string) => `Kata sandi baru untuk @${username}`,
+    resetNote: 'Beritahukan langsung ke siswa. Kata sandi ini hanya ditampilkan sekali.',
+    resetCopy: 'Salin',
     weakTitle: 'Perlu diperkuat',
     weakNone: 'Belum ada pelajaran yang lemah. Hebat!',
     weakItem: (n: number, title: string) => `Pelajaran ${n} · ${title}`,

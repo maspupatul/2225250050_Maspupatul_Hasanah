@@ -40,6 +40,7 @@ export function App() {
         <Shell>
           <Routes>
             <Route path="/masuk" element={<AuthPage />} />
+            <Route path="/daftar" element={<AuthPage />} />
             <Route path="/selamat-datang" element={<Navigate to="/masuk" replace />} />
 
             <Route element={<RequireRole role="siswa" />}>

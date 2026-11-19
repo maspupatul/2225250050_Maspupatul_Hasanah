@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
+import secrets
+from collections.abc import Callable, Sequence
 from datetime import date, timedelta
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.content.loader import content
-from app.core.security import hash_password
+from app.core.errors import AppError
+from app.core.security import clear_login_failures, hash_password
 from app.db.models import ROLE_STUDENT, ROLE_TEACHER, StudentProgress, User
 from app.services.classes import classes_of, create_class
 from app.services.progress_report import empty_snapshot, merge_snapshots, student_report
@@ -93,6 +96,30 @@ def students_of(db: Session, teacher: User, codes: list[str] | None = None) -> l
         return []
     stmt = select(User).where(User.role == ROLE_STUDENT, User.class_code.in_(wanted)).order_by(User.name)
     return list(db.scalars(stmt))
+
+
+# Temporary passwords a teacher reads out to a student: lower case (easy to type on a
+# phone), no look-alike characters (no i, l, o, 0, 1).
+TEMP_PASSWORD_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789"
+TEMP_PASSWORD_LENGTH = 6
+
+
+def generate_temporary_password(choice: Callable[[Sequence[str]], str] = secrets.choice) -> str:
+    """Pure given `choice`: a random temporary password (meets the student minimum of 6)."""
+    return "".join(choice(TEMP_PASSWORD_ALPHABET) for _ in range(TEMP_PASSWORD_LENGTH))
+
+
+def reset_student_password(db: Session, teacher: User, student_id: int) -> tuple[User, str]:
+    """Teacher resets the password of a student in one of their own classes.
+    Returns the student and the new temporary password (shown once, never stored in plain text)."""
+    student = db.get(User, student_id)
+    if student is None or not teaches(db, teacher, student):
+        raise AppError("NOT_FOUND", "Siswa tidak ditemukan di kelas Anda.", 404)
+    temporary = generate_temporary_password()
+    student.password_hash = hash_password(temporary)
+    db.commit()
+    clear_login_failures(student.username)  # a student locked out by wrong tries can log in now
+    return student, temporary
 
 
 def teaches(db: Session, teacher: User, student: User) -> bool:

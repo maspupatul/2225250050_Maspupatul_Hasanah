@@ -6,7 +6,7 @@ Status: **diimplementasikan (Tahap 1, SQLite lokal)**. Rancangan jangka panjang 
 
 | Peran | Masuk dengan | Setelah masuk | Tidak bisa |
 |---|---|---|---|
-| `siswa` | Nama pengguna + PIN (min. 6 karakter), **Kode Kelas** dari guru (opsional, bisa diisi/diganti nanti di Profil) | Beranda belajar (Belajar · Latihan · Ujian Akhir · Profil) | Membuka `/guru/*` |
+| `siswa` | Nama pengguna + kata sandi (min. 6 karakter), **Kode Kelas** dari guru (opsional, bisa diisi/diganti nanti di Profil) | Beranda belajar (Belajar · Latihan · Ujian Akhir · Profil) | Membuka `/guru/*` |
 | `guru` | Email/nama pengguna + kata sandi (min. 8 karakter) | `/guru/dashboard` | Membuka halaman belajar siswa, mengubah progres siswa |
 
 - Pendaftaran siswa **wajib** mencentang izin orang tua/wali (UU PDP, [KEAMANAN-PRIVASI.md](KEAMANAN-PRIVASI.md) §3).
@@ -31,7 +31,7 @@ Status: **diimplementasikan (Tahap 1, SQLite lokal)**. Rancangan jangka panjang 
 
 Dibuat otomatis saat database masih kosong dan `ZMATH_SEED_DEMO=1` (bawaan di pengembangan):
 
-| Peran | Nama pengguna | PIN/Sandi | Kelas | Kondisi |
+| Peran | Nama pengguna | Kata sandi | Kelas | Kondisi |
 |---|---|---|---|---|
 | guru | `guru` | `guru123` | VII-A (kode `ZM7A92`) | — |
 | siswa | `ayu` | `123456` | VII-A | Semua pelajaran selesai, nilai ujian 88 → **Tuntas** |
@@ -59,6 +59,7 @@ Progres tetap disimpan di perangkat (aplikasi tetap jalan saat offline), lalu **
 | Cari & filter | Nama/username; status Semua · Perlu bimbingan · Berproses · Tuntas |
 | Export CSV | Pemisah `;` + UTF-8 BOM (langsung rapi di Excel Indonesia); isi yang diawali `= + - @` dinetralkan agar tidak dieksekusi sebagai rumus |
 | Detail siswa | Progres per subbab, statistik, pelajaran **yang perlu diperkuat** (belum selesai atau penguasaan < 60%, plus pelajaran yang soalnya ada di Antrean Ulang), riwayat ujian |
+| Atur ulang kata sandi | Di Detail siswa: "Atur Ulang Kata Sandi" → konfirmasi → server membuat **kata sandi sementara** 6 karakter (huruf kecil + angka, tanpa huruf/angka yang mirip seperti i, l, o, 0, 1). Ditampilkan **sekali** + tombol Salin, lalu guru memberitahukannya ke siswa. Kata sandi lama langsung tidak berlaku, dan blokir login (5× salah) dibuka. Sesi login siswa yang sudah aktif di perangkat lain tetap berlaku sampai token habis (7 hari). Siswa lalu bisa mengganti kata sandi sementara itu sendiri di **Profil → Kata sandi → Ubah** (kata sandi lama, kata sandi baru, ulangi kata sandi baru) |
 
 **Status** (`student_status`):
 - **Tuntas**: semua pelajaran selesai dan nilai ujian terbaik ≥ KKM 70.
@@ -79,12 +80,14 @@ Progres tetap disimpan di perangkat (aplikasi tetap jalan saat offline), lalu **
 | POST | `/api/v1/guru/classes` | guru: `{"class_name": "VII-A"}` → kelas baru + `class_code` (201; 409 jika nama sudah dipakai) |
 | GET | `/api/v1/guru/students-summary?class_code=…` | guru: semua kelasnya, atau satu kelas (404 jika kode bukan miliknya) |
 | GET | `/api/v1/guru/students/{id}` | guru (kelasnya sendiri) |
+| PUT | `/api/v1/auth/me/password` | siswa/guru yang sedang masuk: ubah kata sandi sendiri (wajib kata sandi lama; salah 5× → tunggu 5 menit) |
+| POST | `/api/v1/guru/students/{id}/reset-password` | guru (kelasnya sendiri). Lihat "Atur ulang kata sandi" di §4 |
 
-Token: JWT HS256 di header `Authorization: Bearer …`, berlaku 7 hari (`ZMATH_TOKEN_DAYS`). PIN/sandi disimpan sebagai PBKDF2-SHA256 + salt.
+Token: JWT HS256 di header `Authorization: Bearer …`, berlaku 7 hari (`ZMATH_TOKEN_DAYS`). Kata sandi disimpan sebagai PBKDF2-SHA256 + salt.
 
 ## 6. Penyimpangan dari Dokumen Lain (perlu keputusan)
 
 | Dokumen | Tertulis | Tahap 1 ini | Alasan |
 |---|---|---|---|
 | CLAUDE.md §2, KEAMANAN-PRIVASI §4 | Supabase Auth + RLS | SQLite lokal + JWT sendiri | Permintaan pengguna; belum ada proyek Supabase. Tabel dirancang agar mudah dipindah |
-| KEAMANAN-PRIVASI §4 | Kata sandi ≥ 8 karakter, verifikasi email | Siswa: PIN ≥ 6, tanpa email | Mudah diingat siswa SMP; diimbangi pembatasan percobaan login |
+| KEAMANAN-PRIVASI §4 | Kata sandi ≥ 8 karakter, verifikasi email | Siswa: kata sandi ≥ 6, tanpa email | Mudah diingat siswa SMP; diimbangi pembatasan percobaan login |

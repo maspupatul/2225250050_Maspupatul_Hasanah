@@ -17,7 +17,11 @@ export default {
         hint: '#7c3aed',
         ringc: { cyan: '#22c7d6', pink: '#f0597a', green: '#2bc48a' },
       },
-      fontFamily: { sans: ['Nunito', 'system-ui', 'Segoe UI', 'Roboto', 'sans-serif'] },
+      fontFamily: {
+        sans: ['Nunito', 'system-ui', 'Segoe UI', 'Roboto', 'sans-serif'],
+        // ONLY the ℤ-Math title (Masuk, Beranda header, Profil subtitle) and avatar initials
+        brand: ['"Plus Jakarta Sans"', 'Nunito', 'system-ui', 'sans-serif'],
+      },
       borderRadius: { '4xl': '2rem' },
       boxShadow: {
         card: '0 12px 32px -14px rgba(43, 34, 56, 0.35)',

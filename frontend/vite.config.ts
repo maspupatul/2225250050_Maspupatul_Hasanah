@@ -13,8 +13,8 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
         id: '/',
-        name: 'Z-Math — Belajar Bilangan Bulat',
-        short_name: 'Z-Math',
+        name: 'ℤ-Math — Belajar Bilangan Bulat',
+        short_name: 'ℤ-Math',
         description:
           'Belajar bilangan bulat SMP: termometer, garis bilangan, soal cerita, petunjuk bertahap, dan Ujian Akhir.',
         lang: 'id',

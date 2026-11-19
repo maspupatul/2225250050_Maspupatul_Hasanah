@@ -14,7 +14,8 @@ const TABS: { to: string; label: string; icon: NavIconName }[] = [
 /** The tab bar shows only on the four tab pages (not inside a lesson, practice or exam). */
 export const isTabPage = (pathname: string) => TABS.some((tab) => tab.to === pathname);
 
-const PILL_SPRING = { type: 'spring', stiffness: 400, damping: 30 } as const;
+// same curve as the lesson slides (SlideIn): quick start, soft landing, no overshoot
+const PILL_MOVE = { type: 'tween', duration: 0.25, ease: [0.22, 1, 0.36, 1] } as const;
 
 /**
  * Floating pill tab bar, rendered ONCE by App (outside the routes). Because it stays
@@ -29,7 +30,8 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[480px] px-3 pb-[calc(env(safe-area-inset-bottom)+12px)]"
+      // own GPU layer: the bar stays put and does not flicker while the page behind it changes
+      className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-[480px] px-3 pb-[calc(env(safe-area-inset-bottom)+12px)] [transform:translateZ(0)]"
     >
       <ul className="grid grid-cols-4 gap-1 rounded-full bg-plum-900/95 p-1.5 shadow-[0_5px_0_#231a2f] ring-1 ring-white/10 backdrop-blur">
         {TABS.map((tab) => {
@@ -39,17 +41,17 @@ export function BottomNav() {
               <NavLink
                 to={tab.to}
                 aria-current={active ? 'page' : undefined}
-                className="relative block rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="relative block touch-manipulation rounded-full outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-2 focus-visible:ring-accent"
               >
-                <motion.span
-                  whileTap={{ scale: 0.92 }}
-                  className={`relative flex flex-col items-center gap-0.5 px-1 py-2 text-[11px] font-extrabold leading-none transition-colors duration-200 ${active ? 'text-white' : 'text-white/55 hover:text-white/85'}`}
+                {/* instant press feedback in CSS (no JS wait); colours follow the indicator */}
+                <span
+                  className={`relative flex flex-col items-center gap-0.5 px-1 py-2 text-[11px] font-extrabold leading-none transition-[color,transform] duration-[250ms] ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-95 active:duration-150 active:ease-out ${active ? 'text-white' : 'text-white/55 hover:text-white/85'}`}
                 >
                   {active && (
                     <motion.span
                       layoutId="activeTabIndicator"
                       className="absolute inset-0 rounded-full bg-accent shadow-[0_3px_0_#c2410c]"
-                      transition={PILL_SPRING}
+                      transition={PILL_MOVE}
                     />
                   )}
                   <motion.span
@@ -66,7 +68,7 @@ export function BottomNav() {
                     )}
                   </motion.span>
                   <span className="relative max-w-full truncate">{tab.label}</span>
-                </motion.span>
+                </span>
               </NavLink>
             </li>
           );

@@ -27,7 +27,7 @@ export function ModuleBars({ modules, compact = false }: { modules: ModuleProgre
               style={{ width: `${m.percent}%` }}
             />
           </span>
-          <span className="text-[11px] font-bold text-ink">{m.percent}%</span>
+          <span className="text-[11px] font-bold tabular-nums text-ink">{m.percent}%</span>
         </li>
       ))}
     </ul>

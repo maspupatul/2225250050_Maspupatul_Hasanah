@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { BrandText } from './BrandName';
 import { t } from '../../i18n/id';
 import { useInstall } from '../../lib/install';
 import { Icon } from './Icon';
@@ -21,8 +22,10 @@ export function InstallCard({ dark = false }: { dark?: boolean }) {
       <div className="flex items-center gap-3">
         <ZLogo size={42} animateIn={false} />
         <div className="min-w-0 flex-1">
-          <h2 className="text-sm font-extrabold">{t.install.title}</h2>
-          <p className={`text-xs ${muted}`}>{install.standalone ? t.install.installed : t.install.lead}</p>
+          <h2 className="text-sm font-extrabold">
+            <BrandText text={t.install.title} />
+          </h2>
+          <p className={`text-xs ${muted}`}>{install.standalone ? <BrandText text={t.install.installed} /> : t.install.lead}</p>
         </div>
         {install.standalone ? (
           <span className="flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-extrabold text-correct">

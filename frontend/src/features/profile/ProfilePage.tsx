@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '../../components/ui/Icon';
 import { InstallCard } from '../../components/ui/InstallCard';
+import { BrandName, BrandText } from '../../components/ui/BrandName';
 import { ProgressRings } from '../../components/ui/ProgressRings';
 import { RoundButton } from '../../components/ui/RoundButton';
 import { STAT_TONE } from '../../components/ui/statTones';
@@ -14,6 +15,7 @@ import { todayISO } from '../../lib/format';
 import { useApi } from '../../lib/useApi';
 import { useAuth } from '../../store/auth';
 import { bestExamScore, moduleMastery, useProgress } from '../../store/progress';
+import { ChangePasswordCard } from './ChangePasswordCard';
 import { ClassCodeCard } from './ClassCodeCard';
 
 const RING_COLORS = ['#22c7d6', '#f0597a', '#2bc48a', '#f5a524'];
@@ -64,12 +66,18 @@ export function ProfilePage() {
             <Icon name="settings" size={20} />
           </RoundButton>
         </div>
-        <div className="mx-auto -mt-2 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-amber-300 to-accent text-4xl font-black text-plum-900 shadow-card">
+        <div className="mx-auto -mt-2 grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-amber-300 to-accent font-brand text-4xl font-extrabold tracking-tight text-plum-900 shadow-card">
           {name.charAt(0).toUpperCase() || <Icon name="user" size={36} />}
         </div>
         <h1 className="mt-3 text-xl font-extrabold">{name}</h1>
         <p className="text-xs text-white/60">
-          {user?.kelas ? `${t.teacher.kelas(user.kelas)} · ${t.appName}` : t.profile.student}
+          {user?.kelas ? (
+            <>
+              {t.teacher.kelas(user.kelas)} · <BrandName className="font-brand font-extrabold" />
+            </>
+          ) : (
+            <BrandText text={t.profile.student} brandClassName="font-brand font-extrabold" />
+          )}
         </p>
       </header>
 
@@ -108,7 +116,7 @@ export function ProfilePage() {
               <li key={ring.id} className="flex items-center gap-2">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: ring.color }} />
                 <span className="flex-1 font-semibold text-ink">{ring.label}</span>
-                <span className="font-extrabold text-ink-muted">{ring.value}%</span>
+                <span className="font-extrabold tabular-nums text-ink-muted">{ring.value}%</span>
               </li>
             ))}
           </ul>
@@ -119,7 +127,7 @@ export function ProfilePage() {
             <TrophyArt size={32} />
           </span>
           <span className="flex-1 text-sm font-bold text-ink">{t.profile.examBest}</span>
-          <span className="text-2xl font-black text-ink">{bestExam ?? t.profile.examNone}</span>
+          <span className="text-2xl font-black tabular-nums text-ink">{bestExam ?? t.profile.examNone}</span>
         </section>
 
         <section className="rounded-4xl bg-white p-5">
@@ -152,6 +160,8 @@ export function ProfilePage() {
         </section>
 
         <ClassCodeCard />
+
+        <ChangePasswordCard />
 
         <InstallCard />
       </main>

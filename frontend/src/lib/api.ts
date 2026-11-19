@@ -90,6 +90,12 @@ export const api = {
   /** Student enters or changes their class code (null leaves the class). */
   joinClass: (classCode: string | null) =>
     request<AccountUser>('/auth/me/class', { method: 'PUT', body: JSON.stringify({ class_code: classCode }) }),
+  /** Profil → Ubah kata sandi (the current password is required). */
+  changePassword: (currentPassword: string, newPassword: string) =>
+    request<AccountUser>('/auth/me/password', {
+      method: 'PUT',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    }),
 
   // teacher dashboard
   classes: () => request<SchoolClass[]>('/guru/classes'),
@@ -100,6 +106,9 @@ export const api = {
       `/guru/students-summary${classCode ? `?class_code=${encodeURIComponent(classCode)}` : ''}`,
     ),
   studentDetail: (id: number) => request<StudentDetail>(`/guru/students/${id}`),
+  /** Forgotten password: the server sets a temporary one and returns it once. */
+  resetStudentPassword: (id: number) =>
+    post<{ username: string; temporary_password: string }>(`/guru/students/${id}/reset-password`),
 };
 
 export interface AuthSession {

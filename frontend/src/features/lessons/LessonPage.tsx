@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PopButton } from '../../components/ui/PopButton';
 import { ProgressCard } from '../../components/ui/ProgressCard';
 import { RoundButton } from '../../components/ui/RoundButton';
-import { SlideIn } from '../../components/ui/SlideIn';
+import { scrollToTop, SlideIn } from '../../components/ui/SlideIn';
 import { Icon } from '../../components/ui/Icon';
 import { LessonIcon } from '../../components/ui/LessonIcon';
 import { t } from '../../i18n/id';
@@ -42,7 +42,7 @@ export function LessonPage() {
     setDirection(next > current ? 1 : -1);
     setIndex(next);
     saveSegment(lessonId, next);
-    window.scrollTo({ top: 0 });
+    scrollToTop();
   };
 
   return (
@@ -73,7 +73,9 @@ export function LessonPage() {
         ))}
       </div>
 
-      <section className="mt-4 flex-1 overflow-hidden rounded-4xl bg-white p-5 text-ink shadow-[0_6px_0_#231a2f]">
+      {/* flex-1 + a minimum height: a short slide never makes the card (and the buttons
+          under it) jump up compared with a long one */}
+      <section className="mt-4 min-h-[60dvh] flex-1 overflow-hidden rounded-4xl bg-white p-5 text-ink shadow-[0_6px_0_#231a2f]">
         {lesson ? (
           <SlideIn id={`${current}-${replayKey}`} direction={direction}>
             <SegmentView segment={lesson.segments[current]} />
@@ -100,7 +102,10 @@ export function LessonPage() {
         </PopButton>
         <PopButton
           disabled={!lesson}
-          onClick={() => (last ? navigate(`/latihan/${lessonId}`) : go(current + 1))}
+          // the last slide leads on to Latihan with the same forward motion
+          onClick={() =>
+            last ? navigate(`/latihan/${lessonId}`, { state: { enter: 'forward' } }) : go(current + 1)
+          }
           className="text-sm"
         >
           <span className="inline-flex items-center gap-1.5">

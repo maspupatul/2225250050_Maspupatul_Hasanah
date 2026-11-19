@@ -12,7 +12,7 @@ export function ProgressCard({ icon, title, percent }: { icon: ReactNode; title:
           </span>
           <span className="min-w-0 [overflow-wrap:anywhere]">{title}</span>
         </span>
-        <span className="shrink-0 text-white/70">{value}%</span>
+        <span className="shrink-0 tabular-nums text-white/70">{value}%</span>
       </div>
       <div
         className="mt-3 h-2 overflow-hidden rounded-full bg-plum-900/70"

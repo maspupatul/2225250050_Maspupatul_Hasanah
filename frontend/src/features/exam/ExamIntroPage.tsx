@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BadgeCard } from '../../components/ui/BadgeCard';
 import { Icon, type IconName } from '../../components/ui/Icon';
 import { TrophyArt } from '../../components/ui/TrophyArt';
+import { BrandName, BrandText } from '../../components/ui/BrandName';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -32,7 +33,9 @@ export function ExamIntroPage() {
   return (
     <div className="min-h-dvh bg-lavender-50 pb-32">
       <header className="rounded-b-[2.5rem] bg-plum-800 px-6 pb-14 pt-[calc(env(safe-area-inset-top)+24px)] text-white">
-        <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">{t.appName}</p>
+        <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">
+          <BrandName />
+        </p>
         <div className="mt-3 flex items-center gap-4">
           <span className="grid h-16 w-16 shrink-0 place-items-center rounded-3xl bg-[#2D2142] shadow-card ring-1 ring-white/10">
             <TrophyArt size={42} />
@@ -51,7 +54,7 @@ export function ExamIntroPage() {
           <h2 className="text-sm font-extrabold text-ink">{t.exam.stagesTitle}</h2>
           {error && !info && (
             <button type="button" onClick={reload} className="mt-3 text-sm font-bold text-accent">
-              {t.home.loadError} {t.home.retry} ›
+              <BrandText text={t.home.loadError} /> {t.home.retry} ›
             </button>
           )}
           {!info && !error && <div className="mt-3 h-28 animate-pulse rounded-3xl bg-lavender-100" />}
@@ -104,7 +107,7 @@ export function ExamIntroPage() {
               <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${percent}%` }} />
             </div>
             <p className="mt-1 text-xs font-bold text-ink-muted">
-              {percent}% {t.home.completed}
+              <span className="tabular-nums">{percent}%</span> {t.home.completed}
             </p>
           </div>
         )}

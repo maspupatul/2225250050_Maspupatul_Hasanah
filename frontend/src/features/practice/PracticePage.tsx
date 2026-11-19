@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Icon } from '../../components/ui/Icon';
+import { SlideIn } from '../../components/ui/SlideIn';
 import { LessonIcon } from '../../components/ui/LessonIcon';
+import { BrandText } from '../../components/ui/BrandName';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { averageWeight, type Outcome } from '../../lib/score';
@@ -19,6 +21,7 @@ type Mode = 'lesson' | 'review' | 'random';
 export function PracticePage() {
   const { lessonId = '' } = useParams();
   const navigate = useNavigate();
+  const enteredForward = (useLocation().state as { enter?: string } | null)?.enter === 'forward';
   const mode: Mode = lessonId === 'ulang' ? 'review' : lessonId === 'acak' ? 'random' : 'lesson';
   // `/latihan/acak?topik=m1`: random practice inside one module (Latihan per Topik)
   const topic = useSearchParams()[0].get('topik') ?? undefined;
@@ -87,7 +90,9 @@ export function PracticePage() {
       <div className="grid min-h-dvh place-items-center bg-plum-800 px-6 text-center text-white">
         {failed ? (
           <div>
-            <p className="text-sm">{t.home.loadError}</p>
+            <p className="text-sm">
+              <BrandText text={t.home.loadError} />
+            </p>
             <button
               type="button"
               onClick={() => navigate('/')}
@@ -122,7 +127,7 @@ export function PracticePage() {
         : t.practice.lessonTitle(lesson?.number ?? 0, lesson?.title ?? '');
   const back = mode === 'lesson' ? '/' : '/latihan';
 
-  return (
+  const session = (
     <PracticeSession
       key={`${lessonId}-${topic ?? ''}`}
       total={total}
@@ -152,5 +157,14 @@ export function PracticePage() {
         />
       )}
     />
+  );
+  // from the last lesson slide: Latihan enters from the right, like the next slide would.
+  // Only the page entrance moves; problems inside the session still change instantly.
+  return enteredForward ? (
+    <SlideIn id="practice" direction={1}>
+      {session}
+    </SlideIn>
+  ) : (
+    session
   );
 }

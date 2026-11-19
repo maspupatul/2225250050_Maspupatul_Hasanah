@@ -11,7 +11,7 @@ from app.core.security import require_role
 from app.db.database import get_db
 from app.db.models import ROLE_TEACHER, User
 from app.schemas.account import ClassCreate, ClassOut
-from app.services.accounts import report_for, students_of, teaches
+from app.services.accounts import report_for, reset_student_password, students_of, teaches
 from app.services.classes import class_out, classes_of, create_class, normalize_class_code, student_counts
 from app.services.progress_report import KKM, class_report
 
@@ -73,3 +73,13 @@ def student_detail(
     if student is None or not teaches(db, teacher, student):
         raise AppError("NOT_FOUND", "Siswa tidak ditemukan di kelas Anda.", 404)
     return report_for(student)
+
+
+@router.post("/students/{student_id}/reset-password")
+def reset_password(
+    student_id: int, teacher: User = Depends(require_role(ROLE_TEACHER)), db: Session = Depends(get_db)
+) -> dict:
+    """A forgotten student password: the server sets a temporary one and returns it once,
+    so the teacher can tell the student. Only for students in the teacher's own classes."""
+    student, temporary = reset_student_password(db, teacher, student_id)
+    return {"username": student.username, "temporary_password": temporary}

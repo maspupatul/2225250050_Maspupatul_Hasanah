@@ -38,7 +38,7 @@ export function ExamResult({ outcomes, stages, newBest, onHome, onAgain }: Props
         </svg>
         <div className="absolute inset-0 grid place-items-center">
           <div>
-            <p className="text-4xl font-black text-ink">{score}</p>
+            <p className="text-4xl font-black tabular-nums text-ink">{score}</p>
             <p className="text-[11px] font-bold uppercase tracking-widest text-ink-muted">{t.exam.score}</p>
           </div>
         </div>
@@ -61,7 +61,7 @@ export function ExamResult({ outcomes, stages, newBest, onHome, onAgain }: Props
                 <span>
                   {t.exam.stage(i + 1)} · {s.title}
                 </span>
-                <span className="text-ink-muted">{s.score}</span>
+                <span className="tabular-nums text-ink-muted">{s.score}</span>
               </div>
               <div className="mt-1 h-2 overflow-hidden rounded-full bg-lavender-200">
                 <div

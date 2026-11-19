@@ -45,6 +45,13 @@ class UserOut(BaseModel):
     class_code: str | None
 
 
+class ChangePasswordRequest(BaseModel):
+    """Profil → Ubah kata sandi. Length rules per role are checked in the endpoint (clear message)."""
+
+    current_password: str = Field(min_length=1, max_length=64)
+    new_password: str = Field(min_length=1, max_length=64)
+
+
 class JoinClassRequest(BaseModel):
     """Student enters or changes their class code (Profil). null leaves the class."""
 

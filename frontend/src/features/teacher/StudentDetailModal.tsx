@@ -7,6 +7,7 @@ import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
 import { ModuleBars } from './ModuleBars';
+import { PasswordResetCard } from './PasswordResetCard';
 import { StatusBadge } from './StatusBadge';
 
 type Props = { studentId: number; onClose: () => void };
@@ -67,7 +68,7 @@ export function StudentDetailModal({ studentId, onClose }: Props) {
           <div className="mt-4 space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge status={data.status} />
-              <span className="text-sm font-bold text-ink-muted">
+              <span className="text-sm font-bold tabular-nums text-ink-muted">
                 {data.percent_done}% · {t.teacher.mastery(data.avg_mastery)}
               </span>
             </div>
@@ -99,7 +100,7 @@ export function StudentDetailModal({ studentId, onClose }: Props) {
                     <li key={w.id} className="rounded-2xl bg-lavender-50 px-3 py-2">
                       <div className="flex items-center justify-between gap-2 text-sm font-bold">
                         <span className="min-w-0 truncate">{t.teacher.weakItem(w.number, w.title)}</span>
-                        <span className="shrink-0 text-xs text-ink-muted">
+                        <span className="shrink-0 text-xs tabular-nums text-ink-muted">
                           {w.status === 'done'
                             ? `${w.mastery}%`
                             : w.status === 'in_progress'
@@ -136,12 +137,14 @@ export function StudentDetailModal({ studentId, onClose }: Props) {
                           style={{ width: `${e.score}%` }}
                         />
                       </span>
-                      <span className="w-8 text-right font-black">{e.score}</span>
+                      <span className="w-8 text-right font-black tabular-nums">{e.score}</span>
                     </li>
                   ))}
                 </ul>
               )}
             </section>
+
+            <PasswordResetCard studentId={data.id} studentName={data.name} />
           </div>
         )}
       </motion.div>

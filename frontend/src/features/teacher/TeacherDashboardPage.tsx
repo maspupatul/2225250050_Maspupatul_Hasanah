@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { PopButton } from '../../components/ui/PopButton';
 import { ZLogo } from '../../components/ui/ZLogo';
 import { Icon, type IconName } from '../../components/ui/Icon';
+import { BrandName } from '../../components/ui/BrandName';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { todayISO } from '../../lib/format';
@@ -101,7 +102,7 @@ export function TeacherDashboardPage() {
             <ZLogo size={44} />
             <div className="min-w-0">
               <p className="truncate text-xs font-bold uppercase tracking-widest text-white/60">
-                {data?.kelas ? t.teacher.kelas(data.kelas) : t.appName}
+                {data?.kelas ? t.teacher.kelas(data.kelas) : <BrandName />}
               </p>
               <h1 className="text-lg font-black leading-tight sm:text-xl">{t.teacher.title}</h1>
             </div>
@@ -292,10 +293,10 @@ export function TeacherDashboardPage() {
                                   style={{ width: `${m.percent}%` }}
                                 />
                               </span>
-                              <span className="text-xs font-bold">{m.percent}%</span>
+                              <span className="text-xs font-bold tabular-nums">{m.percent}%</span>
                             </td>
                           ))}
-                          <td className="px-2 py-3 text-right font-black">{s.exam_best ?? t.teacher.notYet}</td>
+                          <td className="px-2 py-3 text-right font-black tabular-nums">{s.exam_best ?? t.teacher.notYet}</td>
                           <td className="px-2 py-3 text-right font-bold">{s.hints_used}</td>
                           <td className="px-4 py-3">
                             <StatusBadge status={s.status} />

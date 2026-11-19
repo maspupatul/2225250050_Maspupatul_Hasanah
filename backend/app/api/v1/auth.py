@@ -21,13 +21,14 @@ from app.core.security import (
 )
 from app.db.database import get_db
 from app.db.models import ROLE_STUDENT, ROLE_TEACHER, User
-from app.schemas.account import JoinClassRequest, LoginRequest, RegisterRequest
+from app.schemas.account import ChangePasswordRequest, JoinClassRequest, LoginRequest, RegisterRequest
 from app.services.accounts import get_by_username, normalize_username, snapshot_of, user_out
 from app.services.classes import require_class
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 TEACHER_MIN_PASSWORD = 8
+STUDENT_MIN_PASSWORD = 6
 
 
 def _session(user: User) -> dict:
@@ -77,7 +78,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)) -> dict:
     if user is None or not verify_password(body.password, user.password_hash):
         record_login_failure(username)
         # one message for both cases: do not reveal which usernames exist
-        raise AppError("LOGIN_FAILED", "Nama pengguna atau PIN/kata sandi salah.", 401)
+        raise AppError("LOGIN_FAILED", "Nama pengguna atau kata sandi salah.", 401)
     if body.role and body.role != user.role:
         other = "guru" if user.role == ROLE_TEACHER else "siswa"
         raise AppError("WRONG_ROLE", f"Akun ini adalah akun {other}. Pilih 'Masuk sebagai {other.capitalize()}'.", 403)
@@ -87,6 +88,29 @@ def login(body: LoginRequest, db: Session = Depends(get_db)) -> dict:
 
 @router.get("/me")
 def me(user: User = Depends(current_user)) -> dict:
+    return user_out(user)
+
+
+@router.put("/me/password")
+def change_password(
+    body: ChangePasswordRequest, user: User = Depends(current_user), db: Session = Depends(get_db)
+) -> dict:
+    """Profil → Ubah kata sandi (e.g. after a teacher's temporary password).
+    The current password is required, and wrong guesses are throttled like logins, so a phone
+    left logged in cannot be used to try passwords."""
+    key = f"password:{user.id}"
+    check_login_allowed(key)
+    if not verify_password(body.current_password, user.password_hash):
+        record_login_failure(key)
+        raise AppError("WRONG_PASSWORD", "Kata sandi lama salah.", 400)
+    minimum = TEACHER_MIN_PASSWORD if user.role == ROLE_TEACHER else STUDENT_MIN_PASSWORD
+    if len(body.new_password) < minimum:
+        raise AppError("WEAK_PASSWORD", f"Kata sandi baru minimal {minimum} karakter.", 400)
+    if body.new_password == body.current_password:
+        raise AppError("SAME_PASSWORD", "Kata sandi baru harus berbeda dari yang lama.", 400)
+    user.password_hash = hash_password(body.new_password)
+    db.commit()
+    clear_login_failures(key)
     return user_out(user)
 
 

@@ -79,4 +79,4 @@ Pengguna utama Z-Math adalah **anak di bawah umur (12–14 tahun)**. Karena itu,
 
 ## Catatan Tahap 1 (Akun Lokal)
 
-Akun siswa/guru Tahap 1 memakai SQLite lokal, bukan Supabase. Aturan yang tetap dipenuhi: izin orang tua wajib saat siswa mendaftar, guru hanya melihat siswa sekelas, peran guru tidak bisa didaftarkan bebas (butuh kode sekolah), sandi di-hash (PBKDF2 + salt), dan perangkat dibersihkan saat keluar. Penyimpangan (PIN siswa ≥ 6 karakter, tanpa email) dicatat di [AKUN-DAN-PEMANTAUAN.md](AKUN-DAN-PEMANTAUAN.md) §6.
+Akun siswa/guru Tahap 1 memakai SQLite lokal, bukan Supabase. Aturan yang tetap dipenuhi: izin orang tua wajib saat siswa mendaftar, guru hanya melihat siswa sekelas, peran guru tidak bisa didaftarkan bebas (butuh kode sekolah), sandi di-hash (PBKDF2 + salt), dan perangkat dibersihkan saat keluar. Penyimpangan (kata sandi siswa ≥ 6 karakter, tanpa email) dicatat di [AKUN-DAN-PEMANTAUAN.md](AKUN-DAN-PEMANTAUAN.md) §6.

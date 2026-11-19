@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Icon, type IconName } from '../../components/ui/Icon';
+import { BrandName } from '../../components/ui/BrandName';
 import { t } from '../../i18n/id';
 import { api } from '../../lib/api';
 import { useApi } from '../../lib/useApi';
@@ -77,7 +78,9 @@ export function PracticeHubPage() {
   return (
     <div className="min-h-dvh bg-lavender-50 pb-32">
       <header className="rounded-b-[2.5rem] bg-plum-800 px-6 pb-12 pt-[calc(env(safe-area-inset-top)+24px)] text-white">
-        <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">{t.appName}</p>
+        <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/60">
+          <BrandName />
+        </p>
         <h1 className="mt-2 text-[28px] font-extrabold leading-tight">{t.practiceHub.title}</h1>
         <p className="text-sm text-white/70">{t.practiceHub.subtitle}</p>
       </header>

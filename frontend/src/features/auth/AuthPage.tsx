@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { useState, type FormEvent } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { InstallCard } from '../../components/ui/InstallCard';
+import { BrandName } from '../../components/ui/BrandName';
 import { PopButton } from '../../components/ui/PopButton';
 import { ZLogo } from '../../components/ui/ZLogo';
 import { Icon } from '../../components/ui/Icon';
@@ -12,20 +13,24 @@ import type { Role } from '../../lib/types';
 import { homeFor, useAuth } from '../../store/auth';
 import { snapshotOf, useProgress } from '../../store/progress';
 
-type Mode = 'login' | 'register';
+const LOGIN_PATH = '/masuk';
+const REGISTER_PATH = '/daftar';
 
 const field =
-  'mt-1 w-full rounded-2xl border-2 border-lavender-200 bg-white px-4 py-3 text-base font-bold text-ink outline-none transition focus:border-accent';
+  'mt-1 w-full rounded-2xl border-2 border-lavender-200 bg-white px-4 py-3 text-base font-bold text-ink outline-none transition placeholder:text-sm placeholder:font-semibold focus:border-accent';
 const label = 'block text-sm font-extrabold text-ink';
 const hint = 'mt-1 text-xs leading-5 text-ink-muted';
 
-/** `/masuk`: login and sign-up for students (nickname + PIN) and teachers (username/e-mail + password). */
+/**
+ * `/masuk` (login) and `/daftar` (sign-up) for students (username + password, optional class
+ * code) and teachers (username/e-mail + password + school sign-up code).
+ */
 export function AuthPage() {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { user, signIn } = useAuth();
   const markActive = useProgress((s) => s.markActive);
   const [role, setRole] = useState<Role>('siswa');
-  const [mode, setMode] = useState<Mode>('login');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -38,7 +43,7 @@ export function AuthPage() {
 
   if (user) return <Navigate to={homeFor(user)} replace />;
 
-  const register = mode === 'register';
+  const register = pathname === REGISTER_PATH;
   const ready =
     username.trim().length >= 3 &&
     password.length >= (register ? (role === 'guru' ? 8 : 6) : 1) &&
@@ -87,7 +92,9 @@ export function AuthPage() {
       <div className="flex items-center gap-4">
         <ZLogo size={64} />
         <div>
-          <h1 className="text-3xl font-black tracking-tight">{t.appName}</h1>
+          <h1 className="text-3xl font-black tracking-tight">
+            <BrandName className="font-brand font-extrabold" />
+          </h1>
           <p className="text-sm text-white/70">{t.subject}</p>
         </div>
       </div>
@@ -150,6 +157,7 @@ export function AuthPage() {
             autoComplete="username"
             autoCapitalize="none"
             spellCheck={false}
+            placeholder={t.auth.usernamePlaceholder[role]}
             onChange={(e) => setUsername(e.target.value.replace(/\s/g, ''))}
           />
           {register && <span className={hint}>{t.auth.usernameHint}</span>}
@@ -159,18 +167,18 @@ export function AuthPage() {
           {t.auth.password[role]}
           <span className="relative block">
             <input
-              className={`${field} pr-28`}
+              className={`${field} pr-24`}
               type={showPassword ? 'text' : 'password'}
               value={password}
               maxLength={64}
-              inputMode={role === 'siswa' ? 'numeric' : undefined}
               autoComplete={register ? 'new-password' : 'current-password'}
+              placeholder={t.auth.passwordPlaceholder}
               onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-2 top-1/2 mt-0.5 -translate-y-1/2 rounded-xl px-3 py-2 text-xs font-extrabold text-plum-700"
+              className="absolute right-1.5 top-1/2 mt-0.5 -translate-y-1/2 rounded-xl px-2.5 py-2 text-xs font-extrabold text-plum-700"
             >
               {showPassword ? t.auth.hidePassword : t.auth.showPassword}
             </button>
@@ -234,12 +242,17 @@ export function AuthPage() {
           {register ? t.auth.submitRegister : t.auth.submitLogin}
         </PopButton>
 
+        {/* students reset through their teacher; teachers are not told to ask a teacher */}
+        {!register && role === 'siswa' && (
+          <p className="text-center text-xs leading-5 text-ink-muted">{t.auth.forgotPassword}</p>
+        )}
+
         <p className="text-center text-sm text-ink-muted">
           {register ? t.auth.haveAccount : t.auth.noAccount}{' '}
           <button
             type="button"
             onClick={() => {
-              setMode(register ? 'login' : 'register');
+              navigate(register ? LOGIN_PATH : REGISTER_PATH, { replace: true });
               setError(null);
             }}
             className="font-extrabold text-accent underline-offset-2 hover:underline"

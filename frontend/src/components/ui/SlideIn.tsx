@@ -1,50 +1,44 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 type Props = {
-  /** Changing the key plays the transition (e.g. the problem number). */
+  /** Changing the key plays the transition (e.g. the lesson slide number). */
   id: string | number;
-  /** 1 = next (enter from the right), −1 = back (enter from the left). */
+  /** 1 = forward (enter from the right), −1 = back (enter from the left). */
   direction?: 1 | -1;
   children: ReactNode;
   className?: string;
 };
 
-// enter from outside on the side we move towards, bounce into the centre, leave quickly the other way
-const variants = {
-  enter: (dir: number) => ({ x: dir > 0 ? 120 : -120, opacity: 0, scale: 0.95 }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: { type: 'spring', stiffness: 300, damping: 25, opacity: { duration: 0.2 } },
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? -120 : 120,
-    opacity: 0,
-    scale: 0.95,
-    transition: { duration: 0.16, ease: 'easeIn' },
-  }),
-} as const;
+/** Shared motion for moving forward/back between screens (docs/UI-UX.md). */
+export const SLIDE_SHIFT_PX = 16;
+export const SLIDE_DURATION_S = 0.26;
+export const SLIDE_EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Slide + fade + soft spring between two contents (problems, lesson screens).
- * Short (≈0.3 s) and switched off by MotionConfig when the device asks for reduced motion.
+ * Directional enter: the new content glides in from the side we move towards (16 px) while
+ * fading in, in 260 ms. There is no exit animation, so the new screen is there at once and
+ * every button works immediately (nothing waits for the old screen to leave). Off entirely
+ * when the device asks for reduced motion.
  */
 export function SlideIn({ id, direction = 1, children, className }: Props) {
+  const reduceMotion = useReducedMotion();
   return (
-    <AnimatePresence mode="wait" initial={false} custom={direction}>
-      <motion.div
-        key={id}
-        custom={direction}
-        variants={variants}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        className={className}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      key={id}
+      className={className}
+      initial={reduceMotion ? false : { opacity: 0, x: direction * SLIDE_SHIFT_PX }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: SLIDE_DURATION_S, ease: SLIDE_EASE }}
+    >
+      {children}
+    </motion.div>
   );
+}
+
+/** Scroll back to the top when the screen changes: smooth, or instant with reduced motion. */
+export function scrollToTop(): void {
+  const reduce =
+    typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
 }
