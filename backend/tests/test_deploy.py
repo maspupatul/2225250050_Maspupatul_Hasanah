@@ -176,6 +176,20 @@ def test_old_failures_do_not_count(monkeypatch):
     security.check_login_allowed(key)  # the window has passed
 
 
+def test_pyproject_lists_every_runtime_package():
+    """Vercel installs from pyproject.toml, not requirements.txt: a missing package = 500 on start."""
+    import tomllib
+    from pathlib import Path
+
+    backend = Path(__file__).resolve().parents[1]
+    declared = set(tomllib.loads((backend / "pyproject.toml").read_text("utf-8"))["project"]["dependencies"])
+    test_only = {"pytest", "httpx"}
+    lines = (backend / "requirements.txt").read_text("utf-8").splitlines()
+    runtime = {ln.strip() for ln in lines if ln.strip() and not ln.startswith("#")}
+    runtime = {pkg for pkg in runtime if pkg.split("==")[0] not in test_only}
+    assert declared == runtime
+
+
 def test_settings_never_print_secrets(monkeypatch):
     """A failing test or a log line must not show keys or passwords (repr of Settings)."""
     monkeypatch.setenv("GEMINI_API_KEY", "AQ-kunci-rahasia-uji")

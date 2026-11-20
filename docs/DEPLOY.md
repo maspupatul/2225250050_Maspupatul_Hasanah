@@ -43,7 +43,7 @@ Tabel (`users`, `classes`, `student_progress`, `practice_attempts`, `login_failu
 4. **Deploy**. Cek: `https://<proyek>.vercel.app/health` → `{"status":"ok"}`, dan `https://<proyek>.vercel.app/api/v1/modules` → daftar modul.
 
 Catatan:
-- Python 3.12 (`backend/.python-version`). Paket dari `backend/requirements.txt` (`psycopg[binary]` untuk PostgreSQL).
+- Python 3.12 (`backend/.python-version`). Vercel memasang paket dari daftar `dependencies` di `backend/pyproject.toml` (bukan `requirements.txt`, karena `pyproject.toml` didahulukan). Daftar ini harus sama dengan paket aplikasi di `requirements.txt`; `tests/test_deploy.py` memeriksanya. Gejala jika kosong: build hanya beberapa detik, lalu log `ModuleNotFoundError: No module named 'fastapi'`.
 - Batas waktu fungsi 60 detik (`vercel.json`). Tanya Asisten menunggu Gemini paling lama 20 detik, Smart Hint 12 detik.
 - Permintaan pertama setelah lama tidak dipakai lebih lambat beberapa detik (*cold start*).
 - `CORS_ORIGINS` tidak perlu diisi selama aplikasi dibuka lewat alamat Netlify (lewat proxy).
