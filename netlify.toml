@@ -1,7 +1,7 @@
 # Netlify: the ℤ-Math web app (React PWA). The API (FastAPI) runs on Vercel and the database on
 # Supabase — see docs/DEPLOY.md.
 #
-# WAJIB DIGANTI sebelum deploy: alamat backend Vercel pada redirect /api/* di bawah
+# Alamat backend Vercel ada pada redirect /api/* di bawah. Ganti bila proyek Vercel berganti
 # (contoh: https://zmath-api.vercel.app). Netlify tidak bisa membaca variabel lingkungan di sini.
 
 [build]
@@ -16,7 +16,7 @@
 # so no CORS setup is needed and the app keeps calling /api/v1/... as before.
 [[redirects]]
   from = "/api/*"
-  to = "https://GANTI-DENGAN-BACKEND-VERCEL.vercel.app/api/:splat"
+  to = "https://2225250050-maspupatul-hasanah-bo47.vercel.app/api/:splat"
   status = 200
   force = true
 
