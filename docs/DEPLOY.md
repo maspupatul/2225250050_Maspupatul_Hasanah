@@ -5,7 +5,7 @@ Tanpa kartu kredit. Tiga layanan gratis:
 | Bagian | Layanan | Isi |
 |---|---|---|
 | Aplikasi web (React PWA) | **Netlify** | Folder `frontend/`, konfigurasi `netlify.toml` di akar repo |
-| API (FastAPI) | **Vercel** (Python Function) | Folder `backend/`, konfigurasi `backend/vercel.json`, entrypoint `backend/api/index.py` |
+| API (FastAPI) | **Vercel** (Python Function) | Folder `backend/`, konfigurasi `backend/vercel.json`. Vercel menemukan `app` di `backend/app/main.py` secara otomatis |
 | Database | **Supabase** (PostgreSQL) | Tabel dibuat otomatis oleh backend saat pertama berjalan |
 
 ```
@@ -29,7 +29,7 @@ Tabel (`users`, `classes`, `student_progress`, `practice_attempts`, `login_failu
 ## 2. Vercel (backend)
 
 1. [vercel.com](https://vercel.com) → **Add New → Project** → impor repo GitHub ini.
-2. **Root Directory: `backend`**. Framework Preset: *Other*. Build Command dan Output Directory dikosongkan.
+2. **Root Directory: `backend`**. Framework Preset: **FastAPI** (biasanya terdeteksi otomatis dari `requirements.txt`). Build Command, Output Directory, dan Install Command dibiarkan bawaan. Vercel memakai objek `app` di `app/main.py`.
 3. **Environment Variables** (Production):
 
 | Nama | Isi |

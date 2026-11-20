@@ -46,6 +46,7 @@ def test_pg8000_driver_and_sqlite_untouched():
 
 
 def test_database_url_wins_over_old_name(monkeypatch):
+    monkeypatch.delenv("ZMATH_PG_DRIVER", raising=False)  # default driver (the PG test run sets pg8000)
     monkeypatch.setenv("DATABASE_URL", SUPABASE)
     monkeypatch.setenv("ZMATH_DB_URL", "sqlite:///lama.db")
     assert Settings().db_url().startswith("postgresql+psycopg://postgres.abcd:")
@@ -173,3 +174,14 @@ def test_old_failures_do_not_count(monkeypatch):
     real_time = security.time.time
     monkeypatch.setattr(security.time, "time", lambda: real_time() + security.WINDOW_SECONDS + 1)
     security.check_login_allowed(key)  # the window has passed
+
+
+def test_settings_never_print_secrets(monkeypatch):
+    """A failing test or a log line must not show keys or passwords (repr of Settings)."""
+    monkeypatch.setenv("GEMINI_API_KEY", "AQ-kunci-rahasia-uji")
+    monkeypatch.setenv("ZMATH_JWT_SECRET", "jwt-rahasia-uji")
+    monkeypatch.setenv("ZMATH_TEACHER_CODE", "kode-rahasia-uji")
+    monkeypatch.setenv("DATABASE_URL", SUPABASE)
+    shown = repr(Settings())
+    for secret in ("kunci-rahasia-uji", "jwt-rahasia-uji", "kode-rahasia-uji", "rahasia@"):
+        assert secret not in shown

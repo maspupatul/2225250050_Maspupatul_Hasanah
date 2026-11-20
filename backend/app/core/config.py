@@ -64,21 +64,21 @@ class Settings:
     data_dir: Path = field(default_factory=lambda: Path(os.getenv("ZMATH_DATA_DIR", str(BACKEND_DIR / ".data"))))
     # PostgreSQL (Supabase): DATABASE_URL wins; ZMATH_DB_URL is the older name. Empty = SQLite.
     database_url: str = field(
-        default_factory=lambda: (os.getenv("DATABASE_URL") or os.getenv("ZMATH_DB_URL") or "").strip()
+        repr=False, default_factory=lambda: (os.getenv("DATABASE_URL") or os.getenv("ZMATH_DB_URL") or "").strip()
     )
     pg_driver: str = field(default_factory=lambda: os.getenv("ZMATH_PG_DRIVER", "psycopg").strip() or "psycopg")
     # Secret for signing login tokens. Empty = generated once and kept in data_dir (never committed).
-    jwt_secret: str = field(default_factory=lambda: os.getenv("ZMATH_JWT_SECRET", ""))
+    jwt_secret: str = field(repr=False, default_factory=lambda: os.getenv("ZMATH_JWT_SECRET", ""))
     token_days: int = field(default_factory=lambda: int(os.getenv("ZMATH_TOKEN_DAYS", "7")))
     # Teachers can only self-register with this code. Empty = teacher sign-up is closed.
-    teacher_signup_code: str = field(default_factory=lambda: os.getenv("ZMATH_TEACHER_CODE", ""))
+    teacher_signup_code: str = field(repr=False, default_factory=lambda: os.getenv("ZMATH_TEACHER_CODE", ""))
     # Demo accounts (guru/guru123 + 3 students) for trying the app. Turn off in production.
     # Default on only for the local SQLite file: a shared database (DATABASE_URL, e.g. Supabase)
     # or Vercel never gets accounts with known passwords unless ZMATH_SEED_DEMO=1 is set on purpose.
     seed_demo: bool = field(default_factory=lambda: os.getenv("ZMATH_SEED_DEMO", _demo_default()) == "1")
     pbkdf2_iterations: int = field(default_factory=lambda: int(os.getenv("ZMATH_PBKDF2_ITERATIONS", "310000")))
     # ---- Smart Hint (Gemini). Off when the key is missing or ZMATH_AI_HINTS=0.
-    gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip())
+    gemini_api_key: str = field(repr=False, default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip())
     ai_hints: bool = field(default_factory=lambda: os.getenv("ZMATH_AI_HINTS", "1") == "1")
     ai_timeout_ms: int = field(default_factory=lambda: int(os.getenv("ZMATH_AI_TIMEOUT_MS", "12000")))
     # Tanya Asisten may wait longer than a hint: the chat shows "Asisten sedang berpikir…"
