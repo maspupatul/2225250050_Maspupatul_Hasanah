@@ -481,5 +481,19 @@ export const t = {
     },
   },
 
+  about: {
+    button: 'Tentang aplikasi',
+    title: 'Tentang ℤ-Math',
+    body: 'ℤ-Math adalah media belajar interaktif Bilangan Bulat untuk SMP. Kamu belajar dengan langkah RMT, Lab Visual, Smart Hint, dan Asisten Belajar.',
+    developerTitle: 'Pengembang',
+    name: 'Nama',
+    nim: 'NIM',
+    program: 'Program Studi',
+    developerName: 'Maspupatul Hasanah',
+    developerNim: '2225250050',
+    developerProgram: 'Pendidikan Matematika',
+    footer: 'ℤ-Math • Dikembangkan oleh Maspupatul Hasanah — Pendidikan Matematika',
+  },
+
   common: { close: 'Tutup', loading: 'Memuat…' },
 } as const;

@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AboutModal } from '../../components/ui/AboutModal';
 import { Icon, type IconName } from '../../components/ui/Icon';
 import { Toast, type ToastMessage } from '../../components/ui/Toast';
 import { ZLogo } from '../../components/ui/ZLogo';
@@ -46,6 +47,8 @@ export function HomePage() {
   const bestExam = bestExamScore(useProgress((s) => s.examResults));
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const clearToast = useCallback(() => setToast(null), []);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const closeAbout = useCallback(() => setAboutOpen(false), []);
 
   const states = modules ? lessonStates(modules, lessons) : {};
   const percent = modules ? percentDone(modules, lessons) : 0;
@@ -68,7 +71,10 @@ export function HomePage() {
         <div className="relative flex items-center justify-between gap-2">
           <span className="flex items-center gap-2.5">
             <ZLogo size={40} />
-            <BrandName className="font-brand text-lg font-extrabold tracking-tight" />
+            {/* the word mark yields to the "Tentang" button on 360 px phones; the logo stays */}
+            <span className="hidden min-[380px]:inline">
+              <BrandName className="font-brand text-lg font-extrabold tracking-tight" />
+            </span>
           </span>
           <span className="flex items-center gap-1.5">
             <Badge icon="flame" value={streak} label={t.home.streak(streak)} />
@@ -80,6 +86,15 @@ export function HomePage() {
             >
               {name.charAt(0).toUpperCase() || <Icon name="user" size={20} />}
             </Link>
+            <button
+              type="button"
+              onClick={() => setAboutOpen(true)}
+              aria-label={t.about.button}
+              title={t.about.button}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition active:scale-90"
+            >
+              <Icon name="info" size={20} />
+            </button>
           </span>
         </div>
 
@@ -168,6 +183,7 @@ export function HomePage() {
         )}
       </main>
       <Toast toast={toast} onDone={clearToast} />
+      <AnimatePresence>{aboutOpen && <AboutModal onClose={closeAbout} />}</AnimatePresence>
     </div>
   );
 }

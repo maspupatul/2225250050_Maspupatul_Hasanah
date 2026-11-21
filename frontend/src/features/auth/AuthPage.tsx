@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { useState, type FormEvent } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { InstallCard } from '../../components/ui/InstallCard';
-import { BrandName } from '../../components/ui/BrandName';
+import { BrandName, BrandText } from '../../components/ui/BrandName';
 import { PopButton } from '../../components/ui/PopButton';
 import { ZLogo } from '../../components/ui/ZLogo';
 import { Icon } from '../../components/ui/Icon';
@@ -268,6 +268,10 @@ export function AuthPage() {
       <div className="mt-6">
         <InstallCard />
       </div>
+
+      <footer className="mt-auto pt-8 text-center text-[11px] leading-5 text-white/50">
+        <BrandText text={t.about.footer} />
+      </footer>
     </div>
   );
 }

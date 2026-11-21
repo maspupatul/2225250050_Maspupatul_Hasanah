@@ -30,6 +30,7 @@ export type IconName =
   | 'gamepad'
   | 'hourglass'
   | 'image'
+  | 'info'
   | 'install'
   | 'lightbulb'
   | 'lock'
@@ -212,6 +213,13 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <rect x="6" y="2.5" width="12" height="19" rx="3" {...D} />
       <path d="M12 7v6.5M9.2 10.8 12 13.5l2.8-2.7M10.5 18.5h3" />
+    </>
+  ),
+  info: (
+    <>
+      <circle cx="12" cy="12" r="9" {...D} />
+      <path d="M12 11v5.5" />
+      <circle cx="12" cy="7.8" r="1.2" {...DOT} />
     </>
   ),
   lightbulb: (
