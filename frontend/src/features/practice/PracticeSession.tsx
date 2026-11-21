@@ -7,6 +7,7 @@ import { RoundButton } from '../../components/ui/RoundButton';
 import { Toggle } from '../../components/ui/Toggle';
 import { Icon } from '../../components/ui/Icon';
 import { t } from '../../i18n/id';
+import { createPrefetcher } from './problemPrefetch';
 import { api } from '../../lib/api';
 import type { Outcome } from '../../lib/score';
 import type { ChatMessage, Hint, Problem, StepKey, StepResult, Twin } from '../../lib/types';
@@ -106,6 +107,8 @@ export function PracticeSession({
   // chat of the active step only, in memory (never stored on the device or the server)
   const [chat, setChat] = useState<{ key: string; messages: ChatMessage[] }>({ key: '', messages: [] });
   const closeAssistant = useCallback(() => setAssistantOpen(false), []);
+  // one per session (parents remount the session with `key` to start anew)
+  const [prefetcher] = useState(() => createPrefetcher(fetchProblem));
 
   useEffect(() => {
     if (!assistant) return;
@@ -133,17 +136,20 @@ export function PracticeSession({
       setTwin(null);
       setFinal(null);
       try {
-        const next = await fetchProblem(i, useProgress.getState().guided);
+        const guidedNow = useProgress.getState().guided;
+        const next = await prefetcher.take(i, guidedNow);
         setProblem(next);
         setStepKey(next.current_step);
         setPhase('solving');
         window.scrollTo({ top: 0 });
+        // load the next problem while this one is solved: no empty card between problems
+        if (i + 1 < total) prefetcher.prefetch(i + 1, guidedNow);
       } catch (err) {
         setError(message(err));
         setPhase('error');
       }
     },
-    [fetchProblem],
+    [prefetcher, total],
   );
 
   useEffect(() => {

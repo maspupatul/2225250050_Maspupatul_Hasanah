@@ -44,8 +44,11 @@ Tabel (`users`, `classes`, `student_progress`, `practice_attempts`, `login_failu
 
 Catatan:
 - Python 3.12 (`backend/.python-version`). Vercel memasang paket dari daftar `dependencies` di `backend/pyproject.toml` (bukan `requirements.txt`, karena `pyproject.toml` didahulukan). Daftar ini harus sama dengan paket aplikasi di `requirements.txt`; `tests/test_deploy.py` memeriksanya. Gejala jika kosong: build hanya beberapa detik, lalu log `ModuleNotFoundError: No module named 'fastapi'`.
+- **Region `sin1` (Singapura)** di `vercel.json`, sama dengan region database Supabase (`aws-0-ap-southeast-1`). Tanpa ini Vercel memakai `iad1` (Amerika), dan setiap query menyeberang benua (sekitar 0,2 detik per query; *cold start* sampai belasan detik). Jika proyek Supabase berada di region lain, sesuaikan `regions` (cek host pooler di `DATABASE_URL`).
+- Koneksi database dipakai ulang di dalam satu instans Vercel (pool kecil: 2 + 3 cadangan, didaur ulang tiap 5 menit, dicek sebelum dipakai). Pooler Supabase mode transaksi tetap melakukan pooling sesungguhnya.
+- Jalur soal dibuat hemat query: menyimpan jawaban = satu `UPDATE`; penghapusan percobaan kedaluwarsa (> 2 hari) paling sering sekali per 10 menit per instans, bukan pada setiap soal baru.
 - Batas waktu fungsi 60 detik (`vercel.json`). Tanya Asisten menunggu Gemini paling lama 20 detik, Smart Hint 12 detik.
-- Permintaan pertama setelah lama tidak dipakai lebih lambat beberapa detik (*cold start*).
+- Permintaan pertama setelah lama tidak dipakai lebih lambat beberapa detik (*cold start*: memuat Python, lalu membuat/memeriksa tabel sekali per instans).
 - `CORS_ORIGINS` tidak perlu diisi selama aplikasi dibuka lewat alamat Netlify (lewat proxy).
 
 ## 3. Netlify (frontend)

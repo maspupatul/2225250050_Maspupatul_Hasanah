@@ -15,7 +15,7 @@ from dataclasses import asdict, dataclass, field, fields
 from functools import lru_cache
 from typing import Any
 
-from sqlalchemy import delete
+from sqlalchemy import delete, update
 
 from app.content.loader import content
 from app.core.errors import AppError
@@ -40,6 +40,8 @@ WRONG_AFTER_LAST_HINT_FOR_TWIN = 2
 HINT_WEIGHTS = {0: 1.0, 1: 0.8, 2: 0.6, 3: 0.4}
 TWIN_WEIGHT = 0.2
 ATTEMPT_TTL_S = 2 * 24 * 3600  # an unfinished problem is kept two days
+CLEANUP_EVERY_S = 600  # delete expired attempts at most this often (per server instance)
+_last_cleanup = 0.0
 
 PROMPTS = {
     "known": "Bilangan apa saja yang diketahui? Pilih beserta tandanya.",
@@ -126,11 +128,22 @@ def attempt_from(row: PracticeAttempt) -> Attempt:
     return Attempt(id=row.id, instance=_instance(row.template_id, row.seed), states=states, **data)
 
 
+def _cleanup_due(now: float) -> bool:
+    """Old attempts are deleted at most every CLEANUP_EVERY_S per server instance, not on every
+    new problem: one round trip fewer on the path that shows the next problem."""
+    global _last_cleanup
+    if now - _last_cleanup < CLEANUP_EVERY_S:
+        return False
+    _last_cleanup = now
+    return True
+
+
 def _save(attempt: Attempt, *, new: bool = False) -> None:
     now = time.time()
     with SessionLocal() as db:
         if new:
-            db.execute(delete(PracticeAttempt).where(PracticeAttempt.updated_at < now - ATTEMPT_TTL_S))
+            if _cleanup_due(now):
+                db.execute(delete(PracticeAttempt).where(PracticeAttempt.updated_at < now - ATTEMPT_TTL_S))
             db.add(
                 PracticeAttempt(
                     id=attempt.id,
@@ -141,11 +154,14 @@ def _save(attempt: Attempt, *, new: bool = False) -> None:
                 )
             )
         else:
-            row = db.get(PracticeAttempt, attempt.id)
-            if row is None:
+            # one UPDATE by primary key (no SELECT first): a single round trip per answer
+            changed = db.execute(
+                update(PracticeAttempt)
+                .where(PracticeAttempt.id == attempt.id)
+                .values(data=attempt_data(attempt), updated_at=now)
+            ).rowcount
+            if not changed:
                 raise AppError("ATTEMPT_NOT_FOUND", "Soal tidak ditemukan. Yuk, mulai soal baru.", 404)
-            row.data = attempt_data(attempt)
-            row.updated_at = now
         db.commit()
 
 

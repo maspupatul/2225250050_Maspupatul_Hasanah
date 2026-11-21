@@ -452,7 +452,8 @@ export const t = {
     quick: ['Aku bingung mulai dari mana', 'Apa arti kata di soal ini?', 'Cek cara berpikirku'],
     placeholder: 'Tulis pertanyaanmu…',
     send: 'Kirim',
-    thinking: 'Asisten sedang berpikir…',
+    /** Shown one after another while the reply is on its way (see assistantWait.ts). */
+    thinkingStages: ['Asisten sedang membaca soalmu…', 'Menyusun penjelasan…', 'Sebentar lagi, ya…'],
     privacy: 'Jangan tulis nama atau data pribadi. Obrolan tidak disimpan.',
     offline: 'Asisten butuh internet. Sementara, buka Petunjuk ya.',
     you: 'Kamu',

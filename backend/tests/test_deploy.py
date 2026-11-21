@@ -7,7 +7,6 @@ import ssl
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
-from sqlalchemy.pool import NullPool
 
 from app.content.loader import content
 from app.core import config, security
@@ -56,7 +55,10 @@ def test_psycopg_options_for_supabase_pooler():
     options = engine_options(normalize_db_url(SUPABASE))
     assert options["connect_args"] == {"prepare_threshold": None, "sslmode": "require"}
     assert options["pool_pre_ping"] is True and "poolclass" not in options
-    assert engine_options(normalize_db_url(SUPABASE), serverless=True)["poolclass"] is NullPool
+    serverless = engine_options(normalize_db_url(SUPABASE), serverless=True)
+    # a small reused pool on Vercel: no new TLS login per query, recycled before it goes stale
+    assert serverless["pool_size"] <= 2 and serverless["max_overflow"] <= 3
+    assert serverless["pool_recycle"] <= 300 and serverless["pool_pre_ping"] is True
     explicit = engine_options(normalize_db_url(SUPABASE + "?sslmode=verify-full"))
     assert "sslmode" not in explicit["connect_args"]  # the URL's own choice is kept
     local = engine_options("postgresql+psycopg://u:p@localhost:5432/zmath")
@@ -146,12 +148,30 @@ def test_old_attempts_are_cleaned_up():
     with SessionLocal() as db:
         db.get(PracticeAttempt, payload["attempt_id"]).updated_at -= attempts.ATTEMPT_TTL_S + 60
         db.commit()
+    attempts._last_cleanup = 0.0  # due now (normally at most every CLEANUP_EVERY_S)
     attempts.start_attempt(lesson_id=None, template_id=STORY, guided=True, seed=8)  # triggers clean-up
     with SessionLocal() as db:
         assert db.get(PracticeAttempt, payload["attempt_id"]) is None
 
 
 # ------------------------------------------------------------------ login throttle in the database
+
+
+def test_cleanup_runs_at_most_every_few_minutes():
+    attempts._last_cleanup = 0.0
+    assert attempts._cleanup_due(1_000_000.0) is True
+    assert attempts._cleanup_due(1_000_000.0 + attempts.CLEANUP_EVERY_S - 1) is False
+    assert attempts._cleanup_due(1_000_000.0 + attempts.CLEANUP_EVERY_S) is True
+    attempts._last_cleanup = 0.0
+
+
+def test_vercel_runs_next_to_the_database():
+    """The functions run in Singapore (sin1), the region of the Supabase database."""
+    import json
+    from pathlib import Path
+
+    vercel = json.loads((Path(__file__).resolve().parents[1] / "vercel.json").read_text("utf-8"))
+    assert vercel["regions"] == ["sin1"]
 
 
 def test_login_throttle_is_shared_through_the_database():

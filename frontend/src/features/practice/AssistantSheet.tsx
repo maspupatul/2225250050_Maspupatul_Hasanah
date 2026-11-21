@@ -4,6 +4,7 @@ import { Icon } from '../../components/ui/Icon';
 import { RmtTag } from '../../components/ui/RmtTag';
 import { t } from '../../i18n/id';
 import { ApiError, api } from '../../lib/api';
+import { thinkingStage } from './assistantWait';
 import type { ChatMessage, StepKey } from '../../lib/types';
 
 const a = t.assistant;
@@ -47,9 +48,21 @@ export function AssistantSheet({ attemptId, step, messages, onMessages, onClose 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [turnsLeft, setTurnsLeft] = useState<number | null>(null);
+  const [stage, setStage] = useState(0);
   const [wide] = useState(isWide);
   const closeRef = useRef<HTMLButtonElement>(null);
   const endRef = useRef<HTMLLIElement>(null);
+  // set synchronously, unlike `busy`: a double tap in the same frame sends only once
+  const sending = useRef(false);
+
+  // waiting text moves on (reading → composing → almost there); no limit on the student's time
+  useEffect(() => {
+    if (!busy) return;
+    const started = Date.now();
+    setStage(0);
+    const timer = window.setInterval(() => setStage(thinkingStage(Date.now() - started)), 500);
+    return () => window.clearInterval(timer);
+  }, [busy]);
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -64,7 +77,8 @@ export function AssistantSheet({ attemptId, step, messages, onMessages, onClose 
 
   const send = async (raw: string) => {
     const question = raw.trim().slice(0, MAX_TEXT);
-    if (!question || busy) return;
+    if (!question || sending.current) return;
+    sending.current = true;
     const conversation = [...messages, { role: 'siswa' as const, text: question }];
     onMessages(() => conversation);
     setText('');
@@ -83,6 +97,7 @@ export function AssistantSheet({ attemptId, step, messages, onMessages, onClose 
             : t.errors.generic,
       );
     } finally {
+      sending.current = false;
       setBusy(false);
     }
   };
@@ -147,9 +162,11 @@ export function AssistantSheet({ attemptId, step, messages, onMessages, onClose 
             <Bubble key={i} message={m} />
           ))}
           {busy && (
-            <li className="flex items-center gap-2 text-sm font-bold text-ink-muted">
-              <Icon name="hourglass" size={16} />
-              {a.thinking}
+            <li className="flex justify-start" role="status">
+              <p className="flex items-center gap-2 rounded-3xl rounded-bl-lg bg-white px-4 py-2.5 text-sm font-bold text-ink-muted shadow-pop-soft">
+                <Icon name="hourglass" size={16} className="animate-pulse" />
+                {a.thinkingStages[stage]}
+              </p>
             </li>
           )}
           {error && (
@@ -185,6 +202,8 @@ export function AssistantSheet({ attemptId, step, messages, onMessages, onClose 
               onChange={(e) => setText(e.target.value)}
               maxLength={MAX_TEXT}
               placeholder={a.placeholder}
+              readOnly={busy}
+              aria-busy={busy}
               autoComplete="off"
               className="min-w-0 flex-1 rounded-2xl border-2 border-lavender-200 bg-white px-3 py-2.5 text-[15px] outline-none focus:border-accent"
             />

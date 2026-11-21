@@ -14,11 +14,13 @@ from typing import Any
 from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.engine import make_url
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
-from sqlalchemy.pool import NullPool
 
 from app.core.config import ON_VERCEL, settings
 
 LOCAL_HOSTS = {None, "", "localhost", "127.0.0.1", "::1"}
+SERVERLESS_POOL_SIZE = 2
+SERVERLESS_OVERFLOW = 3
+POOL_RECYCLE_S = 300
 log = logging.getLogger("zmath.db")
 
 
@@ -45,7 +47,11 @@ def engine_options(url: str, serverless: bool = False) -> dict[str, Any]:
         connect_args["ssl_context"] = context
     options: dict[str, Any] = {"connect_args": connect_args, "pool_pre_ping": True}
     if serverless:
-        options["poolclass"] = NullPool  # each function instance is short-lived; the pooler pools
+        # A Vercel instance serves many requests (Fluid compute): keep a few connections open
+        # instead of a new TCP + TLS + login per query (NullPool cost ~4 round trips each time).
+        # Small on purpose: the Supabase pooler (transaction mode) does the real pooling, and
+        # recycled often so a connection frozen with an idle instance is not reused for long.
+        options.update(pool_size=SERVERLESS_POOL_SIZE, max_overflow=SERVERLESS_OVERFLOW, pool_recycle=POOL_RECYCLE_S)
     return options
 
 

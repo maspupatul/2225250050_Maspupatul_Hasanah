@@ -85,6 +85,8 @@ Semua pengaman di §6.6 tetap berlaku: Gemini tidak pernah menerima jawaban, tek
 | **Ekstrinsik** (cara penyajian) | Paling banyak 3 kalimat, setiap kalimat ≤ 15 kata, kata sehari-hari, tanpa markdown atau emoji. Merujuk ke alat yang sudah ada di layar (garis bilangan, termometer). Tiga tombol pertanyaan siap pakai mengurangi beban mengetik. Tanpa animasi baru |
 | **Germane** (membangun skema) | Siswa diminta menjelaskan alasan, memeriksa caranya sendiri, dan menghubungkan dengan langkah sebelumnya (*self-explanation*) |
 
+Saat menunggu balasan, gelembung asisten menampilkan teks bertahap ("Asisten sedang membaca soalmu…" → "Menyusun penjelasan…" → "Sebentar lagi, ya…"), supaya siswa tahu pertanyaannya sedang diproses. Teksnya yang berganti, bukan tenggat untuk siswa; tidak ada hitung mundur. Selama menunggu, pertanyaan baru tidak bisa dikirim (mencegah kiriman ganda).
+
 **3. Petunjuk sesuai kesulitan, tanpa jawaban akhir.** Tingkat bantuan (`support_level`) mengikuti 3 tingkat petunjuk (§6.2):
 
 | Tingkat | Muncul saat | Isi |
