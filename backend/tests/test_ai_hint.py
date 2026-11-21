@@ -278,3 +278,39 @@ def test_hint_response_has_source_field_when_ai_off():
     step = payload["steps"][0]["key"]
     hint = attempts.request_hint(payload["attempt_id"], step)
     assert hint["source"] == "static" and hint["ai_text"] is None and hint["text"]
+
+
+# ------------------------------------------------------------------ fast chain (Tanya Asisten)
+
+
+def test_model_chain_puts_preferred_fast_models_first():
+    listed = ["gemini-4-hydrogen", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite"]
+    fast = ("gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-9-tidak-ada")
+    assert ai_hint.model_chain(listed, fast) == ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-4-hydrogen"]
+    assert ai_hint.model_chain(listed) == listed  # Smart Hint: order unchanged
+    assert ai_hint.model_chain(None, fast) == list(fast)  # list not known yet: try the fast guesses
+    assert ai_hint.model_chain(None) == []  # Smart Hint on a fresh instance: static hint, as before
+
+
+def test_fast_chain_answers_without_waiting_for_the_slow_model(ai_on, monkeypatch):
+    fake = _FakeModels({"gemini-4-hydrogen": "lambat", "gemini-3.5-flash-lite": "Cepat."})
+    monkeypatch.setattr(ai_hint, "_client", type("C", (), {"models": fake})())
+    monkeypatch.setattr(ai_hint, "_models_for_request", lambda: ["gemini-4-hydrogen", "gemini-3.5-flash-lite"])
+    assert ai_hint.generate_text("p", "s", prefer=("gemini-3.5-flash-lite",)) == "Cepat."
+    assert [m for m, _ in fake.calls] == ["gemini-3.5-flash-lite"]
+
+
+def test_fresh_instance_uses_fast_guess_and_skips_missing_model(ai_on, monkeypatch):
+    fake = _FakeModels({"gemini-3.5-flash-lite": _ApiError(404), "gemini-3.1-flash-lite": "Ada."})
+    monkeypatch.setattr(ai_hint, "_client", type("C", (), {"models": fake})())
+    monkeypatch.setattr(ai_hint, "_models_for_request", lambda: None)
+    assert ai_hint.generate_text("p", "s", prefer=("gemini-3.5-flash-lite", "gemini-3.1-flash-lite")) == "Ada."
+
+
+def test_reply_token_cap_reaches_gemini(ai_on, monkeypatch):
+    seen = []
+    fake = _FakeModels({"gemini-3.5-flash-lite": lambda c: seen.append(c.max_output_tokens) or "Ok."})
+    monkeypatch.setattr(ai_hint, "_client", type("C", (), {"models": fake})())
+    monkeypatch.setattr(ai_hint, "_models_for_request", lambda: ["gemini-3.5-flash-lite"])
+    ai_hint.generate_text("p", "s", prefer=("gemini-3.5-flash-lite",), max_tokens=450)
+    assert seen == [450]

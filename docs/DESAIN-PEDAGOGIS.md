@@ -87,6 +87,8 @@ Semua pengaman di §6.6 tetap berlaku: Gemini tidak pernah menerima jawaban, tek
 
 Saat menunggu balasan, gelembung asisten menampilkan teks bertahap ("Asisten sedang membaca soalmu…" → "Menyusun penjelasan…" → "Sebentar lagi, ya…"), supaya siswa tahu pertanyaannya sedang diproses. Teksnya yang berganti, bukan tenggat untuk siswa; tidak ada hitung mundur. Selama menunggu, pertanyaan baru tidak bisa dikirim (mencegah kiriman ganda).
 
+**Kecepatan tanpa melonggarkan pengecekan.** Asisten memakai model Gemini "lite" yang cepat lebih dulu (`assistant.FAST_MODELS`, sekitar 1–2 detik per balasan; batas 450 token), lalu model lain sebagai cadangan. Smart Hint tetap memakai urutannya sendiri. Balasan **tidak di-*stream*** kata demi kata: setiap balasan harus lolos pengecekan "tanpa bocor" (`ai_hint.is_safe`) secara utuh sebelum siswa melihatnya. Teks yang sudah tampil tidak bisa ditarik kembali, jadi streaming bisa menampilkan angka jawaban sebelum pengecekan selesai (melanggar F-10). Balasan yang pendek (paling banyak 3 kalimat) membuat streaming juga hampir tidak mempercepat.
+
 **3. Petunjuk sesuai kesulitan, tanpa jawaban akhir.** Tingkat bantuan (`support_level`) mengikuti 3 tingkat petunjuk (§6.2):
 
 | Tingkat | Muncul saat | Isi |

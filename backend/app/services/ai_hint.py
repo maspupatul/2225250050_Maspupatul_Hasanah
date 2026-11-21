@@ -21,7 +21,7 @@ import re
 import threading
 import time
 from collections import OrderedDict
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FutureTimeout
 from dataclasses import dataclass
@@ -39,6 +39,7 @@ THINKING_LEVELS = ("MINIMAL", "LOW", None)  # lowest first; None = model default
 LIST_TIMEOUT_MS = 30000
 GEMINI_MIN_DEADLINE_MS = 10000  # Gemini answers 400 to any request deadline below 10 s
 MIN_CALL_MS = 1500
+MAX_OUTPUT_TOKENS = 1024
 MODEL_SHARE = 0.45  # share of the budget for the preferred model, so a fallback still has time
 CACHE_SIZE = 2000
 MAX_CHARS = 360
@@ -339,7 +340,7 @@ def _models_for_request() -> list[str] | None:
     return current
 
 
-def _call(model: str, prompt: str, system: str = SYSTEM_PROMPT) -> str | None:
+def _call(model: str, prompt: str, system: str = SYSTEM_PROMPT, max_tokens: int = MAX_OUTPUT_TOKENS) -> str | None:
     """One model. Uses the lowest thinking level the model accepts (fast answers)."""
     from google.genai import types
 
@@ -348,7 +349,7 @@ def _call(model: str, prompt: str, system: str = SYSTEM_PROMPT) -> str | None:
         config = types.GenerateContentConfig(
             system_instruction=system,
             temperature=0.4,
-            max_output_tokens=1024,
+            max_output_tokens=max_tokens,
             thinking_config=types.ThinkingConfig(thinking_level=level) if level else None,
             # no per-request timeout: Gemini rejects deadlines under 10 s (400). The student's
             # wait is capped by _call_within instead.
@@ -369,7 +370,23 @@ def _gemini_generate(req: AIHintRequest) -> str | None:
     return generate_text(build_prompt(req), SYSTEM_PROMPT)
 
 
-def generate_text(prompt: str, system: str, budget_ms: int | None = None) -> str | None:
+def model_chain(models: list[str] | None, prefer: Sequence[str] = ()) -> list[str]:
+    """Pure: the order to try models in. `prefer` (fast models for a caller that needs speed)
+    goes first: only those this account lists, or all of them while the list is not known yet
+    (a fresh server instance: a missing model answers 404 in a fraction of a second)."""
+    if models is None:
+        return list(prefer)
+    first = [m for m in prefer if m in models]
+    return first + [m for m in models if m not in first]
+
+
+def generate_text(
+    prompt: str,
+    system: str,
+    budget_ms: int | None = None,
+    prefer: Sequence[str] = (),
+    max_tokens: int = MAX_OUTPUT_TOKENS,
+) -> str | None:
     """Walk the model chain within one time budget (ZMATH_AI_TIMEOUT_MS).
 
     The budget is a hard wall-clock limit: a student never waits longer. Each model except the
@@ -378,25 +395,26 @@ def generate_text(prompt: str, system: str, budget_ms: int | None = None) -> str
     tried (no global pause). 429 (quota is per project) and network errors are raised at once.
     """
     models = _models_for_request()
-    if not models:
+    chain = model_chain(models, prefer)
+    if not chain:
         return None
     deadline = time.monotonic() + (budget_ms or settings.ai_timeout_ms) / 1000
-    candidates = [m for m in list(models) if _model_paused.get(m, 0.0) <= time.monotonic()]
+    candidates = [m for m in chain if _model_paused.get(m, 0.0) <= time.monotonic()]
     for i, model in enumerate(candidates):
         remaining_ms = int((deadline - time.monotonic()) * 1000)
         if remaining_ms < MIN_CALL_MS:
             break
         # the preferred model gets a share; fallbacks get whatever is left
-        shared = model == models[0] and i < len(candidates) - 1
+        shared = model == chain[0] and i < len(candidates) - 1
         budget_ms = max(MIN_CALL_MS, int(remaining_ms * MODEL_SHARE)) if shared else remaining_ms
         try:
-            text = _call_within(model, prompt, budget_ms, system)
+            text = _call_within(model, prompt, budget_ms, system, max_tokens)
         except Exception as exc:
             code = _error_code(exc)
             if code == 429 or _is_network_error(exc):
                 raise
             with _lock:
-                if code == 404 and model in models and len(models) > 1:
+                if code == 404 and models is not None and model in models and len(models) > 1:
                     models.remove(model)  # gone for this account: drop for good
                 else:
                     slow = isinstance(exc, TimeoutError)
@@ -412,10 +430,12 @@ def generate_text(prompt: str, system: str, budget_ms: int | None = None) -> str
 _executor = ThreadPoolExecutor(max_workers=8, thread_name_prefix="zmath-ai")
 
 
-def _call_within(model: str, prompt: str, budget_ms: int, system: str = SYSTEM_PROMPT) -> str | None:
+def _call_within(
+    model: str, prompt: str, budget_ms: int, system: str = SYSTEM_PROMPT, max_tokens: int = MAX_OUTPUT_TOKENS
+) -> str | None:
     """`_call` with a hard wall-clock limit (the SDK timeout is per network phase, not total).
     On timeout the call is abandoned; its thread ends when the SDK timeout fires."""
-    future = _executor.submit(_call, model, prompt, system)
+    future = _executor.submit(_call, model, prompt, system, max_tokens)
     try:
         return future.result(timeout=budget_ms / 1000)
     except FutureTimeout:

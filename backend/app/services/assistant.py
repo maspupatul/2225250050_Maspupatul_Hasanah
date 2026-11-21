@@ -34,6 +34,11 @@ log = logging.getLogger("zmath.assistant")
 MAX_MESSAGES = 6  # recent turns the model sees
 MAX_TEXT = 300  # characters per message
 TURN_LIMIT = 20  # questions per problem
+# Chat needs speed more than depth: fast "lite" models first (measured 1-2 s per reply on
+# 2026-11-21, while the Smart Hint chain's first model often took 20 s+ or was busy).
+# Smart Hint keeps its own order (ai_hint.rank_models). Missing models are skipped (404).
+FAST_MODELS = ("gemini-3.5-flash-lite", "gemini-3.1-flash-lite")
+MAX_REPLY_TOKENS = 450  # a reply is at most 3 short sentences (~50 tokens); room to spare
 Role = Literal["siswa", "asisten"]
 
 STEP_GOALS = {
@@ -158,7 +163,9 @@ def build_prompt(
 
 
 def generate(prompt: str) -> str | None:  # swapped out in tests
-    return ai_hint.generate_text(prompt, SYSTEM_PROMPT, settings.assistant_timeout_ms)
+    return ai_hint.generate_text(
+        prompt, SYSTEM_PROMPT, settings.assistant_timeout_ms, prefer=FAST_MODELS, max_tokens=MAX_REPLY_TOKENS
+    )
 
 
 def reply(attempt_id: str, messages: list[Message], private: list[str]) -> dict:
